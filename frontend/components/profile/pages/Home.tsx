@@ -7,12 +7,16 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import Link from "next/link"
+import { useRouter } from "next/router"
 
 import { AiFillContacts } from "react-icons/ai"
 import { RiSuitcaseLine } from "react-icons/ri"
 import Typed from "react-typed"
 
-const MainArea = () => {
+const Home = () => {
+  const username = useRouter().query.username as string
+
   const secondaryColor = useColorModeValue("#f7b733", "#00c6ff")
 
   return (
@@ -28,7 +32,7 @@ const MainArea = () => {
         <Heading color="white" as="h3" fontWeight={200} size="lg">
           Hello I&apos;m Sandip Sadhukhan
         </Heading>
-        <Flex>
+        <Flex flexDir={["column", "column", "column", "row", "row"]}>
           <Heading as="h2" color="white" fontWeight={300} size="xl">
             I&apos;m working as
           </Heading>
@@ -41,18 +45,26 @@ const MainArea = () => {
           </Heading>
         </Flex>
         <HStack spacing={8} mt={10}>
-          <Button variant="solid" bgColor={secondaryColor}>
-            <AiFillContacts fontSize={20} />
-            <Text ml={2}>Contact Me</Text>
-          </Button>
-          <Button variant="solid" bgColor={secondaryColor}>
-            <RiSuitcaseLine fontSize={20} />
-            <Text ml={2}>Hire Me</Text>
-          </Button>
+          <Link href={`/${username}/contact-me`}>
+            <a>
+              <Button variant="solid" bgColor={secondaryColor}>
+                <AiFillContacts fontSize={20} />
+                <Text ml={2}>Contact Me</Text>
+              </Button>
+            </a>
+          </Link>
+          <Link href={`/${username}/contact-me`}>
+            <a>
+              <Button variant="solid" bgColor={secondaryColor}>
+                <RiSuitcaseLine fontSize={20} />
+                <Text ml={2}>Hire Me</Text>
+              </Button>
+            </a>
+          </Link>
         </HStack>
       </Flex>
     </Center>
   )
 }
 
-export default MainArea
+export default Home

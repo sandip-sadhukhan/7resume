@@ -20,9 +20,13 @@ import { FaUserTie, FaBloggerB, FaTimes } from "react-icons/fa"
 
 import Typed from "react-typed"
 import NavItem from "./NavItem"
+import { useRouter } from "next/router"
 
 const MobileSidebar = ({ onClose }: { onClose: () => void }) => {
   const { colorMode, toggleColorMode } = useColorMode()
+
+  const { pathname, query } = useRouter()
+  const username = query.username as string
 
   const secondaryColor = useColorModeValue("#f7b733", "#00c6ff")
 
@@ -47,7 +51,7 @@ const MobileSidebar = ({ onClose }: { onClose: () => void }) => {
       </Flex>
       <Flex w="full" flexDir="column" align="center" zIndex={10}>
         <Avatar
-          src="avatar-1.jpg"
+          src="/avatar-1.jpg"
           border={`2px solid ${colorMode === "light" ? "#F98127" : "#009BFF"}`}
         />
         <Heading
@@ -87,51 +91,57 @@ const MobileSidebar = ({ onClose }: { onClose: () => void }) => {
           title="Home"
           NavIcon={AiFillHome}
           hoverColor={hoverColor}
-          link="/"
+          link={`/${username}`}
           secondaryColor={secondaryColor}
-          active
+          active={pathname === "/[username]"}
         />
         <NavItem
           title="About Me"
           NavIcon={FaUserTie}
           hoverColor={hoverColor}
-          link="/"
+          link={`/${username}/about-me`}
           secondaryColor={secondaryColor}
+          active={pathname === "/[username]/about-me"}
         />
         <NavItem
           title="Resume"
           NavIcon={AiOutlineFilePdf}
           hoverColor={hoverColor}
-          link="/"
+          link={`/${username}/resume`}
           secondaryColor={secondaryColor}
+          active={pathname === "/[username]/resume"}
         />
         <NavItem
           title="Portfolio"
           NavIcon={BsFileEarmarkPostFill}
           hoverColor={hoverColor}
-          link="/"
+          link={`/${username}/portfolio`}
           secondaryColor={secondaryColor}
+          active={pathname === "/portfolio"}
         />
         <NavItem
           title="Blog"
           NavIcon={FaBloggerB}
           hoverColor={hoverColor}
-          link="/"
+          link={`/${username}/blog`}
           secondaryColor={secondaryColor}
+          active={pathname === "/[username]/blog"}
         />
         <NavItem
           title="Contact Me"
           NavIcon={AiFillContacts}
           hoverColor={hoverColor}
-          link="/"
+          link={`/${username}/contact-me`}
           secondaryColor={secondaryColor}
+          active={pathname === "/[username]/contact-me"}
         />
         <NavItem
           title="Appointments"
           NavIcon={BsFillCalendarDateFill}
           hoverColor={hoverColor}
-          link="/"
+          link={`/${username}/appointments`}
           secondaryColor={secondaryColor}
+          active={pathname === "/[username]/appointments"}
         />
       </Flex>
     </VStack>

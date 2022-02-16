@@ -1,4 +1,3 @@
-import type { NextPage } from "next"
 import {
   Avatar,
   Flex,
@@ -13,13 +12,17 @@ import {
   DrawerOverlay,
   DrawerCloseButton,
 } from "@chakra-ui/react"
-import Sidebar from "../components/profile/Sidebar"
-import MobileSidebar from "../components/profile/MobileSidebar"
-import MainArea from "../components/profile/MainArea"
+import Sidebar from "./sidebar/Sidebar"
+import MobileSidebar from "./sidebar/MobileSidebar"
 import { MdMenu } from "react-icons/md"
+import React from "react"
 
-const UserPage: NextPage = () => {
-  const { colorMode, toggleColorMode } = useColorMode()
+interface Props {
+  children: JSX.Element
+}
+
+const Layout = (props: Props) => {
+  const { colorMode } = useColorMode()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
@@ -44,7 +47,7 @@ const UserPage: NextPage = () => {
           >
             <HStack spacing={4}>
               <Avatar
-                src="avatar-1.jpg"
+                src="/avatar-1.jpg"
                 border={`4px solid ${
                   colorMode === "light" ? "#F98127" : "#009BFF"
                 }`}
@@ -63,7 +66,7 @@ const UserPage: NextPage = () => {
               <MdMenu fontSize={30} />
             </Flex>
           </Flex>
-          <MainArea />
+          {props.children}
         </VStack>
       </HStack>
       <Drawer
@@ -87,4 +90,4 @@ const UserPage: NextPage = () => {
   )
 }
 
-export default UserPage
+export default Layout
