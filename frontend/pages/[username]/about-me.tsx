@@ -7,7 +7,6 @@ import {
   SimpleGrid,
   useColorModeValue,
   VStack,
-  Container,
   Image,
 } from "@chakra-ui/react"
 import type { NextPage } from "next"
