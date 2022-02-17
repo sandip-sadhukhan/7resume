@@ -32,6 +32,8 @@ const Layout = (props: Props) => {
           w="290px"
           minH="100vh"
           display={["none", "none", "none", "flex", "flex"]}
+          pos="sticky"
+          top={0}
         >
           <Sidebar />
         </VStack>

@@ -48,7 +48,6 @@ const Sidebar = () => {
       bgColor={colorMode === "light" ? "gray.100" : "gray.700"}
       overflowY="auto"
       borderRight={`5px solid ${colorMode === "light" ? "#f7b733" : "#00c6ff"}`}
-      pos="relative"
     >
       <Flex
         w="full"

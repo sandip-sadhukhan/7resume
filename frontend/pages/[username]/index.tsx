@@ -1,11 +1,14 @@
 import type { NextPage } from "next"
 import Layout from "../../components/profile/Layout"
-import Home from "../../components/profile/pages/Home"
+import HomeSection from "../../components/profile/sections/home/HomeSection"
 
 const UserHome: NextPage = () => {
+  const name = "Sandip Sadhukhan"
+  const professionList = ["Developer", "Programmer", "Engineer"]
+
   return (
     <Layout>
-      <Home />
+      <HomeSection name={name} professionList={professionList} />
     </Layout>
   )
 }
