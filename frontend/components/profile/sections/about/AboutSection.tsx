@@ -11,17 +11,18 @@ import {
   Image,
   Box,
   Center,
-  IconButton,
   Button,
 } from "@chakra-ui/react"
 import { BiMap, BiCoffeeTogo } from "react-icons/bi"
 import { FaBriefcase } from "react-icons/fa"
 import { ImStack } from "react-icons/im"
+import { BsFillPlayFill, BsEmojiSmile } from "react-icons/bs"
+import { BiBulb, BiTrophy } from "react-icons/bi"
+import { FiCoffee } from "react-icons/fi"
 
 import IconBox from "./IconBox"
 import ServiceBox from "./ServiceBox"
-import { BsFillPlayFill } from "react-icons/bs"
-import Link from "next/link"
+import FactBox from "./FactBox"
 
 const AboutSection = () => {
   const secondaryColor = useColorModeValue("#f7b733", "#00c6ff")
@@ -30,6 +31,7 @@ const AboutSection = () => {
     "linear(to-l, rgba(230,173,125, 1), rgba(248,143,56, 1))",
     "linear(to-r, #0072ff, #00c6ff)"
   )
+  const grayBackground = useColorModeValue("gray.100", "gray.700")
 
   return (
     <VStack
@@ -117,7 +119,7 @@ const AboutSection = () => {
       {/* Services */}
       <Flex w="full" py={10}>
         <Box
-          bgColor={useColorModeValue("gray.100", "gray.700")}
+          bgColor={grayBackground}
           p={[3, 3, 5, 10, 10]}
           w="full"
           borderRadius={5}
@@ -199,6 +201,49 @@ const AboutSection = () => {
             </Center>
           </Flex>
         </Box>
+      </Flex>
+
+      {/* Facts */}
+      <Flex pt={5} pb={20} flexDir="column" w="full">
+        <Heading as="h3" fontSize={[20, 20, 20, 30, 30]}>
+          Facts
+        </Heading>
+        <HStack
+          pt={8}
+          w="full"
+          spacing={[0, 0, 0, 4, 8]}
+          flexDir={["column", "column", "column", "row", "row"]}
+          gap={4}
+        >
+          <FactBox
+            grayBackground={grayBackground}
+            secondaryColor={secondaryColor}
+            primaryText="Happy Clients"
+            secondaryText="1200"
+            icon={BsEmojiSmile}
+          />
+          <FactBox
+            grayBackground={grayBackground}
+            secondaryColor={secondaryColor}
+            primaryText="Experience Years"
+            secondaryText="5"
+            icon={BiBulb}
+          />
+          <FactBox
+            grayBackground={grayBackground}
+            secondaryColor={secondaryColor}
+            primaryText="Awards Won"
+            secondaryText="22"
+            icon={BiTrophy}
+          />
+          <FactBox
+            grayBackground={grayBackground}
+            secondaryColor={secondaryColor}
+            primaryText="Meetings"
+            secondaryText="120"
+            icon={FiCoffee}
+          />
+        </HStack>
       </Flex>
     </VStack>
   )
