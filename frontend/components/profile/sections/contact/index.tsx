@@ -1,14 +1,5 @@
-import {
-  Box,
-  Flex,
-  Heading,
-  IconButton,
-  SimpleGrid,
-  useColorModeValue,
-  VStack,
-} from "@chakra-ui/react"
+import { useColorModeValue, VStack } from "@chakra-ui/react"
 import React from "react"
-import { FaFacebookF } from "react-icons/fa"
 import SectionHeading from "../../SectionHeading"
 import ContactInfo from "./ContactInfo"
 import FollowMe from "./FollowMe"
