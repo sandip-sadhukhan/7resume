@@ -17,7 +17,7 @@ const Hireme = () => {
   )
 
   return (
-    <Flex pb={10} w="full">
+    <Flex pt={5} pb={10} w="full">
       <Box bgGradient={hireMeGradient} w="full" px={14} py={20}>
         <Flex flexDir={["column", "column", "column", "row", "row"]}>
           <VStack

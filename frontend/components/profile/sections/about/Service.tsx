@@ -8,7 +8,7 @@ interface Props {
 
 const Service = (props: Props) => {
   return (
-    <Flex w="full" py={10}>
+    <Flex w="full" pt={10} pb={5}>
       <Box
         bgColor={props.grayBackground}
         p={[3, 3, 5, 10, 10]}

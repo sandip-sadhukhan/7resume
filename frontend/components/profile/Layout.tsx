@@ -23,6 +23,7 @@ interface Props {
 
 const Layout = (props: Props) => {
   const { colorMode } = useColorMode()
+
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
