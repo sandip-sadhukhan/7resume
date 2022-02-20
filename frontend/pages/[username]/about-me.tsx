@@ -1,6 +1,6 @@
 import type { NextPage } from "next"
 import Layout from "../../components/profile/Layout"
-import AboutSection from "../../components/profile/sections/about/AboutSection"
+import AboutSection from "../../components/profile/sections/about"
 
 const AboutMe: NextPage = () => {
   return (

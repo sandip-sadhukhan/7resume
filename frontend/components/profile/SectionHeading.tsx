@@ -10,7 +10,12 @@ interface Props {
 const SectionHeading = (props: Props) => {
   return (
     <VStack align="center" w="full">
-      <Heading mb={1} color={props.headingColor} fontWeight={600}>
+      <Heading
+        mb={1}
+        color={props.headingColor}
+        fontWeight={600}
+        textTransform="uppercase"
+      >
         {props.title}
       </Heading>
       <Divider pt={1} w={40} bgColor={props.secondaryColor} />
