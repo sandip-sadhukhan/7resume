@@ -10,3 +10,7 @@ export interface Testimonial {
   userImage: string
   star: number
 }
+export interface SkillType {
+  name: string
+  value: number
+}

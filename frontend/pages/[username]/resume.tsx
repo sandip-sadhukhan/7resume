@@ -1,11 +1,11 @@
-import { Heading } from "@chakra-ui/react"
 import type { NextPage } from "next"
 import Layout from "../../components/profile/Layout"
+import ResumeSection from "../../components/profile/sections/resume"
 
 const Resume: NextPage = () => {
   return (
     <Layout>
-      <Heading>Resume</Heading>
+      <ResumeSection />
     </Layout>
   )
 }
