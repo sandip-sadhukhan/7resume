@@ -19,7 +19,7 @@ interface Props {
 
 const AppointmentForm = ({ secondaryColor }: Props) => {
   return (
-    <VStack flex={1} pt={10} gap={4}>
+    <VStack w="full" py={10} gap={4}>
       <InputGroup>
         <InputLeftElement pointerEvents="none">
           <FiEdit2 color="gray.300" />
@@ -32,7 +32,11 @@ const AppointmentForm = ({ secondaryColor }: Props) => {
         </InputLeftElement>
         <Input variant="outline" w="full" type="text" placeholder="Name" />
       </InputGroup>
-      <HStack w="full">
+      <HStack
+        w="full"
+        flexDir={["column", "column", "column", "row", "row"]}
+        gap={4}
+      >
         <InputGroup>
           <InputLeftElement pointerEvents="none">
             <FiMail color="gray.300" />
@@ -46,7 +50,11 @@ const AppointmentForm = ({ secondaryColor }: Props) => {
           <Input variant="outline" w="full" type="tel" placeholder="Phone" />
         </InputGroup>
       </HStack>
-      <HStack w="full">
+      <HStack
+        w="full"
+        flexDir={["column", "column", "column", "row", "row"]}
+        gap={4}
+      >
         <InputGroup>
           <InputLeftElement pointerEvents="none">
             <MdDateRange color="gray.300" />
@@ -67,6 +75,7 @@ const AppointmentForm = ({ secondaryColor }: Props) => {
         w="full"
         rounded="full"
         size="lg"
+        shadow="lg"
       >
         Booking appointment
       </Button>

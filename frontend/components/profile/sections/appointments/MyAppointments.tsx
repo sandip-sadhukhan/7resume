@@ -8,7 +8,7 @@ interface Props {
 
 const MyAppointments = (props: Props) => {
   return (
-    <VStack align="start">
+    <VStack align="start" w="full">
       <Heading size="sm">My Appointments</Heading>
       <Text>Before booking an appointment please check my availability</Text>
       <VStack pt={6} gap={4} align="start">

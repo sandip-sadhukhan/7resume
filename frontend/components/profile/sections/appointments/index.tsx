@@ -23,7 +23,13 @@ const AppointmentSection = () => {
         title="Appointments"
       />
 
-      <HStack align="start" w="full" pt={10} spacing={16}>
+      <HStack
+        align="start"
+        w="full"
+        pt={10}
+        spacing={[0, 0, 0, 8, 16]}
+        flexDir={["column", "column", "column", "row", "row"]}
+      >
         {/* My Appointments */}
         <MyAppointments secondaryColor={secondaryColor} />
 
