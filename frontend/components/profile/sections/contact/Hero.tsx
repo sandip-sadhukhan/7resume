@@ -24,7 +24,6 @@ const Hero = (props: Props) => {
             variant="flushed"
             placeholder="Name"
             required
-            autoFocus
             mb={8}
             size="lg"
           />
