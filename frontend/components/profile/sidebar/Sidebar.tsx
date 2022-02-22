@@ -133,7 +133,7 @@ const Sidebar = () => {
           hoverColor={hoverColor}
           link={`/${username}/portfolio`}
           secondaryColor={secondaryColor}
-          active={pathname === "/portfolio"}
+          active={pathname.startsWith("/[username]/portfolio")}
         />
         <NavItem
           title="Blog"
@@ -141,7 +141,7 @@ const Sidebar = () => {
           hoverColor={hoverColor}
           link={`/${username}/blog`}
           secondaryColor={secondaryColor}
-          active={pathname === "/[username]/blog"}
+          active={pathname.startsWith("/[username]/blog")}
         />
         <NavItem
           title="Contact Me"
