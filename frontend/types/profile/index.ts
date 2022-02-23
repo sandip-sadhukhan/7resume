@@ -14,3 +14,8 @@ export interface SkillType {
   name: string
   value: number
 }
+
+export interface BreadcrumbType {
+  text: string
+  link: string
+}
