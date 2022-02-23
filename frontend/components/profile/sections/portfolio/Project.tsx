@@ -19,7 +19,7 @@ const Project: React.FC<ProjectProps> = (props: ProjectProps) => {
   const { secondaryColor, slug, imageURL, name, category } = props
   return (
     <VStack spacing={3}>
-      <Link href={`/${username}/portfolio/${slug}`} p>
+      <Link href={`/${username}/portfolio/${slug}`}>
         <a style={{ width: "100%", height: 350, position: "relative" }}>
           <Image src={imageURL} alt="portfolio image" layout="fill" />
         </a>
