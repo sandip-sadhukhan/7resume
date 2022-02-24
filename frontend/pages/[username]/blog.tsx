@@ -1,11 +1,11 @@
-import { Heading } from "@chakra-ui/react"
 import type { NextPage } from "next"
 import Layout from "../../components/profile/Layout"
+import BlogSection from "../../components/profile/sections/blog"
 
 const Blog: NextPage = () => {
   return (
     <Layout>
-      <Heading>Blog</Heading>
+      <BlogSection />
     </Layout>
   )
 }
