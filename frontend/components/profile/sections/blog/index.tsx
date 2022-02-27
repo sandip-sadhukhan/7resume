@@ -5,6 +5,7 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
+import { useRouter } from "next/router"
 import React from "react"
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi"
 import SectionHeading from "../../SectionHeading"
@@ -15,6 +16,8 @@ const BlogSection = () => {
   const secondaryColor = useColorModeValue("#f7b733", "#00c6ff")
   const headingColor = useColorModeValue("gray.800", "gray.50")
   const grayBackground = useColorModeValue("blue.50", "gray.700")
+
+  const username = useRouter().query.username as string
 
   return (
     <VStack
@@ -35,6 +38,7 @@ const BlogSection = () => {
           grayBackground={grayBackground}
           secondaryColor={secondaryColor}
           bannerImg="/blog-img.jpg"
+          link={`/${username}/blog/hello`}
           viewCount={122}
           title="Transitions in Design"
           date="Mar 10, 2019"
@@ -46,6 +50,7 @@ const BlogSection = () => {
           grayBackground={grayBackground}
           secondaryColor={secondaryColor}
           bannerImg="/blog-img.jpg"
+          link={`/${username}/blog/hello`}
           viewCount={122}
           title="Transitions in Design"
           date="Mar 10, 2019"
@@ -57,6 +62,7 @@ const BlogSection = () => {
           grayBackground={grayBackground}
           secondaryColor={secondaryColor}
           bannerImg="/blog-img.jpg"
+          link={`/${username}/blog/hello`}
           viewCount={122}
           title="Transitions in Design"
           date="Mar 10, 2019"
@@ -68,6 +74,7 @@ const BlogSection = () => {
           grayBackground={grayBackground}
           secondaryColor={secondaryColor}
           bannerImg="/blog-img.jpg"
+          link={`/${username}/blog/hello`}
           viewCount={122}
           title="Transitions in Design"
           date="Mar 10, 2019"

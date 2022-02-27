@@ -16,6 +16,7 @@ interface BlogGridProps {
   grayBackground: string
   secondaryColor: string
   bannerImg: string
+  link: string
   viewCount: number
   title: string
   date: string
@@ -29,6 +30,7 @@ const BlogGrid: React.FC<BlogGridProps> = (props: BlogGridProps) => {
     grayBackground,
     secondaryColor,
     bannerImg,
+    link,
     viewCount,
     title,
     date,
@@ -39,7 +41,7 @@ const BlogGrid: React.FC<BlogGridProps> = (props: BlogGridProps) => {
 
   return (
     <VStack shadow="lg" bgColor={grayBackground} w="full">
-      <Link href="#">
+      <Link href={link}>
         <a>
           <Flex
             flexDir="column"
