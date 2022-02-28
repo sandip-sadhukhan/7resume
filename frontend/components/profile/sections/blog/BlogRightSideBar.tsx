@@ -1,17 +1,8 @@
-import {
-  Divider,
-  Heading,
-  IconButton,
-  Input,
-  InputGroup,
-  InputRightElement,
-  useColorModeValue,
-  VStack,
-} from "@chakra-ui/react"
+import { Divider, Heading, useColorModeValue, VStack } from "@chakra-ui/react"
 import React from "react"
-import { BiSearch } from "react-icons/bi"
 import BlogTrailerGroup from "./BlogTrailerGroup"
 import CategoryListItem from "./CategoryListItem"
+import SearchBox from "./SearchBox"
 import TagGroup from "./TagGroup"
 
 interface BlogRightSideBarProps {
@@ -29,28 +20,8 @@ const BlogRightSideBar: React.FC<BlogRightSideBarProps> = (
   return (
     <VStack as="aside" flex={3} align="start" spacing={10}>
       {/* Search Blog */}
-      <VStack w="full" align="start" spacing={6}>
-        <Heading fontWeight={400} size="md">
-          Search In Blog
-        </Heading>
-        <InputGroup size="lg">
-          <Input
-            type="text"
-            placeholder="Search Posts .."
-            rounded="full"
-            color={grayText}
-          />
-          <InputRightElement>
-            <IconButton
-              aria-label="Search Btn"
-              onClick={() => alert("searched")}
-              variant="ghost"
-            >
-              <BiSearch fontSize={20} color={secondaryColor} />
-            </IconButton>
-          </InputRightElement>
-        </InputGroup>
-      </VStack>
+      <SearchBox grayText={grayText} secondaryColor={secondaryColor} />
+
       {/* Related Post */}
       <BlogTrailerGroup
         grayBackground={grayBackground}

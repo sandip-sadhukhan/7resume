@@ -38,7 +38,7 @@ const BlogSection = () => {
           grayBackground={grayBackground}
           secondaryColor={secondaryColor}
           bannerImg="/blog-img.jpg"
-          link={`/${username}/blog/hello`}
+          link={`/${username}/blog/post/hello`}
           viewCount={122}
           title="Transitions in Design"
           date="Mar 10, 2019"
