@@ -15,6 +15,13 @@ import IconBox from "./IconBox"
 interface Props {
   headingColor: string
   secondaryColor: string
+  name: string
+  nationality: string
+  about_me: string
+  experience: number
+  projects: number
+  meetings: number
+  about_me_image: string
 }
 
 const Hero = (props: Props) => {
@@ -25,24 +32,14 @@ const Hero = (props: Props) => {
         pt={[5, 5, 5, 10, 10]}
         w="full"
       >
-        <Heading size="md">Sandip Sadhukhan</Heading>
+        <Heading size="md">{props.name}</Heading>
         <HStack>
           <BiMap />
-          <Text colorScheme="blackAlpha">West Bengal, India</Text>
+          <Text colorScheme="blackAlpha">{props.nationality}</Text>
         </HStack>
 
-        <Text pt={5} textAlign="justify">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quo in, modi
-          vero nulla odit maxime, fuga sequi, ex praesentium expedita esse
-          voluptates. Non cumque, quasi amet suscipit iure fuga deserunt error
-          obcaecati harum perferendis assumenda consequuntur aperiam cum vero
-          pariatur earum! Sint, ea quos ab facilis suscipit beatae amet
-          consequatur, ipsam
-        </Text>
-        <Text textAlign="justify">
-          velit odio a eos expedita non quae, qui esse ipsum assumenda nihil
-          facere cum sequi optio harum dolor reiciendis? Soluta tenetur quas ea
-          optio ab? Ratione rerum odit explicabo magni amet provident hi.
+        <Text pt={5} textAlign="justify" style={{ whiteSpace: "pre-wrap" }}>
+          {props.about_me}
         </Text>
 
         <HStack
@@ -62,28 +59,31 @@ const Hero = (props: Props) => {
           <IconBox
             headingColor={props.headingColor}
             secondaryColor={props.secondaryColor}
-            primaryText="5+ Years Job"
+            primaryText={`${props.experience}+ Years Job`}
             secondaryText="Experience"
             icon={FaBriefcase}
           />
           <IconBox
             headingColor={props.headingColor}
             secondaryColor={props.secondaryColor}
-            primaryText="300+ Projects"
+            primaryText={`${props.projects}+ Projects`}
             secondaryText="Completed"
             icon={ImStack}
           />
           <IconBox
             headingColor={props.headingColor}
             secondaryColor={props.secondaryColor}
-            primaryText="120+ Meetings"
+            primaryText={`${props.meetings}+ Meetings`}
             secondaryText="Successful"
             icon={BiCoffeeTogo}
           />
         </HStack>
       </VStack>
       <VStack w="100%" h="100%">
-        <Image src="/about-bg.png" alt="pc" />
+        <Image
+          src={`${process.env.NEXT_PUBLIC_BASE_API_URL}${props.about_me_image}`}
+          alt="pc"
+        />
       </VStack>
     </SimpleGrid>
   )

@@ -7,52 +7,22 @@ import Hireme from "./Hireme"
 import Fact from "./Fact"
 import Pricing from "./Pricing"
 import ClientSay from "./ClientSay"
-import { Testimonial } from "../../../../types/profile"
+import {
+  AboutSectionProps,
+  ClientType,
+  PricingPlanType,
+  ServiceType,
+  TestimonialType,
+} from "../../../../types/profile"
 import MyClients from "./MyClients"
 import SectionHeading from "../../SectionHeading"
 
-const AboutSection = () => {
+const AboutSection: React.FC<AboutSectionProps> = (
+  props: AboutSectionProps
+) => {
   const secondaryColor = useColorModeValue("#f7b733", "#00c6ff")
   const headingColor = useColorModeValue("gray.800", "gray.50")
   const grayBackground = useColorModeValue("blue.50", "gray.700")
-
-  const testimonials: Testimonial[] | null = [
-    {
-      body: "Hi Lorem ipsum dolor sit amet consectetur adipisicing elit. Dictarecusandae itaque sed praesentium sunt vero ab, libero quae eumaut quod atque velit suscipit aliquid ea voluptatem doloresbeatae facilis?",
-      name: "Sandip Sadhukhan",
-      position: "Full Stack Developer",
-      userImage: "/avatar-1.jpg",
-      star: 4,
-    },
-    {
-      body: "Hello Lorem ipsum dolor sit amet consectetur adipisicing elit. Dictarecusandae itaque sed praesentium sunt vero ab, libero quae eumaut quod atque velit suscipit aliquid ea voluptatem doloresbeatae facilis?",
-      name: "Dark Looter",
-      position: "UI/UX Developer",
-      userImage: "/avatar-1.jpg",
-      star: 2,
-    },
-    {
-      body: "Hm Lorem ipsum dolor sit amet consectetur adipisicing elit. Dictarecusandae itaque sed praesentium sunt vero ab, libero quae eumaut quod atque velit suscipit aliquid ea voluptatem doloresbeatae facilis?",
-      name: "James Bond",
-      position: "Frontend Developer",
-      userImage: "/avatar-1.jpg",
-      star: 1,
-    },
-    {
-      body: "Nice Lorem ipsum dolor sit amet consectetur adipisicing elit. Dictarecusandae itaque sed praesentium sunt vero ab, libero quae eumaut quod atque velit suscipit aliquid ea voluptatem doloresbeatae facilis?",
-      name: "Tom and jerry",
-      position: "Cartoon Developer",
-      userImage: "/avatar-1.jpg",
-      star: 5,
-    },
-    {
-      body: "Stupid Lorem ipsum dolor sit amet consectetur adipisicing elit. Dictarecusandae itaque sed praesentium sunt vero ab, libero quae eumaut quod atque velit suscipit aliquid ea voluptatem doloresbeatae facilis?",
-      name: "Prince of Persia",
-      position: "Sr Dev",
-      userImage: "/avatar-1.jpg",
-      star: 1,
-    },
-  ]
 
   return (
     <VStack
@@ -69,31 +39,69 @@ const AboutSection = () => {
       />
 
       {/* Name Description & Image */}
-      <Hero secondaryColor={secondaryColor} headingColor={headingColor} />
+      <Hero
+        secondaryColor={secondaryColor}
+        headingColor={headingColor}
+        name={props.name}
+        about_me_image={props.about_me_image}
+        nationality={props.nationality}
+        about_me={props.about_me}
+        experience={props.experience}
+        meetings={props.meetings}
+        projects={props.projects}
+      />
 
       {/* Services */}
-      <Service grayBackground={grayBackground} />
+      {props.display_services === true ? (
+        <Service
+          grayBackground={grayBackground}
+          services={props.services as ServiceType[]}
+        />
+      ) : null}
 
       {/* Why Hire me */}
-      <Hireme />
+      <Hireme
+        why_hire_me={props.why_hire_me}
+        video_description={props.video_description}
+      />
 
       {/* Facts */}
-      <Fact grayBackground={grayBackground} secondaryColor={secondaryColor} />
-
-      {/* Pricing Plans */}
-      <Pricing headingColor={headingColor} secondaryColor={secondaryColor} />
-
-      {/* Client Say */}
-      {testimonials && (
-        <ClientSay
-          testimonials={testimonials}
+      {props.display_fun_facts === true ? (
+        <Fact
+          happy_clients={props.happy_clients}
+          experience={props.experience}
+          awards_won={props.awards_won}
+          meetings={props.meetings}
           grayBackground={grayBackground}
           secondaryColor={secondaryColor}
         />
-      )}
+      ) : null}
+
+      {/* Pricing Plans */}
+      {props.display_pricing_plans === true ? (
+        <Pricing
+          headingColor={headingColor}
+          secondaryColor={secondaryColor}
+          pricing_plans={props.pricing_plans as PricingPlanType[]}
+        />
+      ) : null}
+
+      {/* Client Say */}
+      {props.display_testimonials === true ? (
+        <ClientSay
+          testimonials={props.testimonials as TestimonialType[]}
+          grayBackground={grayBackground}
+          secondaryColor={secondaryColor}
+        />
+      ) : null}
 
       {/* My Clients */}
-      <MyClients grayBackground={grayBackground} />
+      {props.display_clients === true ? (
+        <MyClients
+          grayBackground={grayBackground}
+          clients={props.clients as ClientType[]}
+        />
+      ) : null}
     </VStack>
   )
 }

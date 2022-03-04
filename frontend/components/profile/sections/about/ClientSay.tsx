@@ -1,12 +1,12 @@
 import { Box, Flex, Heading, HStack, Text, VStack } from "@chakra-ui/react"
 import React, { useState } from "react"
-import { Testimonial, Testimonials } from "../../../../types/profile"
+import { Testimonials, TestimonialType } from "../../../../types/profile"
 import TestimonialBox from "./TestimonialBox"
 
 interface Props {
   grayBackground: string
   secondaryColor: string
-  testimonials: Testimonial[]
+  testimonials: TestimonialType[]
 }
 
 const ClientSay = (props: Props) => {

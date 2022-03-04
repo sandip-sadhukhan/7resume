@@ -8,17 +8,27 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import React from "react"
+import { PricingPlanType } from "../../../../types/profile"
 
-interface Props {
-  imageURL: string
-  title: string
+interface PricingBoxProps extends PricingPlanType {
   headingColor: string
-  features: string[]
   secondaryColor: string
-  specialPrice?: string
 }
 
-const PricingBox = (props: Props) => {
+const PricingBox: React.FC<PricingBoxProps> = (props: PricingBoxProps) => {
+  const {
+    headingColor,
+    secondaryColor,
+    plan_name,
+    plan_price,
+    price_duration,
+    plan_currency,
+    is_featured,
+    feature_comment,
+    features,
+    plan_icon_path,
+  } = props
+
   return (
     <VStack
       flex={1}
@@ -31,50 +41,51 @@ const PricingBox = (props: Props) => {
       rounded="2xl"
       w="full"
     >
-      {props.specialPrice ? (
+      {is_featured ? (
         <Box
-          bgColor={props.secondaryColor}
+          bgColor={secondaryColor}
           px={16}
           py={2}
           mb={2}
           clipPath="polygon(100% 0, 90% 50%, 100% 100%, 0% 100%, 10% 50%, 0 0)"
         >
           <Text color="white" fontWeight={700}>
-            {props.specialPrice}
+            {feature_comment}
           </Text>
         </Box>
       ) : null}
-      <Avatar size="2xl" src={props.imageURL} />
+      <Avatar
+        size="2xl"
+        src={`${process.env.NEXT_PUBLIC_BASE_API_URL}${plan_icon_path}`}
+      />
       <Heading py={10} as="h4" size="lg" textTransform="uppercase">
-        {props.title}
+        {plan_name}
       </Heading>
-      {props.features.map((feature, index) => (
-        <Text key={index} color={props.headingColor}>
-          {feature}
-        </Text>
-      ))}
+      <Text style={{ whiteSpace: "pre-wrap" }} color={headingColor}>
+        {features}
+      </Text>
       <Flex alignItems="baseline" pb={5}>
-        <Text color={props.secondaryColor} fontWeight={500} fontSize="20">
-          $
+        <Text color={secondaryColor} fontWeight={500} fontSize="20">
+          {plan_currency}
         </Text>
         <Text
           me={2}
           ms={1}
           fontWeight={500}
           fontSize="50"
-          color={props.secondaryColor}
+          color={secondaryColor}
         >
-          99
+          {plan_price}
         </Text>
         <Flex>
-          <Text fontSize={18}>/ Per Month</Text>
+          <Text fontSize={18}>/ {price_duration}</Text>
         </Flex>
       </Flex>
       <Button
         as="a"
         href="#"
         color="#fff"
-        bgColor={props.secondaryColor}
+        bgColor={secondaryColor}
         rounded="full"
       >
         Hire Me

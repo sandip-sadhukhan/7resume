@@ -10,7 +10,14 @@ import {
 import React from "react"
 import { BsFillPlayFill } from "react-icons/bs"
 
-const Hireme = () => {
+interface HireMeProps {
+  why_hire_me: string
+  video_description: string
+}
+
+const Hireme: React.FC<HireMeProps> = (props: HireMeProps) => {
+  const { why_hire_me, video_description } = props
+
   const hireMeGradient = useColorModeValue(
     "linear(to-l, rgba(230,173,125, 1), rgba(248,143,56, 1))",
     "linear(to-r, #0072ff, #00c6ff)"
@@ -34,8 +41,8 @@ const Hireme = () => {
             >
               Why you hire me?
             </Heading>
-            <Heading color="white">
-              I&apos;M THE BEST FRONT END EXPERT IN THE MARKETPLACE
+            <Heading color="white" textTransform="uppercase">
+              {why_hire_me}
             </Heading>
           </VStack>
           <Center flex={2}>
@@ -45,7 +52,7 @@ const Hireme = () => {
               h="100px"
               shadow="2xl"
               as="a"
-              href="https://www.youtube.com/watch?v=NtfbWkxJTHw"
+              href={video_description}
               target="_blank"
             >
               <BsFillPlayFill fontSize={50} />

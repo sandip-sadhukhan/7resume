@@ -54,16 +54,17 @@ class UserProfile(BaseModel):
 
     # General Settings
     # Display Sections
+    display_resume = models.BooleanField(default=True)
+    display_portfolio = models.BooleanField(default=True)
     display_blog = models.BooleanField(default=True)
+    display_appointments = models.BooleanField(default=True)
+    # display part
+    display_services = models.BooleanField(default=True)
+    display_fun_facts = models.BooleanField(default=True)
+    display_pricing_plans = models.BooleanField(default=True)
+    display_testimonials = models.BooleanField(default=True)
     display_clients = models.BooleanField(default=True)
     display_contact_form = models.BooleanField(default=True)
-    display_portfolio = models.BooleanField(default=True)
-    display_resume = models.BooleanField(default=True)
-    display_services = models.BooleanField(default=True)
-    display_testimonial = models.BooleanField(default=True)
-    display_fun_facts = models.BooleanField(default=True)
-    display_appointments = models.BooleanField(default=True)
-    display_pricing_plans = models.BooleanField(default=True)
     # Blog Page widgets appearance
     blog_allow_search_box = models.BooleanField(default=True)
     blog_allow_categories = models.BooleanField(default=True)
@@ -87,7 +88,13 @@ class UserProfile(BaseModel):
     )
     nationality = models.CharField(max_length=50, blank=True)
     about_me = models.TextField(blank=True)
-    my_positions = models.TextField(blank=True)
+    my_positions = models.TextField(
+        default="Developer\r\nHacker\r\nUI/UX Designer"
+    )
+    why_hire_me = models.CharField(
+        max_length=500,
+        default="I'm the best developer in the marketplace",
+    )
     video_description = models.CharField(max_length=100, blank=True)
     resume = models.FileField(upload_to="resume/", blank=True)
     # Contact Information
@@ -171,6 +178,10 @@ class PricingPlan(BaseModel):
         upload_to="plan-icons/",
         default="plan-icons/default.png",
     )
+
+    @property
+    def plan_icon_path(self):
+        return f"/media/{self.plan_icon.name}"
 
     def __str__(self):
         return str(self.plan_name)
@@ -352,6 +363,10 @@ class Testimonial(BaseModel):
     rating = models.IntegerField(default=5)
     message = models.TextField()
 
+    @property
+    def image_path(self):
+        return f"/media/{self.image.name}"
+
     def __str__(self):
         return str(self.name)
 
@@ -366,6 +381,10 @@ class Client(BaseModel):
     image = models.ImageField(
         upload_to="client_images/",
     )
+
+    @property
+    def image_path(self):
+        return f"/media/{self.image.name}"
 
     def __str__(self):
         return str(self.name)

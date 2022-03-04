@@ -13,7 +13,12 @@ const ServiceBox = (props: Props) => {
       spacing={[0, 0, 0, 4, 4]}
       flexDir={["column", "column", "column", "row", "row"]}
     >
-      <Avatar src={props.imageURL} size="lg" shadow="lg" alignSelf="start" />
+      <Avatar
+        src={`${process.env.NEXT_PUBLIC_BASE_API_URL}${props.imageURL}`}
+        size="lg"
+        shadow="lg"
+        alignSelf="start"
+      />
       <VStack
         align="start"
         flexDir={["column", "column", "column", "column", "column"]}

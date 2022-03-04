@@ -8,10 +8,24 @@ class UserAccountAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = UserAccount
-    list_display = ("name", "email", "is_staff", "is_active", "is_superuser")
-    list_filter = ("name", "email", "is_staff", "is_active", "is_superuser")
+    list_display = (
+        "username",
+        "name",
+        "email",
+        "is_staff",
+        "is_active",
+        "is_superuser",
+    )
+    list_filter = (
+        "username",
+        "name",
+        "email",
+        "is_staff",
+        "is_active",
+        "is_superuser",
+    )
     fieldsets = (
-        (None, {"fields": ("name", "email", "password")}),
+        (None, {"fields": ("username", "name", "email", "password")}),
         ("Permissions", {"fields": ("is_staff", "is_active", "is_superuser")}),
     )
     add_fieldsets = (
@@ -20,6 +34,7 @@ class UserAccountAdmin(UserAdmin):
             {
                 "classes": ("wide",),
                 "fields": (
+                    "username",
                     "name",
                     "email",
                     "password1",
@@ -32,10 +47,11 @@ class UserAccountAdmin(UserAdmin):
         ),
     )
     search_fields = (
+        "username",
         "name",
         "email",
     )
-    ordering = ("name",)
+    ordering = ("username",)
 
 
 admin.site.register(UserAccount, UserAccountAdmin)

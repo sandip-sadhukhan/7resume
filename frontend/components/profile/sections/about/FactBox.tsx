@@ -6,7 +6,7 @@ interface Props {
   grayBackground: string
   secondaryColor: string
   primaryText: string
-  secondaryText: string
+  secondaryText: number
   icon: IconType
 }
 

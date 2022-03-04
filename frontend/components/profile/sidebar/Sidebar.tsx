@@ -22,8 +22,9 @@ import { FaUserTie, FaBloggerB } from "react-icons/fa"
 import Typed from "react-typed"
 import NavItem from "./NavItem"
 import { useRouter } from "next/router"
+import { SidebarProps } from "../../../types/profile"
 
-const Sidebar = () => {
+const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
   const { pathname, query } = useRouter()
   const username = query.username as string
 
@@ -61,7 +62,7 @@ const Sidebar = () => {
       <Flex w="full" flexDir="column" align="center" zIndex={10} pt={100}>
         <Avatar
           size="xl"
-          src="/avatar-1.jpg"
+          src={`${process.env.NEXT_PUBLIC_BASE_API_URL}${props.profile_picture}`}
           border={`8px solid ${colorMode === "light" ? "#F98127" : "#009BFF"}`}
         />
         <Heading
@@ -71,11 +72,11 @@ const Sidebar = () => {
           textTransform="uppercase"
           fontWeight={600}
         >
-          Sandip Sadhukhan
+          {props.name}
         </Heading>
         <Text mt={2}>
           <Typed
-            strings={["Programmer", "Developer", "Engineer"]}
+            strings={props.my_positions.split("\r\n")}
             typeSpeed={70}
             loop
           />
@@ -91,6 +92,7 @@ const Sidebar = () => {
               bgColor={colorMode === "light" ? "gray.200" : "gray.800"}
               mt={3}
               aria-label="toggle color mode"
+              rounded="full"
               icon={
                 colorMode === "light" ? (
                   <MdNightlight color="gray.800" />
@@ -119,30 +121,36 @@ const Sidebar = () => {
           secondaryColor={secondaryColor}
           active={pathname === "/[username]/about-me"}
         />
-        <NavItem
-          title="Resume"
-          NavIcon={AiOutlineFilePdf}
-          hoverColor={hoverColor}
-          link={`/${username}/resume`}
-          secondaryColor={secondaryColor}
-          active={pathname === "/[username]/resume"}
-        />
-        <NavItem
-          title="Portfolio"
-          NavIcon={BsFileEarmarkPostFill}
-          hoverColor={hoverColor}
-          link={`/${username}/portfolio`}
-          secondaryColor={secondaryColor}
-          active={pathname.startsWith("/[username]/portfolio")}
-        />
-        <NavItem
-          title="Blog"
-          NavIcon={FaBloggerB}
-          hoverColor={hoverColor}
-          link={`/${username}/blog`}
-          secondaryColor={secondaryColor}
-          active={pathname.startsWith("/[username]/blog")}
-        />
+        {props.display_resume ? (
+          <NavItem
+            title="Resume"
+            NavIcon={AiOutlineFilePdf}
+            hoverColor={hoverColor}
+            link={`/${username}/resume`}
+            secondaryColor={secondaryColor}
+            active={pathname === "/[username]/resume"}
+          />
+        ) : null}
+        {props.display_portfolio ? (
+          <NavItem
+            title="Portfolio"
+            NavIcon={BsFileEarmarkPostFill}
+            hoverColor={hoverColor}
+            link={`/${username}/portfolio`}
+            secondaryColor={secondaryColor}
+            active={pathname.startsWith("/[username]/portfolio")}
+          />
+        ) : null}
+        {props.display_blog ? (
+          <NavItem
+            title="Blog"
+            NavIcon={FaBloggerB}
+            hoverColor={hoverColor}
+            link={`/${username}/blog`}
+            secondaryColor={secondaryColor}
+            active={pathname.startsWith("/[username]/blog")}
+          />
+        ) : null}
         <NavItem
           title="Contact Me"
           NavIcon={AiFillContacts}
@@ -151,14 +159,16 @@ const Sidebar = () => {
           secondaryColor={secondaryColor}
           active={pathname === "/[username]/contact-me"}
         />
-        <NavItem
-          title="Appointments"
-          NavIcon={BsFillCalendarDateFill}
-          hoverColor={hoverColor}
-          link={`/${username}/appointments`}
-          secondaryColor={secondaryColor}
-          active={pathname === "/[username]/appointments"}
-        />
+        {props.display_appointments ? (
+          <NavItem
+            title="Appointments"
+            NavIcon={BsFillCalendarDateFill}
+            hoverColor={hoverColor}
+            link={`/${username}/appointments`}
+            secondaryColor={secondaryColor}
+            active={pathname === "/[username]/appointments"}
+          />
+        ) : null}
       </Flex>
     </VStack>
   )

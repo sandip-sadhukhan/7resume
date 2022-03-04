@@ -14,12 +14,15 @@ import Typed from "react-typed"
 import { useRouter } from "next/router"
 import Link from "next/link"
 
-interface Props {
+interface HomeSectionProps {
   name: string
   professionList: string[]
 }
 
-const HomeSection = ({ name, professionList }: Props) => {
+const HomeSection: React.FC<HomeSectionProps> = ({
+  name,
+  professionList,
+}: HomeSectionProps) => {
   const username = useRouter().query.username as string
   const secondaryColor = useColorModeValue("#f7b733", "#00c6ff")
 

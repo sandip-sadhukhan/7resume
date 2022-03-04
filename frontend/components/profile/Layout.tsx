@@ -10,14 +10,16 @@ import {
   DrawerContent,
   DrawerBody,
   DrawerOverlay,
-  DrawerCloseButton,
 } from "@chakra-ui/react"
 import Sidebar from "./sidebar/Sidebar"
 import MobileSidebar from "./sidebar/MobileSidebar"
 import { MdMenu } from "react-icons/md"
 import React from "react"
+import { LayoutProps } from "../../types/profile"
+import Head from "next/head"
 
 interface Props {
+  layoutProps: LayoutProps
   children: JSX.Element
 }
 
@@ -28,6 +30,18 @@ const Layout = (props: Props) => {
 
   return (
     <>
+      <Head>
+        <title>{props.layoutProps.site_title}</title>
+        <meta charSet="UTF-8" />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="description" content={props.layoutProps.meta_description} />
+        <link
+          rel="icon"
+          type="image/png"
+          href={`${process.env.NEXT_PUBLIC_BASE_API_URL}${props.layoutProps.favicon}`}
+        />
+      </Head>
       <HStack w="100vw" h="100vh" overflowX="hidden" align="start" spacing={0}>
         <VStack
           w="290px"
@@ -36,7 +50,15 @@ const Layout = (props: Props) => {
           pos="sticky"
           top={0}
         >
-          <Sidebar />
+          <Sidebar
+            name={props.layoutProps.name}
+            profile_picture={props.layoutProps.profile_picture}
+            my_positions={props.layoutProps.my_positions}
+            display_resume={props.layoutProps.display_resume}
+            display_portfolio={props.layoutProps.display_portfolio}
+            display_blog={props.layoutProps.display_blog}
+            display_appointments={props.layoutProps.display_appointments}
+          />
         </VStack>
         <VStack flex={1} minH="100vh" p={0} m={0} spacing={0}>
           <Flex
@@ -81,11 +103,19 @@ const Layout = (props: Props) => {
         onOverlayClick={onClose}
         size="full"
       >
-        <DrawerCloseButton />
         <DrawerOverlay />
         <DrawerContent w="full">
           <DrawerBody w="full" overflow="hidden">
-            <MobileSidebar onClose={onClose} />
+            <MobileSidebar
+              name={props.layoutProps.name}
+              profile_picture={props.layoutProps.profile_picture}
+              my_positions={props.layoutProps.my_positions}
+              display_resume={props.layoutProps.display_resume}
+              display_portfolio={props.layoutProps.display_portfolio}
+              display_blog={props.layoutProps.display_blog}
+              display_appointments={props.layoutProps.display_appointments}
+              onClose={onClose}
+            />
           </DrawerBody>
         </DrawerContent>
       </Drawer>

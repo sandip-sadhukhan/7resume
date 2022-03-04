@@ -11,10 +11,10 @@ import {
 import React from "react"
 import { AiFillStar } from "react-icons/ai"
 import { FaQuoteLeft } from "react-icons/fa"
-import { Testimonial } from "../../../../types/profile"
+import { TestimonialType } from "../../../../types/profile"
 
 interface Props {
-  testimonial: Testimonial
+  testimonial: TestimonialType
   secondaryColor: string
   grayBackground: string
 }
@@ -40,12 +40,15 @@ const TestimonialBox = (props: Props) => {
             color={props.secondaryColor}
           />
           <Text textAlign="justify" pt={5}>
-            {props.testimonial.body}
+            {props.testimonial.message}
           </Text>
         </HStack>
       </Box>
       <HStack spacing={3}>
-        <Avatar size="lg" src={props.testimonial.userImage} />
+        <Avatar
+          size="lg"
+          src={`${process.env.NEXT_PUBLIC_BASE_API_URL}${props.testimonial.image_path}`}
+        />
         <VStack align="start">
           <Text fontWeight={600} mb={-2}>
             {props.testimonial.name}
@@ -54,35 +57,35 @@ const TestimonialBox = (props: Props) => {
           <Flex>
             <AiFillStar
               color={
-                props.testimonial.star in [1, 2, 3, 4, 5]
+                props.testimonial.rating in [1, 2, 3, 4, 5]
                   ? props.secondaryColor
                   : props.grayBackground
               }
             />
             <AiFillStar
               color={
-                props.testimonial.star in [2, 3, 4, 5]
+                props.testimonial.rating in [2, 3, 4, 5]
                   ? props.secondaryColor
                   : props.grayBackground
               }
             />
             <AiFillStar
               color={
-                props.testimonial.star in [3, 4, 5]
+                props.testimonial.rating in [3, 4, 5]
                   ? props.secondaryColor
                   : props.grayBackground
               }
             />
             <AiFillStar
               color={
-                props.testimonial.star in [4, 5]
+                props.testimonial.rating in [4, 5]
                   ? props.secondaryColor
                   : props.grayBackground
               }
             />
             <AiFillStar
               color={
-                props.testimonial.star == 5
+                props.testimonial.rating === 5
                   ? props.secondaryColor
                   : props.grayBackground
               }

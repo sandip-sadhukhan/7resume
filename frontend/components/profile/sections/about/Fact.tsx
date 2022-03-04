@@ -8,6 +8,10 @@ import FactBox from "./FactBox"
 interface Props {
   grayBackground: string
   secondaryColor: string
+  happy_clients: number
+  experience: number
+  awards_won: number
+  meetings: number
 }
 
 const Fact = (props: Props) => {
@@ -27,28 +31,28 @@ const Fact = (props: Props) => {
           grayBackground={props.grayBackground}
           secondaryColor={props.secondaryColor}
           primaryText="Happy Clients"
-          secondaryText="1200"
+          secondaryText={props.happy_clients}
           icon={BsEmojiSmile}
         />
         <FactBox
           grayBackground={props.grayBackground}
           secondaryColor={props.secondaryColor}
           primaryText="Experience Years"
-          secondaryText="5"
+          secondaryText={props.experience}
           icon={BiBulb}
         />
         <FactBox
           grayBackground={props.grayBackground}
           secondaryColor={props.secondaryColor}
           primaryText="Awards Won"
-          secondaryText="22"
+          secondaryText={props.awards_won}
           icon={BiTrophy}
         />
         <FactBox
           grayBackground={props.grayBackground}
           secondaryColor={props.secondaryColor}
           primaryText="Meetings"
-          secondaryText="120"
+          secondaryText={props.meetings}
           icon={FiCoffee}
         />
       </HStack>
