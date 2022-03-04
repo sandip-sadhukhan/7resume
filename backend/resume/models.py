@@ -99,8 +99,7 @@ class UserProfile(BaseModel):
     resume = models.FileField(upload_to="resume/", blank=True)
     # Contact Information
     address = models.TextField(blank=True)
-    latitude = models.FloatField(default=28.7041)
-    longitude = models.FloatField(default=77.1025)
+    gmap_iframe = models.CharField(max_length=2000, blank=True)
     phone = models.TextField(blank=True)
     email = models.TextField(blank=True)
     # Statictics
@@ -135,9 +134,6 @@ class UserProfile(BaseModel):
 
     def __str__(self):
         return str(self.user.email)
-
-
-# <iframe src = "https://maps.google.com/maps?q=10.305385,77.923029&hl=es;z=14&amp;output=embed"></iframe>
 
 
 class Service(BaseModel):

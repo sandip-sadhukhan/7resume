@@ -94,3 +94,38 @@ export interface ClientType {
   name: string
   image_path: string
 }
+
+export interface ContactMeSectionProps {
+  display_contact_form: boolean
+  contact_form_image: string
+  phone: string
+  email: string
+  address: string
+  gmap_iframe: string
+  follow_me: FollowMeType
+}
+
+export interface FollowMeType {
+  facebook: string
+  twitter: string
+  instagram: string
+  whatsapp: string
+  youtube: string
+  linkedin: string
+  snapchat: string
+  github: string
+  pinterest: string
+  reddit: string
+  stackoverflow: string
+  behance: string
+  skype: string
+  vimeo: string
+  codepen: string
+  dribble: string
+  dropbox: string
+  flickr: string
+  rss: string
+  soundcloud: string
+  tumblr: string
+  yelp: string
+}

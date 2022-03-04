@@ -1,7 +1,8 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status, permissions
+from rest_framework import status, permissions, serializers
 from accounts.models import UserAccount
+from .models import Message
 from .selectors import (
     getAboutMeSectionData,
     getContactMeSectionData,
@@ -91,3 +92,39 @@ class ContactMeProfilePageView(APIView):
         }
 
         return Response(data)
+
+
+# Contact Me form submit
+class ContactMessageSend(APIView):
+    class MessageSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Message
+            fields = ("name", "email", "message")
+
+    def post(self, request, username, format=None):
+        try:
+            user = UserAccount.objects.get(username=username)
+        except UserAccount.DoesNotExist:
+            return Response(
+                {
+                    "success": False,
+                    "error": "Username not exists",
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        serializer = self.MessageSerializer(data=request.data)
+        if serializer.is_valid():
+            Message.objects.create(
+                user_profile=user.user_profile,
+                name=serializer.data["name"],
+                email=serializer.data["email"],
+                message=serializer.data["message"],
+            )
+            return Response(
+                {"success": True, "message": "Message Sent Successfully!"}
+            )
+        else:
+            return Response(
+                serializer.errors, status=status.HTTP_400_BAD_REQUEST
+            )

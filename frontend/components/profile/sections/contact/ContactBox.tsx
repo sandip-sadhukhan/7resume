@@ -6,8 +6,7 @@ interface Props {
   secondaryColor: string
   icon: IconType
   title: string
-  primaryText: string
-  secondaryText: string
+  description: string
 }
 
 const ContactBox = (props: Props) => {
@@ -28,11 +27,11 @@ const ContactBox = (props: Props) => {
         <Text fontSize={20} fontWeight={600}>
           {props.title}
         </Text>
-        <Text color={useColorModeValue("gray.600", "gray.300")}>
-          {props.primaryText}
-        </Text>
-        <Text color={useColorModeValue("gray.600", "gray.300")}>
-          {props.secondaryText}
+        <Text
+          color={useColorModeValue("gray.600", "gray.300")}
+          whiteSpace="pre-wrap"
+        >
+          {props.description}
         </Text>
       </VStack>
     </HStack>

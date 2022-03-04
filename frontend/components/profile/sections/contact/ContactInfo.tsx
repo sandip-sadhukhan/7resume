@@ -8,6 +8,9 @@ import ContactBox from "./ContactBox"
 interface Props {
   grayBackground: string
   secondaryColor: string
+  phone: string
+  email: string
+  address: string
 }
 
 const ContactInfo = (props: Props) => {
@@ -27,22 +30,19 @@ const ContactInfo = (props: Props) => {
             secondaryColor={props.secondaryColor}
             icon={MdCall}
             title="Phone"
-            primaryText="(+91) 9999999999"
-            secondaryText="(+91) 9999999999"
+            description={props.phone}
           />
           <ContactBox
             secondaryColor={props.secondaryColor}
             icon={FiMail}
             title="Email"
-            primaryText="info@domain.com"
-            secondaryText="name@domain.com"
+            description={props.email}
           />
           <ContactBox
             secondaryColor={props.secondaryColor}
             icon={RiMapPin2Fill}
             title="Address"
-            primaryText="123 Barjora Road"
-            secondaryText="West Bengal, India"
+            description={props.address}
           />
         </HStack>
       </Box>

@@ -1,15 +1,30 @@
 import { useColorModeValue, VStack } from "@chakra-ui/react"
 import React from "react"
+import { ContactMeSectionProps } from "../../../../types/profile"
 import SectionHeading from "../../SectionHeading"
 import ContactInfo from "./ContactInfo"
 import FollowMe from "./FollowMe"
 import Hero from "./Hero"
 import MapBox from "./MapBox"
 
-const Contact = () => {
+const Contact: React.FC<ContactMeSectionProps> = (
+  props: ContactMeSectionProps
+) => {
   const secondaryColor = useColorModeValue("#f7b733", "#00c6ff")
   const headingColor = useColorModeValue("gray.800", "gray.50")
   const grayBackground = useColorModeValue("blue.50", "gray.700")
+
+  const {
+    display_contact_form,
+    contact_form_image,
+    phone,
+    email,
+    address,
+    gmap_iframe,
+    follow_me,
+  } = props
+
+  console.log(gmap_iframe)
 
   return (
     <VStack
@@ -25,24 +40,30 @@ const Contact = () => {
         headingColor={headingColor}
         title="Contact Me"
       />
-
       {/* Hero Section */}
-      <Hero secondaryColor={secondaryColor} />
-
+      {display_contact_form ? (
+        <Hero
+          contact_form_image={contact_form_image}
+          secondaryColor={secondaryColor}
+        />
+      ) : null}
       {/* Contact Information */}
       <ContactInfo
         grayBackground={grayBackground}
         secondaryColor={secondaryColor}
+        phone={phone}
+        email={email}
+        address={address}
       />
-
       {/* Map */}
-      <MapBox url="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14645.741762490958!2d87.37156387948454!3d23.40863250614111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f777802e248979%3A0x561dfae64229340!2sPakhanna%2C%20West%20Bengal!5e0!3m2!1sen!2sin!4v1645368183188!5m2!1sen!2sin" />
+      {gmap_iframe && gmap_iframe !== "" ? <MapBox url={gmap_iframe} /> : null}
 
       {/* Follow Me */}
       <FollowMe
         grayBackground={grayBackground}
         headingColor={headingColor}
         secondaryColor={secondaryColor}
+        follow_me={follow_me}
       />
     </VStack>
   )
