@@ -1,5 +1,13 @@
 from rest_framework import serializers
-from .models import PricingPlan, Service, Testimonial, Client
+from .models import (
+    Education,
+    Experiences,
+    PricingPlan,
+    Service,
+    Skill,
+    Testimonial,
+    Client,
+)
 
 
 class ServiceSerializer(serializers.ModelSerializer):
@@ -49,4 +57,44 @@ class ClientSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "image_path",
+        )
+
+
+class ExperienceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Experiences
+        fields = (
+            "id",
+            "company",
+            "image_path",
+            "position",
+            "description",
+            "date_from",
+            "date_to",
+            "currently_working",
+        )
+
+
+class EducationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Education
+        fields = (
+            "id",
+            "school",
+            "image_path",
+            "field",
+            "description",
+            "date_from",
+            "date_to",
+            "currently_studying",
+        )
+
+
+class SkillSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Skill
+        fields = (
+            "id",
+            "title",
+            "level",
         )

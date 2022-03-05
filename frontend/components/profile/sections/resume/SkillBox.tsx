@@ -18,8 +18,8 @@ const SkillBox: React.FC<SkillBoxProps> = (props: SkillBoxProps) => {
         {title}
       </Heading>
       <VStack w="full" align="start" gap={2}>
-        {skills.map((skill, index) => (
-          <ProgressBar key={index} grayText={grayText} skill={skill} />
+        {skills.map((skill) => (
+          <ProgressBar key={skill.id} grayText={grayText} skill={skill} />
         ))}
       </VStack>
     </VStack>

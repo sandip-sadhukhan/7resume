@@ -18,4 +18,8 @@ urlpatterns = [
         "profile/<str:username>/contact-me/send/",
         apis.ContactMessageSend.as_view(),
     ),
+    path(
+        "profile/<str:username>/resume/",
+        apis.ResumeProfilePageView.as_view(),
+    ),
 ]

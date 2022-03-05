@@ -1,6 +1,6 @@
 import { Box, Flex, Heading, HStack, Text, VStack } from "@chakra-ui/react"
 import React, { useState } from "react"
-import { Testimonials, TestimonialType } from "../../../../types/profile"
+import { TestimonialsType, TestimonialType } from "../../../../types/profile"
 import TestimonialBox from "./TestimonialBox"
 
 interface Props {
@@ -10,10 +10,10 @@ interface Props {
 }
 
 const ClientSay = (props: Props) => {
-  const testimonials: Testimonials[] = []
+  const testimonials: TestimonialsType[] = []
 
   for (let i = 0; i < props.testimonials.length; i += 2) {
-    const _testimonials: Testimonials = {
+    const _testimonials: TestimonialsType = {
       first: props.testimonials[i],
       second: null,
     }

@@ -14,7 +14,7 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = str(config("ALLOWED_HOSTS")).split(" ")
 
 
 # Application definition
@@ -26,6 +26,7 @@ MY_APPS = [
 THIRD_PARTY_APPS = [
     "corsheaders",
     "rest_framework",
+    "drf_yasg",
 ]
 
 INSTALLED_APPS = [
@@ -132,3 +133,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Custom Model
 AUTH_USER_MODEL = "accounts.UserAccount"
+
+# Rest framework

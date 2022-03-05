@@ -194,8 +194,15 @@ class Education(BaseModel):
     image = models.ImageField(upload_to="educations/")
     description = models.TextField(blank=True)
     date_from = models.DateField()
-    date_to = models.DateField()
+    date_to = models.DateField(blank=True, null=True)
     currently_studying = models.BooleanField(default=False)
+
+    @property
+    def image_path(self):
+        return f"/media/{self.image.name}"
+
+    class Meta:
+        ordering = ("-date_from",)
 
     def __str__(self):
         return str(self.school)
@@ -212,8 +219,15 @@ class Experiences(BaseModel):
     position = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     date_from = models.DateField()
-    date_to = models.DateField()
+    date_to = models.DateField(blank=True, null=True)
     currently_working = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ("-date_from",)
+
+    @property
+    def image_path(self):
+        return f"/media/{self.image.name}"
 
     def __str__(self):
         return str(self.company)

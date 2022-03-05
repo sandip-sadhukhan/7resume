@@ -1,12 +1,15 @@
-# Get all the data required for layout in profile
 from .serializers import (
     ClientSerializer,
+    EducationSerializer,
+    ExperienceSerializer,
     PricingPlanSerializer,
     ServiceSerializer,
+    SkillSerializer,
     TestimonialSerializer,
 )
 
 
+# Get all the data required for layout in profile
 def getLayoutData(user):
     data = {
         # SEO
@@ -32,7 +35,8 @@ def getHomeSectionData(user):
         "section": {
             "name": user.name,
             "my_positions": user.user_profile.my_positions,
-            "start_page_background": f"/media/{user.user_profile.start_page_background.name}",
+            "start_page_background": "/media/"
+            + str(user.user_profile.start_page_background.name),
         },
     }
 
@@ -113,7 +117,8 @@ def getContactMeSectionData(user):
         "layout": getLayoutData(user),
         "section": {
             "display_contact_form": user.user_profile.display_contact_form,
-            "contact_form_image": f"/media/{user.user_profile.contact_form_image}",
+            "contact_form_image": "/media/"
+            + str(user.user_profile.contact_form_image),
             "phone": user.user_profile.phone,
             "email": user.user_profile.email,
             "address": user.user_profile.address,
@@ -144,6 +149,71 @@ def getContactMeSectionData(user):
                 "tumblr": user.user_profile.tumblr,
                 "yelp": user.user_profile.yelp,
             },
+        },
+    }
+
+    return data
+
+
+def getResumeSectionData(user):
+
+    # if resume is not displayed then don't add additional resources
+    if not user.user_profile.display_resume:
+        return {"display_resume": False, "layout": {}, "section": {}}
+
+    experiences = ExperienceSerializer(
+        instance=user.user_profile.experiences.all(),
+        many=True,
+    )
+
+    """
+    skills: [
+        {
+            "category": "Work Skills",
+            "skills": [
+                {
+                    "title": "PHP",
+                    "level": 80
+                },
+                {
+                    "title": "PHP",
+                    "level": 80
+                },
+                ..
+            ],
+            ...
+        }
+    ]
+    """
+    skillCategories = user.user_profile.skill_categories.all()
+    skills = []
+    for category in skillCategories:
+        serializer = SkillSerializer(instance=category.skills.all(), many=True)
+        skill = {
+            "category": category.title,
+            "skills": serializer.data,
+        }
+        skills.append(skill)
+
+    educations = EducationSerializer(
+        instance=user.user_profile.educations.all(),
+        many=True,
+    )
+
+    resume = user.user_profile.resume.name
+    if resume == "":
+        resume = None
+    else:
+        resume = f"/media/{resume}"
+
+    data = {
+        "display_resume": True,
+        "layout": getLayoutData(user),
+        "section": {
+            "resume": resume,
+            "experiences": experiences.data,
+            "skills_categories": skills,
+            "educations": educations.data,
         },
     }
 

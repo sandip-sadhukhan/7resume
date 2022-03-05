@@ -1,11 +1,6 @@
-export interface Testimonials {
+export interface TestimonialsType {
   first: TestimonialType
   second: TestimonialType | null
-}
-
-export interface SkillType {
-  name: string
-  value: number
 }
 
 export interface BreadcrumbType {
@@ -128,4 +123,44 @@ export interface FollowMeType {
   soundcloud: string
   tumblr: string
   yelp: string
+}
+
+export interface ResumeSectionProps {
+  resume: string | null
+  experiences: ExperienceType[]
+  skills_categories: SkillCategoryType[]
+  educations: EducationType[]
+}
+
+export interface ExperienceType {
+  id: number
+  company: string
+  image_path: string
+  position: string
+  description: string
+  date_from: string
+  date_to: string | null
+  currently_working: boolean
+}
+
+export interface SkillCategoryType {
+  category: string
+  skills: SkillType[]
+}
+
+export interface SkillType {
+  id: number
+  title: string
+  level: number
+}
+
+export interface EducationType {
+  id: number
+  school: string
+  image_path: string
+  field: string
+  description: string
+  date_from: string
+  date_to: string | null
+  currently_studying: boolean
 }

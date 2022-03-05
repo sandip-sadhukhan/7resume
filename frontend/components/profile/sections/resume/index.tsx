@@ -1,14 +1,20 @@
 import { useColorModeValue, VStack } from "@chakra-ui/react"
 import React from "react"
+import { ResumeSectionProps } from "../../../../types/profile"
 import SectionHeading from "../../SectionHeading"
-import History from "./History"
+import WorkHistory from "./WorkHistory"
 import SkillSection from "./SkillSection"
+import BackgroundHistory from "./BackgroundHistory"
 
-const ResumeSection: React.FC = () => {
+const ResumeSection: React.FC<ResumeSectionProps> = (
+  props: ResumeSectionProps
+) => {
   const secondaryColor = useColorModeValue("#f7b733", "#00c6ff")
   const headingColor = useColorModeValue("gray.800", "gray.50")
   const grayBackground = useColorModeValue("blue.50", "gray.700")
   const grayText = useColorModeValue("gray.600", "gray.300")
+
+  const { resume, educations, experiences, skills_categories } = props
 
   return (
     <VStack
@@ -26,24 +32,27 @@ const ResumeSection: React.FC = () => {
       />
 
       {/* Work History */}
-      <History
+      <WorkHistory
         grayBackground={grayBackground}
         grayText={grayText}
         secondaryColor={secondaryColor}
-        hasResume={true}
-        title="Work History"
+        resume={resume}
+        experiences={experiences}
       />
 
       {/* Skills */}
-      <SkillSection grayBackground={grayBackground} grayText={grayText} />
+      <SkillSection
+        skills_categories={skills_categories}
+        grayBackground={grayBackground}
+        grayText={grayText}
+      />
 
       {/* Background History */}
-      <History
+      <BackgroundHistory
         grayBackground={grayBackground}
         grayText={grayText}
         secondaryColor={secondaryColor}
-        hasResume={false}
-        title="Background History"
+        educations={educations}
       />
     </VStack>
   )
