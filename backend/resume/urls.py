@@ -22,4 +22,12 @@ urlpatterns = [
         "profile/<str:username>/resume/",
         apis.ResumeProfilePageView.as_view(),
     ),
+    path(
+        "profile/<str:username>/portfolio/",
+        apis.PortfolioProfilePageView.as_view(),
+    ),
+    path(
+        "profile/<str:username>/portfolio/<str:slug>/",
+        apis.PortfolioDetailProfilePageView.as_view(),
+    ),
 ]

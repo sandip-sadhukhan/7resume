@@ -21,7 +21,11 @@ const Project: React.FC<ProjectProps> = (props: ProjectProps) => {
     <VStack spacing={3}>
       <Link href={`/${username}/portfolio/${slug}`}>
         <a style={{ width: "100%", height: 350, position: "relative" }}>
-          <Image src={imageURL} alt="portfolio image" layout="fill" />
+          <Image
+            src={`${process.env.NEXT_PUBLIC_BASE_API_URL}${imageURL}`}
+            alt="portfolio image"
+            layout="fill"
+          />
         </a>
       </Link>
       <VStack spacing={0}>

@@ -164,3 +164,38 @@ export interface EducationType {
   date_to: string | null
   currently_studying: boolean
 }
+
+export interface PortfolioSectionProps {
+  categories: PortfolioCategoryType[]
+  portfolios: PortfolioGridType[]
+}
+
+export interface PortfolioCategoryType {
+  name: string
+  count: number
+}
+
+export interface PortfolioGridType {
+  id: number
+  category_name: string
+  title: string
+  slug: string
+  featured_image_path: string
+}
+
+export interface SinglePortfolioSectionProps {
+  portfolio: PortfolioType
+  related_projects: PortfolioGridType[]
+}
+
+export interface PortfolioType {
+  id: number
+  category_name: string
+  title: string
+  slug: string
+  link: string
+  published: string
+  featured_image_path: string
+  description: string
+  meta_description: string
+}

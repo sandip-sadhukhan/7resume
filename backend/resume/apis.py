@@ -3,11 +3,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status, permissions, serializers
 from accounts.models import UserAccount
-from .models import Message
+from .models import Message, Project
 from .selectors import (
     getAboutMeSectionData,
     getContactMeSectionData,
     getHomeSectionData,
+    getPortfolioDetailSectionData,
+    getPortfolioSectionData,
     getResumeSectionData,
 )
 
@@ -149,6 +151,59 @@ class ResumeProfilePageView(APIView):
         data = {
             "success": True,
             "data": getResumeSectionData(user),
+        }
+
+        return Response(data)
+
+
+# Portfolio Page
+class PortfolioProfilePageView(APIView):
+    def get(self, request: HttpRequest, username: str):
+        try:
+            user = UserAccount.objects.get(username=username)
+        except UserAccount.DoesNotExist:
+            return Response(
+                {
+                    "success": False,
+                    "error": "Username not exists",
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        data = {
+            "success": True,
+            "data": getPortfolioSectionData(user),
+        }
+
+        return Response(data)
+
+
+# Portfolio Page
+class PortfolioDetailProfilePageView(APIView):
+    def get(self, request: HttpRequest, username: str, slug: str):
+        try:
+            user = UserAccount.objects.get(username=username)
+            portfolio = Project.objects.get(slug=slug, display_project=True)
+        except UserAccount.DoesNotExist :
+            return Response(
+                {
+                    "success": False,
+                    "error": "Username not exists",
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except Project.DoesNotExist:
+            return Response(
+                {
+                    "success": False,
+                    "error": "Portfolio not exists",
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        data = {
+            "success": True,
+            "data": getPortfolioDetailSectionData(user, portfolio),
         }
 
         return Response(data)

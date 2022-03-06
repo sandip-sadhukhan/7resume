@@ -1,11 +1,14 @@
+from .models import Project
 from .serializers import (
     ClientSerializer,
     EducationSerializer,
     ExperienceSerializer,
     PricingPlanSerializer,
+    ProjectShortSerializer,
     ServiceSerializer,
     SkillSerializer,
     TestimonialSerializer,
+    ProjectSerializer,
 )
 
 
@@ -214,6 +217,71 @@ def getResumeSectionData(user):
             "experiences": experiences.data,
             "skills_categories": skills,
             "educations": educations.data,
+        },
+    }
+
+    return data
+
+
+def getPortfolioSectionData(user):
+
+    # if portfolio is not displayed then don't add additional resources
+    if not user.user_profile.display_portfolio:
+        return {"display_portfolio": False, "layout": {}, "section": {}}
+
+    portfolios = ProjectShortSerializer(
+        instance=user.user_profile.user_profile_projects.filter(
+            display_project=True
+        ),
+        many=True,
+    )
+
+    categories = [
+        {
+            "name": category.title,
+            "count": category.category_projects.filter(
+                display_project=True
+            ).count(),
+        }
+        for category in user.user_profile.project_categories.all()
+    ]
+
+    data = {
+        "display_portfolio": True,
+        "layout": getLayoutData(user),
+        "section": {
+            "categories": categories,
+            "portfolios": portfolios.data,
+        },
+    }
+
+    return data
+
+
+def getPortfolioDetailSectionData(user, portfolio):
+
+    # if portfolio is not displayed then don't add additional resources
+    if not user.user_profile.display_portfolio:
+        return {"display_portfolio": False, "layout": {}, "section": {}}
+
+    portfolioData = ProjectSerializer(instance=portfolio).data
+
+    category = portfolio.category
+    related_projects = Project.objects.filter(category=category).exclude(
+        id=portfolio.id
+    )
+    if related_projects.count() > 2:
+        related_projects = related_projects[:2]
+    related_projects_data = ProjectShortSerializer(
+        instance=related_projects, many=True
+    ).data
+
+    data = {
+        "display_portfolio": True,
+        "layout": getLayoutData(user),
+        "section": {
+            "portfolio": portfolioData,
+            "related_projects": related_projects_data,
         },
     }
 

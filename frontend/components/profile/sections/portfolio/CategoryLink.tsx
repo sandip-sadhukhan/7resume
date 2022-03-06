@@ -36,6 +36,7 @@ const CategoryLink: React.FC<CategoryLinkProps> = (
           <Text
             textAlign="center"
             color={active ? secondaryColor : headingColor}
+            _hover={{ color: active ? headingColor : secondaryColor }}
           >
             {categoryName}
           </Text>

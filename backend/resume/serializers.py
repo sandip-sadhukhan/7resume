@@ -3,6 +3,7 @@ from .models import (
     Education,
     Experiences,
     PricingPlan,
+    Project,
     Service,
     Skill,
     Testimonial,
@@ -97,4 +98,32 @@ class SkillSerializer(serializers.ModelSerializer):
             "id",
             "title",
             "level",
+        )
+
+
+class ProjectShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = (
+            "id",
+            "category_name",
+            "title",
+            "slug",
+            "featured_image_path",
+        )
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = (
+            "id",
+            "category_name",
+            "title",
+            "slug",
+            "link",
+            "published",
+            "featured_image_path",
+            "description",
+            "meta_description",
         )

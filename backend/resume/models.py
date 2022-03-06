@@ -259,6 +259,12 @@ class Project(BaseModel):
         null=True,
     )
     title = models.CharField(max_length=200)
+    slug = models.SlugField(
+        max_length=250,
+        null=True,
+        blank=True,
+    )
+
     link = models.URLField(
         max_length=500,
         blank=True,
@@ -269,6 +275,17 @@ class Project(BaseModel):
     )
     description = models.TextField()  # markdown field
     meta_description = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ("-published",)
+
+    @property
+    def category_name(self):
+        return self.category.title
+
+    @property
+    def featured_image_path(self):
+        return f"/media/{self.featured_image.name}"
 
     def __str__(self):
         return str(self.title)
@@ -313,6 +330,11 @@ class Blog(BaseModel):
         null=True,
     )
     title = models.CharField(max_length=200)
+    slug = models.SlugField(
+        max_length=250,
+        null=True,
+        blank=True,
+    )
     short_description = models.TextField()
     description = models.TextField()  # markdown field
     featured_image = models.ImageField(

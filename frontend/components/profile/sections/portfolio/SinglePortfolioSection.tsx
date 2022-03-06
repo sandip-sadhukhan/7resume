@@ -7,17 +7,34 @@ import {
   VStack,
   Image,
 } from "@chakra-ui/react"
+import Head from "next/head"
+import dayjs from "dayjs"
 import { useRouter } from "next/router"
 import React from "react"
 import { FaFacebookF, FaPinterestP, FaTwitter } from "react-icons/fa"
-import { BreadcrumbType } from "../../../../types/profile"
+import {
+  BreadcrumbType,
+  SinglePortfolioSectionProps,
+} from "../../../../types/profile"
 import HeadingBreadcrumb from "./HeadingBreadcrumb"
 import Project from "./Project"
 
-const SinglePortfolioSection = () => {
+const SinglePortfolioSection: React.FC<SinglePortfolioSectionProps> = (
+  props: SinglePortfolioSectionProps
+) => {
   const router = useRouter()
   const username = router.query.username as string
-  const slug = router.query.slug as string
+
+  const {
+    slug,
+    category_name,
+    title,
+    description,
+    featured_image_path,
+    link,
+    meta_description,
+    published,
+  } = props.portfolio
 
   const secondaryColor = useColorModeValue("#f7b733", "#00c6ff")
   const transparentSecondaryColor = useColorModeValue(
@@ -28,12 +45,12 @@ const SinglePortfolioSection = () => {
 
   const portfolioBreadCrumbList: BreadcrumbType[] = [
     {
-      text: "Portfolio",
-      link: `/${username}/portfolio`,
+      text: category_name,
+      link: `/${username}/category/${category_name}`,
     },
     {
-      text: "Office Decoration",
-      link: `/${username}/portfolio/${slug}`,
+      text: title,
+      link: `/${username}/${slug}`,
     },
   ]
 
@@ -45,6 +62,10 @@ const SinglePortfolioSection = () => {
       px={[5, 5, 5, 16, 16]}
       w={["95%", "95%", "95%", "full", "full"]}
     >
+      <Head>
+        <title>{title}</title>
+        <meta name="description" content={meta_description} />
+      </Head>
       {/* Heading & Breadcrumb */}
       <HeadingBreadcrumb
         grayBackground={grayBackground}
@@ -64,7 +85,7 @@ const SinglePortfolioSection = () => {
         >
           <Image
             w="100%"
-            src="/portfolio-img.jpeg"
+            src={`${process.env.NEXT_PUBLIC_BASE_API_URL}${featured_image_path}`}
             alt="portfolio image"
             h="100%"
           />
@@ -88,10 +109,13 @@ const SinglePortfolioSection = () => {
 
             <VStack align="start" w="full" pt={10}>
               <Text>
-                <b>Published: </b> Jan 04, 2019
+                <b>Published: </b> {dayjs(published).format("MMM DD, YYYY")}
               </Text>
               <Text>
-                <b>Demo: </b> www.elmanaway.info
+                <b>Demo: </b>
+                <a href={link} target="_blank" rel="noreferrer">
+                  {link}
+                </a>
               </Text>
             </VStack>
             <HStack align="start" w="full" spacing={8} pt={10}>
@@ -105,49 +129,27 @@ const SinglePortfolioSection = () => {
 
       {/* Blog Content */}
       <VStack w="full" align="start" py={12}>
-        <Text>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ex non
-          maiores quae beatae blanditiis a quaerat culpa voluptate labore enim.
-          Hic, porro doloremque nostrum iusto qui enim dolore quibusdam nisi
-          molestiae eos aliquam vel libero corporis inventore fugit et tempore
-          nesciunt iure, quisquam aut voluptas omnis. Quasi necessitatibus quod
-          labore repellat. Ipsam atque reiciendis optio quos ex? Autem facilis
-          iste unde illum qui voluptatem maiores, explicabo eaque ea tenetur
-          exercitationem quidem sed officiis suscipit numquam in culpa sit
-          excepturi quo. Sequi officiis nulla mollitia molestias at sit commodi.
-          Magni saepe dolore voluptate natus quaerat expedita similique quidem
-          doloribus quos ipsum.
-        </Text>
-        <Text>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid ipsa
-          rem nostrum id est cupiditate aperiam quis dignissimos quam enim
-          itaque distinctio sunt deserunt, quo nulla, animi possimus accusantium
-          nemo. Deserunt non quasi assumenda consequatur. Voluptate aperiam
-          impedit minima, nemo praesentium modi molestiae aliquam adipisci
-          asperiores, exercitationem magnam quos placeat.
-        </Text>
+        <Text whiteSpace="pre-wrap">{description}</Text>
       </VStack>
 
       {/* Related Projects */}
-      <VStack w="full" align="start">
-        <Heading>Related Projects</Heading>
-        <SimpleGrid columns={[1, 1, 1, 2, 2]} w="full" py={10} spacing={8}>
-          <Project
-            category="Websites"
-            imageURL="/portfolio-img.jpeg"
-            name="Company Branding"
-            secondaryColor={secondaryColor}
-            slug="hello"
-          />
-          <Project
-            category="Websites"
-            imageURL="/portfolio-img.jpeg"
-            name="Company Branding"
-            secondaryColor={secondaryColor}
-            slug="hello"
-          />
-        </SimpleGrid>
-      </VStack>
+      {props.related_projects.length > 0 ? (
+        <VStack w="full" align="start">
+          <Heading>Related Projects</Heading>
+          <SimpleGrid columns={[1, 1, 1, 2, 2]} w="full" py={10} spacing={8}>
+            {props.related_projects.map((project) => (
+              <Project
+                key={project.id}
+                category={project.category_name}
+                imageURL={project.featured_image_path}
+                name={project.title}
+                secondaryColor={secondaryColor}
+                slug={project.slug}
+              />
+            ))}
+          </SimpleGrid>
+        </VStack>
+      ) : null}
     </VStack>
   )
 }
