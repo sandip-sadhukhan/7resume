@@ -1,12 +1,14 @@
 import { HStack, useColorModeValue, VStack } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import React from "react"
-import { BreadcrumbType } from "../../../../types/profile"
+import { BlogPostSectionProps, BreadcrumbType } from "../../../../types/profile"
 import HeadingBreadcrumb from "../portfolio/HeadingBreadcrumb"
 import BlogCard from "./BlogCard"
 import BlogRightSideBar from "./BlogRightSideBar"
 
-const SingleBlog = () => {
+const SingleBlog: React.FC<BlogPostSectionProps> = (
+  props: BlogPostSectionProps
+) => {
   const router = useRouter()
   const username = router.query.username as string
 
@@ -14,18 +16,20 @@ const SingleBlog = () => {
   const grayBackground = useColorModeValue("blue.50", "gray.700")
   const grayText = useColorModeValue("gray.600", "gray.300")
 
+  const { blog } = props
+
   const portfolioBreadCrumbList: BreadcrumbType[] = [
     {
       text: "Blog",
       link: `/${username}/blog`,
     },
     {
-      text: "Development",
-      link: `/${username}/blog/category/development`,
+      text: blog.category_name,
+      link: `/${username}/blog/category/${blog.category_name}`,
     },
     {
-      text: "What is an API?",
-      link: `/${username}/blog/post/hello`,
+      text: blog.title,
+      link: `/${username}/blog/post/${blog.slug}`,
     },
   ]
   return (
@@ -57,6 +61,7 @@ const SingleBlog = () => {
           grayBackground={grayBackground}
           grayText={grayText}
           secondaryColor={secondaryColor}
+          blog={blog}
         />
 
         {/* Sidebar */}

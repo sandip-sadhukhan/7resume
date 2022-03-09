@@ -1,5 +1,8 @@
 from .models import Project
 from .serializers import (
+    AppointmentSerializer,
+    BlogSerializer,
+    BlogShortSerializer,
     ClientSerializer,
     EducationSerializer,
     ExperienceSerializer,
@@ -282,6 +285,73 @@ def getPortfolioDetailSectionData(user, portfolio):
         "section": {
             "portfolio": portfolioData,
             "related_projects": related_projects_data,
+        },
+    }
+
+    return data
+
+
+def getBlogSectionData(user):
+    if not user.user_profile.display_blog:
+        return {"display_blog": False, "layout": {}, "section": {}}
+
+    blogs = BlogShortSerializer(
+        instance=user.user_profile.user_profile_blogs.filter(
+            display_article=True
+        ),
+        many=True,
+    )
+
+    data = {
+        "display_blog": True,
+        "layout": getLayoutData(user),
+        "section": {
+            "blogs": blogs.data,
+        },
+    }
+
+    return data
+
+
+def getBlogDetailSectionData(user, blog):
+    if not user.user_profile.display_blog:
+        return {"display_blog": False, "layout": {}, "section": {}}
+
+    blog = BlogSerializer(instance=blog)
+
+    # category = portfolio.category
+    # related_projects = Project.objects.filter(category=category).exclude(
+    #     id=portfolio.id
+    # )
+    # if related_projects.count() > 2:
+    #     related_projects = related_projects[:2]
+    # related_projects_data = ProjectShortSerializer(
+    #     instance=related_projects, many=True
+    # ).data
+
+    data = {
+        "display_blog": True,
+        "layout": getLayoutData(user),
+        "section": {
+            "blog": blog.data,
+            # "related_projects": related_projects_data,
+        },
+    }
+
+    return data
+
+
+def getAppointmentSectionData(user):
+    if not user.user_profile.display_appointments:
+        return {"display_appointments": False, "layout": {}, "section": {}}
+
+    appointment = AppointmentSerializer(instance=user.user_profile.appointment)
+
+    data = {
+        "display_appointments": True,
+        "layout": getLayoutData(user),
+        "section": {
+            "appointment": appointment.data,
         },
     }
 

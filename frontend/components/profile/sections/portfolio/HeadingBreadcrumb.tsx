@@ -14,7 +14,7 @@ interface HeadingBreadcrumbProps {
   grayBackground: string
   title: string
   breadcrumbList: BreadcrumbType[]
-  homePageLink: string
+  homePageLink?: string
 }
 
 const HeadingBreadcrumb: React.FC<HeadingBreadcrumbProps> = (
@@ -35,7 +35,7 @@ const HeadingBreadcrumb: React.FC<HeadingBreadcrumbProps> = (
       <Heading size="md">{title}</Heading>
       <Breadcrumb spacing={3} separator={<FaAngleRight color="gray.500" />}>
         <BreadcrumbItem>
-          <BreadcrumbLink href={homePageLink}>
+          <BreadcrumbLink href={homePageLink || "#"}>
             <HStack>
               <FaHome />
               <Text>Home</Text>

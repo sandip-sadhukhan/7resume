@@ -1,11 +1,14 @@
 from rest_framework import serializers
 from .models import (
+    Appointment,
+    Blog,
     Education,
     Experiences,
     PricingPlan,
     Project,
     Service,
     Skill,
+    Tags,
     Testimonial,
     Client,
 )
@@ -126,4 +129,76 @@ class ProjectSerializer(serializers.ModelSerializer):
             "featured_image_path",
             "description",
             "meta_description",
+        )
+
+
+class BlogShortSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(source="category.title")
+
+    class Meta:
+        model = Blog
+        fields = (
+            "id",
+            "featured_image",
+            "views",
+            "slug",
+            "title",
+            "updated_at",
+            "category_name",
+            "short_description",
+        )
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tags
+        fields = ("title",)
+
+
+class BlogSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(source="category.title")
+    tags = TagSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Blog
+        fields = (
+            "id",
+            "slug",
+            "featured_image",
+            "title",
+            "author",
+            "updated_at",
+            "category_name",
+            "views",
+            "description",
+            "meta_description",
+            "tags",
+        )
+
+
+class AppointmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Appointment
+        fields = (
+            "sunday",
+            "sunday_start_time",
+            "sunday_end_time",
+            "monday",
+            "monday_start_time",
+            "monday_end_time",
+            "tuesday",
+            "tuesday_start_time",
+            "tuesday_end_time",
+            "wednesday",
+            "wednesday_start_time",
+            "wednesday_end_time",
+            "thursday",
+            "thursday_start_time",
+            "thursday_end_time",
+            "friday",
+            "friday_start_time",
+            "friday_end_time",
+            "saturday",
+            "saturday_start_time",
+            "saturday_end_time",
         )

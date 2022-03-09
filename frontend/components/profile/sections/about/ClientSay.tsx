@@ -42,6 +42,7 @@ const ClientSay = (props: Props) => {
           spacing={[0, 0, 0, 8, 8]}
           flexDir={["column", "column", "column", "row", "row"]}
           gap={8}
+          w="full"
         >
           <TestimonialBox
             testimonial={testimonials[current].first}

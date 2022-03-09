@@ -345,6 +345,7 @@ class Blog(BaseModel):
         related_name="blogs",
     )
     meta_description = models.TextField(blank=True)
+    views = models.IntegerField(default=0)
 
     def __str__(self):
         return str(self.title)
@@ -437,32 +438,49 @@ class Message(BaseModel):
 
 
 class Appointment(BaseModel):
-    user_profile = models.ForeignKey(
+    user_profile = models.OneToOneField(
         UserProfile,
         on_delete=models.CASCADE,
-        related_name="appointments",
+        related_name="appointment",
     )
     sunday = models.BooleanField(default=True)
-    sunday_start_time = models.TimeField(blank=True)
-    sunday_end_time = models.TimeField(blank=True)
+    sunday_start_time = models.TimeField(blank=True, null=True)
+    sunday_end_time = models.TimeField(blank=True, null=True)
     monday = models.BooleanField(default=True)
-    monday_start_time = models.TimeField(blank=True)
-    monday_end_time = models.TimeField(blank=True)
+    monday_start_time = models.TimeField(blank=True, null=True)
+    monday_end_time = models.TimeField(blank=True, null=True)
     tuesday = models.BooleanField(default=True)
-    tuesday_start_time = models.TimeField(blank=True)
-    tuesday_end_time = models.TimeField(blank=True)
+    tuesday_start_time = models.TimeField(blank=True, null=True)
+    tuesday_end_time = models.TimeField(blank=True, null=True)
     wednesday = models.BooleanField(default=True)
-    wednesday_start_time = models.TimeField(blank=True)
-    wednesday_end_time = models.TimeField(blank=True)
+    wednesday_start_time = models.TimeField(blank=True, null=True)
+    wednesday_end_time = models.TimeField(blank=True, null=True)
     thursday = models.BooleanField(default=True)
-    thursday_start_time = models.TimeField(blank=True)
-    thursday_end_time = models.TimeField(blank=True)
+    thursday_start_time = models.TimeField(blank=True, null=True)
+    thursday_end_time = models.TimeField(blank=True, null=True)
     friday = models.BooleanField(default=True)
-    friday_start_time = models.TimeField(blank=True)
-    friday_end_time = models.TimeField(blank=True)
+    friday_start_time = models.TimeField(blank=True, null=True)
+    friday_end_time = models.TimeField(blank=True, null=True)
     saturday = models.BooleanField(default=True)
-    saturday_start_time = models.TimeField(blank=True)
-    saturday_end_time = models.TimeField(blank=True)
+    saturday_start_time = models.TimeField(blank=True, null=True)
+    saturday_end_time = models.TimeField(blank=True, null=True)
 
     def __str__(self):
         return str(self.user_profile.user.email)
+
+
+class RequestedAppointment(BaseModel):
+    user_profile = models.ForeignKey(
+        UserProfile,
+        on_delete=models.CASCADE,
+        related_name="requested_appointments",
+    )
+    subject = models.CharField(max_length=300)
+    name = models.CharField(max_length=50)
+    email = models.EmailField(max_length=200)
+    phone = models.CharField(max_length=20)
+    appointment_time = models.DateTimeField()
+    message = models.TextField()
+
+    def __str__(self) -> str:
+        return str(self.name)

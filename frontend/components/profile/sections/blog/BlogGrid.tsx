@@ -7,6 +7,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
+import dayjs from "dayjs"
 import Link from "next/link"
 import React from "react"
 import { BsArrowRight } from "react-icons/bs"
@@ -61,7 +62,10 @@ const BlogGrid: React.FC<BlogGridProps> = (props: BlogGridProps) => {
               <FaEye />
               <Text>{viewCount}</Text>
             </HStack>
-            <Image src={bannerImg} alt={title} />
+            <Image
+              src={`${process.env.NEXT_PUBLIC_BASE_API_URL}${bannerImg}`}
+              alt={title}
+            />
             <IconButton
               w={10}
               bgColor="white"
@@ -81,7 +85,7 @@ const BlogGrid: React.FC<BlogGridProps> = (props: BlogGridProps) => {
           {title}
         </Heading>
         <Text fontSize={12}>
-          {date} - In{" "}
+          {dayjs(date).format("MMM DD, YYYY")} - In{" "}
           <Link href={categoryLink}>
             <a>{category}</a>
           </Link>

@@ -1,28 +1,46 @@
 import { Button, Heading, HStack, Image, Text, VStack } from "@chakra-ui/react"
+import dayjs from "dayjs"
+import Head from "next/head"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import React from "react"
 import { AiOutlineEye } from "react-icons/ai"
 import { FaFacebookF, FaPinterestP, FaTwitter } from "react-icons/fa"
 import { FiBook, FiUser } from "react-icons/fi"
 import { GiBackwardTime } from "react-icons/gi"
+import { BlogPostType } from "../../../../types/profile"
 import TagGroup from "./TagGroup"
 
 interface BlogCardProps {
   grayText: string
   secondaryColor: string
   grayBackground: string
+  blog: BlogPostType
 }
 
 const BlogCard: React.FC<BlogCardProps> = (props: BlogCardProps) => {
-  const { grayText, secondaryColor, grayBackground } = props
+  const router = useRouter()
+  const { asPath } = router
+  const frontendURL = process.env.NEXT_PUBLIC_FRONTEND_URL
+
+  const { grayText, secondaryColor, grayBackground, blog } = props
+
   return (
     <VStack as="main" shadow="lg" flex={7} align="start" borderRadius={5}>
-      <Image w="full" src="/blog-img.jpg" alt="Blog Img" />
+      <Head>
+        <title>{blog.title}</title>
+        <meta name="description" content={blog.meta_description} />
+      </Head>
+      <Image
+        w="full"
+        src={`${process.env.NEXT_PUBLIC_BASE_API_URL}${blog.featured_image}`}
+        alt="Blog Img"
+      />
       <VStack w="full" align="start" px={[2, 2, 2, 8, 10]} py={4}>
         {/* Title and info */}
         <VStack align="start" color={grayText}>
           <Heading as="h1" size="md" pb={2}>
-            Transitions In Design
+            {blog.title}
           </Heading>
           <HStack
             spacing={[1, 1, 1, 5, 5]}
@@ -32,83 +50,32 @@ const BlogCard: React.FC<BlogCardProps> = (props: BlogCardProps) => {
           >
             <HStack>
               <FiUser />
-              <Text fontSize={15}>Sandip Sadhukhan</Text>
+              <Text fontSize={15}>{blog.author}</Text>
             </HStack>
             <HStack>
               <GiBackwardTime />
-              <Text fontSize={15}>Mar 10, 2019</Text>
+              <Text fontSize={15}>
+                {dayjs(blog.updated_at).format("MMM DD, YYYY")}
+              </Text>
             </HStack>
             <Link href="#">
               <a>
                 <HStack _hover={{ color: secondaryColor }}>
                   <FiBook />
-                  <Text fontSize={15}>Development</Text>
+                  <Text fontSize={15}>{blog.category_name}</Text>
                 </HStack>
               </a>
             </Link>
             <HStack>
               <AiOutlineEye />
-              <Text fontSize={15}>132</Text>
+              <Text fontSize={15}>{blog.views}</Text>
             </HStack>
           </HStack>
         </VStack>
         {/* Content */}
         <VStack pt={4}>
-          <Text textAlign="justify">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur
-            natus obcaecati, temporibus distinctio magni molestiae nam
-            laboriosam perspiciatis molestias! Nemo, ut laborum officia impedit
-            fuga magni expedita, voluptatem enim cum recusandae possimus omnis
-            nostrum perferendis a nesciunt facilis, inventore placeat nobis quam
-            fugit aut consectetur! Cupiditate nemo quia deleniti aliquid, minus
-            dolorum animi temporibus nisi quos quibusdam obcaecati, tempore
-            neque? Aspernatur officiis nam iste eaque soluta sed fugit eum porro
-            assumenda rem, facilis sunt corporis ea voluptas quis atque odio
-            reiciendis, beatae necessitatibus! Ipsa enim cum eius quaerat! Quos
-            enim qui at in debitis, nesciunt itaque cupiditate excepturi ipsam
-            natus!
-          </Text>
-          <Text textAlign="justify">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur
-            natus obcaecati, temporibus distinctio magni molestiae nam
-            laboriosam perspiciatis molestias! Nemo, ut laborum officia impedit
-            fuga magni expedita, voluptatem enim cum recusandae possimus omnis
-            nostrum perferendis a nesciunt facilis, inventore placeat nobis quam
-            fugit aut consectetur! Cupiditate nemo quia deleniti aliquid, minus
-            dolorum animi temporibus nisi quos quibusdam obcaecati, tempore
-            neque? Aspernatur officiis nam iste eaque soluta sed fugit eum porro
-            assumenda rem, facilis sunt corporis ea voluptas quis atque odio
-            reiciendis, beatae necessitatibus! Ipsa enim cum eius quaerat! Quos
-            enim qui at in debitis, nesciunt itaque cupiditate excepturi ipsam
-            natus!
-          </Text>
-          <Text textAlign="justify">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur
-            natus obcaecati, temporibus distinctio magni molestiae nam
-            laboriosam perspiciatis molestias! Nemo, ut laborum officia impedit
-            fuga magni expedita, voluptatem enim cum recusandae possimus omnis
-            nostrum perferendis a nesciunt facilis, inventore placeat nobis quam
-            fugit aut consectetur! Cupiditate nemo quia deleniti aliquid, minus
-            dolorum animi temporibus nisi quos quibusdam obcaecati, tempore
-            neque? Aspernatur officiis nam iste eaque soluta sed fugit eum porro
-            assumenda rem, facilis sunt corporis ea voluptas quis atque odio
-            reiciendis, beatae necessitatibus! Ipsa enim cum eius quaerat! Quos
-            enim qui at in debitis, nesciunt itaque cupiditate excepturi ipsam
-            natus!
-          </Text>
-          <Text textAlign="justify">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur
-            natus obcaecati, temporibus distinctio magni molestiae nam
-            laboriosam perspiciatis molestias! Nemo, ut laborum officia impedit
-            fuga magni expedita, voluptatem enim cum recusandae possimus omnis
-            nostrum perferendis a nesciunt facilis, inventore placeat nobis quam
-            fugit aut consectetur! Cupiditate nemo quia deleniti aliquid, minus
-            dolorum animi temporibus nisi quos quibusdam obcaecati, tempore
-            neque? Aspernatur officiis nam iste eaque soluta sed fugit eum porro
-            assumenda rem, facilis sunt corporis ea voluptas quis atque odio
-            reiciendis, beatae necessitatibus! Ipsa enim cum eius quaerat! Quos
-            enim qui at in debitis, nesciunt itaque cupiditate excepturi ipsam
-            natus!
+          <Text textAlign="justify" whiteSpace="pre-wrap">
+            {blog.description}
           </Text>
         </VStack>
         {/* tags */}
@@ -116,10 +83,7 @@ const BlogCard: React.FC<BlogCardProps> = (props: BlogCardProps) => {
           <Heading fontWeight={700} as="h5" size="sm" pb={2}>
             Tags
           </Heading>
-          <TagGroup
-            bg={grayBackground}
-            tags={["Tutorial", "Development", "School", "React"]}
-          />
+          <TagGroup bg={grayBackground} tags={blog.tags} />
         </VStack>
         {/* Social Share */}
         <HStack py={6} spacing={3}>
@@ -133,10 +97,18 @@ const BlogCard: React.FC<BlogCardProps> = (props: BlogCardProps) => {
             variant="outline"
             colorScheme="blue"
           >
-            <HStack spacing={1}>
-              <FaFacebookF />
-              <Text>Share</Text>
-            </HStack>
+            <a
+              href={`http://www.facebook.com/share.php?u=${encodeURIComponent(
+                frontendURL + asPath
+              )}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <HStack spacing={1}>
+                <FaFacebookF />
+                <Text>Share</Text>
+              </HStack>
+            </a>
           </Button>
           <Button
             as="a"
@@ -148,10 +120,18 @@ const BlogCard: React.FC<BlogCardProps> = (props: BlogCardProps) => {
             variant="outline"
             colorScheme="cyan"
           >
-            <HStack spacing={1}>
-              <FaTwitter />
-              <Text>Tweet</Text>
-            </HStack>
+            <a
+              href={`http://twitter.com/intent/tweet?status=${encodeURIComponent(
+                frontendURL + asPath
+              )}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <HStack spacing={1}>
+                <FaTwitter />
+                <Text>Tweet</Text>
+              </HStack>
+            </a>
           </Button>
           <Button
             as="a"
@@ -163,10 +143,18 @@ const BlogCard: React.FC<BlogCardProps> = (props: BlogCardProps) => {
             variant="outline"
             colorScheme="red"
           >
-            <HStack spacing={1}>
-              <FaPinterestP />
-              <Text>Pin</Text>
-            </HStack>
+            <a
+              href={`https://pinterest.com/pin/create/bookmarklet/?url={${
+                frontendURL + asPath
+              }}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <HStack spacing={1}>
+                <FaPinterestP />
+                <Text>Pin</Text>
+              </HStack>
+            </a>
           </Button>
         </HStack>
       </VStack>

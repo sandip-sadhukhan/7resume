@@ -26,7 +26,7 @@ const SinglePortfolioSection: React.FC<SinglePortfolioSectionProps> = (
   const username = router.query.username as string
 
   const {
-    slug,
+    // slug,
     category_name,
     title,
     description,
@@ -45,12 +45,16 @@ const SinglePortfolioSection: React.FC<SinglePortfolioSectionProps> = (
 
   const portfolioBreadCrumbList: BreadcrumbType[] = [
     {
+      text: "Portfolio",
+      link: `/${username}/portfolio`,
+    },
+    {
       text: category_name,
-      link: `/${username}/category/${category_name}`,
+      // link: `/${username}/category/${category_name}`,
     },
     {
       text: title,
-      link: `/${username}/${slug}`,
+      // link: `/${username}/${slug}`,
     },
   ]
 

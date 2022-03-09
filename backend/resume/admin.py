@@ -16,6 +16,7 @@ from resume.models import (
     Client,
     Message,
     Appointment,
+    RequestedAppointment,
 )
 
 admin.site.register(UserProfile)
@@ -34,3 +35,4 @@ admin.site.register(Testimonial)
 admin.site.register(Client)
 admin.site.register(Message)
 admin.site.register(Appointment)
+admin.site.register(RequestedAppointment)

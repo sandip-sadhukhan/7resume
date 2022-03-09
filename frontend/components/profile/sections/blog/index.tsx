@@ -1,18 +1,19 @@
 import {
-  HStack,
+  // HStack,
   SimpleGrid,
-  Text,
+  // Text,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import React from "react"
-import { BiChevronLeft, BiChevronRight } from "react-icons/bi"
+// import { BiChevronLeft, BiChevronRight } from "react-icons/bi"
+import { BlogSectionProps } from "../../../../types/profile"
 import SectionHeading from "../../SectionHeading"
 import BlogGrid from "./BlogGrid"
-import PaginationButton from "./PaginationButton"
+// import PaginationButton from "./PaginationButton"
 
-const BlogSection = () => {
+const BlogSection: React.FC<BlogSectionProps> = (props: BlogSectionProps) => {
   const secondaryColor = useColorModeValue("#f7b733", "#00c6ff")
   const headingColor = useColorModeValue("gray.800", "gray.50")
   const grayBackground = useColorModeValue("blue.50", "gray.700")
@@ -34,58 +35,25 @@ const BlogSection = () => {
       />
 
       <SimpleGrid columns={[1, 1, 1, 3, 3]} py={10} spacing={6} w="full">
-        <BlogGrid
-          grayBackground={grayBackground}
-          secondaryColor={secondaryColor}
-          bannerImg="/blog-img.jpg"
-          link={`/${username}/blog/post/hello`}
-          viewCount={122}
-          title="Transitions in Design"
-          date="Mar 10, 2019"
-          category="Tutorial"
-          categoryLink="#"
-          description="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat, error!"
-        />
-        <BlogGrid
-          grayBackground={grayBackground}
-          secondaryColor={secondaryColor}
-          bannerImg="/blog-img.jpg"
-          link={`/${username}/blog/hello`}
-          viewCount={122}
-          title="Transitions in Design"
-          date="Mar 10, 2019"
-          category="Tutorial"
-          categoryLink="#"
-          description="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat, error!"
-        />
-        <BlogGrid
-          grayBackground={grayBackground}
-          secondaryColor={secondaryColor}
-          bannerImg="/blog-img.jpg"
-          link={`/${username}/blog/hello`}
-          viewCount={122}
-          title="Transitions in Design"
-          date="Mar 10, 2019"
-          category="Tutorial"
-          categoryLink="#"
-          description="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat, error!"
-        />
-        <BlogGrid
-          grayBackground={grayBackground}
-          secondaryColor={secondaryColor}
-          bannerImg="/blog-img.jpg"
-          link={`/${username}/blog/hello`}
-          viewCount={122}
-          title="Transitions in Design"
-          date="Mar 10, 2019"
-          category="Tutorial"
-          categoryLink="#"
-          description="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat, error!"
-        />
+        {props.blogs.map((blog) => (
+          <BlogGrid
+            key={blog.id}
+            grayBackground={grayBackground}
+            secondaryColor={secondaryColor}
+            bannerImg={blog.featured_image}
+            link={`/${username}/blog/post/${blog.slug}`}
+            viewCount={blog.views}
+            title={blog.title}
+            date={blog.updated_at}
+            category={blog.category_name}
+            categoryLink="#"
+            description={blog.short_description}
+          />
+        ))}
       </SimpleGrid>
 
       {/* Pagination */}
-      <HStack pb={10} w="full" justifyContent="center" spacing={0}>
+      {/* <HStack pb={10} w="full" justifyContent="center" spacing={0}>
         <PaginationButton
           grayBackground={grayBackground}
           secondaryColor={secondaryColor}
@@ -121,7 +89,7 @@ const BlogSection = () => {
         >
           <BiChevronRight />
         </PaginationButton>
-      </HStack>
+      </HStack> */}
     </VStack>
   )
 }

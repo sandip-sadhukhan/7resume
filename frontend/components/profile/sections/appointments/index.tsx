@@ -3,8 +3,11 @@ import { useColorModeValue, VStack, HStack } from "@chakra-ui/react"
 import SectionHeading from "../../SectionHeading"
 import MyAppointments from "./MyAppointments"
 import AppointmentForm from "./AppointmentForm"
+import { AppointmentSectionProps } from "../../../../types/profile"
 
-const AppointmentSection = () => {
+const AppointmentSection: React.FC<AppointmentSectionProps> = (
+  props: AppointmentSectionProps
+) => {
   const secondaryColor = useColorModeValue("#f7b733", "#00c6ff")
   const headingColor = useColorModeValue("gray.800", "gray.50")
 
@@ -31,7 +34,10 @@ const AppointmentSection = () => {
         flexDir={["column", "column", "column", "row", "row"]}
       >
         {/* My Appointments */}
-        <MyAppointments secondaryColor={secondaryColor} />
+        <MyAppointments
+          secondaryColor={secondaryColor}
+          appointments={props.appointment}
+        />
 
         {/* Appointment Form */}
         <AppointmentForm secondaryColor={secondaryColor} />

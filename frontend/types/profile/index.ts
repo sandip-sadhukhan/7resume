@@ -5,7 +5,7 @@ export interface TestimonialsType {
 
 export interface BreadcrumbType {
   text: string
-  link: string
+  link?: string
 }
 
 export interface LayoutProps {
@@ -198,4 +198,78 @@ export interface PortfolioType {
   featured_image_path: string
   description: string
   meta_description: string
+}
+
+export interface BlogSectionProps {
+  blogs: BlogGridType[]
+}
+
+export interface BlogGridType {
+  id: number
+  featured_image: string
+  views: number
+  slug: string
+  title: string
+  updated_at: string
+  category_name: string
+  short_description: string
+}
+
+export interface BlogPostSectionProps {
+  blog: BlogPostType
+}
+
+export interface BlogPostType {
+  id: number
+  slug: string
+  featured_image: string
+  title: string
+  author: string
+  updated_at: string
+  category_name: string
+  views: number
+  description: string
+  meta_description: string
+  tags: TagType[]
+}
+
+export interface TagType {
+  title: string
+}
+
+export interface AppointmentSectionProps {
+  appointment: AppointmentType
+}
+
+export interface AppointmentType {
+  sunday: boolean
+  sunday_start_time: string | null
+  sunday_end_time: string | null
+  monday: boolean
+  monday_start_time: string | null
+  monday_end_time: string | null
+  tuesday: boolean
+  tuesday_start_time: string | null
+  tuesday_end_time: string | null
+  wednesday: boolean
+  wednesday_start_time: string | null
+  wednesday_end_time: string | null
+  thursday: boolean
+  thursday_start_time: string | null
+  thursday_end_time: string | null
+  friday: boolean
+  friday_start_time: string | null
+  friday_end_time: string | null
+  saturday: boolean
+  saturday_start_time: string | null
+  saturday_end_time: string | null
+}
+
+export interface RequestedAppointmentType {
+  subject: string
+  name: string
+  email: string
+  phone: string
+  appointment_time: string
+  message: string
 }

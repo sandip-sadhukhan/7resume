@@ -1,7 +1,7 @@
-import { Flex, Heading, SimpleGrid, Tooltip, VStack } from "@chakra-ui/react"
-import Image from "next/image"
+import { Flex, Heading, SimpleGrid, VStack } from "@chakra-ui/react"
 import React from "react"
 import { ClientType } from "../../../../types/profile"
+import Image from "../../../image"
 
 interface Props {
   grayBackground: string
@@ -23,14 +23,22 @@ const MyClients = (props: Props) => {
         </Heading>
         <SimpleGrid pb={5} columns={[2, 2, 4, 6, 6]} w="full" gap={10}>
           {props.clients.map((client) => (
-            <Tooltip label={client.name} key={client.id}>
+            <Flex key={client.id} cursor="pointer" title={client.name}>
               <Image
-                width={100}
+                transition="ease-out"
+                transitionProperty="all"
+                transitionDuration="normal"
+                _groupHover={{
+                  transform: "scale(1.1,1.1)",
+                }}
+                width={70}
                 height={70}
                 src={`${process.env.NEXT_PUBLIC_BASE_API_URL}${client.image_path}`}
                 alt={client.name}
+                objectFit="cover"
+                quality="100"
               />
-            </Tooltip>
+            </Flex>
           ))}
         </SimpleGrid>
       </VStack>

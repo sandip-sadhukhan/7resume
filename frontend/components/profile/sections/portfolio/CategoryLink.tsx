@@ -1,5 +1,4 @@
 import { Text, VStack } from "@chakra-ui/react"
-import Link from "next/link"
 import React from "react"
 
 interface CategoryLinkProps {
@@ -16,7 +15,6 @@ const CategoryLink: React.FC<CategoryLinkProps> = (
 ) => {
   const {
     categoryName,
-    categoryURL,
     count,
     secondaryColor,
     headingColor,
@@ -24,24 +22,16 @@ const CategoryLink: React.FC<CategoryLinkProps> = (
   } = props
   return (
     <VStack align="center" spacing={0}>
-      <Link href={categoryURL}>
-        <a>
-          <Text
-            textAlign="center"
-            color={active ? secondaryColor : headingColor}
-            fontSize={12}
-          >
-            ({count})
-          </Text>
-          <Text
-            textAlign="center"
-            color={active ? secondaryColor : headingColor}
-            _hover={{ color: active ? headingColor : secondaryColor }}
-          >
-            {categoryName}
-          </Text>
-        </a>
-      </Link>
+      <Text
+        textAlign="center"
+        color={active ? secondaryColor : headingColor}
+        fontSize={12}
+      >
+        ({count})
+      </Text>
+      <Text textAlign="center" color={active ? secondaryColor : headingColor}>
+        {categoryName}
+      </Text>
     </VStack>
   )
 }

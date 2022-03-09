@@ -4,12 +4,11 @@ import {
   Flex,
   HStack,
   Text,
-  useBreakpointValue,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import React from "react"
-import { AiFillStar } from "react-icons/ai"
+import { AiFillStar, AiOutlineStar } from "react-icons/ai"
 import { FaQuoteLeft } from "react-icons/fa"
 import { TestimonialType } from "../../../../types/profile"
 
@@ -20,11 +19,10 @@ interface Props {
 }
 
 const TestimonialBox = (props: Props) => {
-  const quoteIconFontSize = useBreakpointValue({ base: 30, md: 60 })
   const whiteBackground = useColorModeValue("white", "gray.600")
 
   return (
-    <VStack align="left" gap={2}>
+    <VStack align="left" gap={2} w="full">
       <Box
         p={[2, 2, 3, 4, 5]}
         bgColor={whiteBackground}
@@ -35,10 +33,7 @@ const TestimonialBox = (props: Props) => {
           spacing={[2, 2, 2, 4, 8]}
           flexDir={["column", "column", "column", "row", "row"]}
         >
-          <FaQuoteLeft
-            fontSize={quoteIconFontSize}
-            color={props.secondaryColor}
-          />
+          <FaQuoteLeft fontSize={30} color={props.secondaryColor} />
           <Text textAlign="justify" pt={5}>
             {props.testimonial.message}
           </Text>
@@ -55,41 +50,16 @@ const TestimonialBox = (props: Props) => {
           </Text>
           <Text fontSize={14}>{props.testimonial.position}</Text>
           <Flex>
-            <AiFillStar
-              color={
-                props.testimonial.rating in [1, 2, 3, 4, 5]
-                  ? props.secondaryColor
-                  : props.grayBackground
-              }
-            />
-            <AiFillStar
-              color={
-                props.testimonial.rating in [2, 3, 4, 5]
-                  ? props.secondaryColor
-                  : props.grayBackground
-              }
-            />
-            <AiFillStar
-              color={
-                props.testimonial.rating in [3, 4, 5]
-                  ? props.secondaryColor
-                  : props.grayBackground
-              }
-            />
-            <AiFillStar
-              color={
-                props.testimonial.rating in [4, 5]
-                  ? props.secondaryColor
-                  : props.grayBackground
-              }
-            />
-            <AiFillStar
-              color={
-                props.testimonial.rating === 5
-                  ? props.secondaryColor
-                  : props.grayBackground
-              }
-            />
+            {Array(props.testimonial.rating)
+              .fill(1)
+              .map((ele: number, index) => (
+                <AiFillStar key={index} color={props.secondaryColor} />
+              ))}
+            {Array(5 - props.testimonial.rating)
+              .fill(1)
+              .map((ele: number, index) => (
+                <AiOutlineStar key={index} color={props.secondaryColor} />
+              ))}
           </Flex>
         </VStack>
       </HStack>
