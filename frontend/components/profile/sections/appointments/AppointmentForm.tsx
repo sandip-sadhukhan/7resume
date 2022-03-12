@@ -97,10 +97,10 @@ const AppointmentForm: React.FC<AppointmentFormProps> = (
           w="full"
           type="text"
           placeholder="Subject"
-          required
           name="subject"
           value={formData.subject}
           onChange={onChange}
+          required
         />
       </InputGroup>
       <InputGroup>
@@ -115,6 +115,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = (
           name="name"
           value={formData.name}
           onChange={onChange}
+          required
         />
       </InputGroup>
       <HStack
@@ -134,6 +135,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = (
             name="email"
             value={formData.email}
             onChange={onChange}
+            required
           />
         </InputGroup>
         <InputGroup>
@@ -148,6 +150,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = (
             name="phone"
             value={formData.phone}
             onChange={onChange}
+            required
           />
         </InputGroup>
       </HStack>
@@ -163,6 +166,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = (
           name="appointment_time"
           value={formData.appointment_time}
           onChange={onChange}
+          required
         />
       </InputGroup>
       <Textarea
@@ -173,6 +177,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = (
         name="message"
         value={formData.message}
         onChange={onChange}
+        required
       />
       <Button
         bgColor={secondaryColor}
