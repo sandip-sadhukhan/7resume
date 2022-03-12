@@ -27,7 +27,13 @@ const BlogCard: React.FC<BlogCardProps> = (props: BlogCardProps) => {
   const { grayText, secondaryColor, grayBackground, blog, absoluteURL } = props
 
   return (
-    <VStack as="main" shadow="lg" flex={7} align="start" borderRadius={5}>
+    <VStack
+      as="main"
+      shadow="lg"
+      flex={[1, 1, 1, 7, 7]}
+      align="start"
+      borderRadius={5}
+    >
       <Head>
         <title>{blog.title}</title>
         <meta name="description" content={blog.meta_description} />
@@ -37,7 +43,7 @@ const BlogCard: React.FC<BlogCardProps> = (props: BlogCardProps) => {
         src={`${process.env.NEXT_PUBLIC_BASE_API_URL}${blog.featured_image}`}
         alt="Blog Img"
       />
-      <VStack w="full" align="start" px={[2, 2, 2, 8, 10]} py={4}>
+      <VStack w="full" align="start" px={[5, 5, 6, 8, 10]} py={4}>
         {/* Title and info */}
         <VStack align="start" color={grayText}>
           <Heading as="h1" size="md" pb={2}>
@@ -87,9 +93,16 @@ const BlogCard: React.FC<BlogCardProps> = (props: BlogCardProps) => {
           <TagGroup bg={grayBackground} tags={blog.tags} />
         </VStack>
         {/* Social Share */}
-        <HStack py={6} spacing={3}>
+        <HStack
+          py={6}
+          spacing={[0, 0, 0, 3, 3]}
+          gap={2}
+          align="start"
+          flexDir={["column", "column", "column", "row", "row"]}
+        >
           <FacebookShareButton url={absoluteURL} quote={blog.title}>
             <Button
+              as="a"
               rounded="full"
               size="sm"
               px={4}
@@ -102,6 +115,7 @@ const BlogCard: React.FC<BlogCardProps> = (props: BlogCardProps) => {
           </FacebookShareButton>
           <TwitterShareButton url={absoluteURL} title={blog.title}>
             <Button
+              as="a"
               rounded="full"
               size="sm"
               px={4}
@@ -118,6 +132,7 @@ const BlogCard: React.FC<BlogCardProps> = (props: BlogCardProps) => {
             description={blog.description}
           >
             <Button
+              as="a"
               rounded="full"
               size="sm"
               px={4}

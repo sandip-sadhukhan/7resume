@@ -218,6 +218,18 @@ export interface BlogGridType {
 export interface BlogPostSectionProps {
   blog: BlogPostType
   site_title: string
+  related_posts: IBlogPostSuggestion[]
+  all_categories: PortfolioCategoryType[]
+  latest_posts: IBlogPostSuggestion[]
+  tag_cloud: TagType[]
+}
+
+export interface IBlogPostSuggestion {
+  id: number
+  featured_image: string
+  title: string
+  slug: string
+  updated_at: string
 }
 
 export interface BlogPostType {

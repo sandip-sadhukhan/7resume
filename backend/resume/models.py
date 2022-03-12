@@ -299,8 +299,9 @@ class Tags(BaseModel):
     )
     title = models.CharField(max_length=200)
 
-    def __str__(self):
-        return str(self.title)
+
+def __str__(self):
+    return str(self.title)
 
 
 class BlogCategory(BaseModel):
@@ -313,6 +314,9 @@ class BlogCategory(BaseModel):
 
     def __str__(self):
         return str(self.title)
+
+    class Meta:
+        ordering = ("-created_at",)
 
 
 class Blog(BaseModel):
@@ -349,6 +353,9 @@ class Blog(BaseModel):
 
     def __str__(self):
         return str(self.title)
+
+    class Meta:
+        ordering = ("-created_at",)
 
 
 class SkillCategory(BaseModel):

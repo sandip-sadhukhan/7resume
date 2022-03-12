@@ -1,7 +1,8 @@
-from .models import Project
+from .models import Blog, Project, Tags
 from .serializers import (
     AppointmentSerializer,
     BlogSerializer,
+    BlogShortGridSerializer,
     BlogShortSerializer,
     ClientSerializer,
     EducationSerializer,
@@ -10,6 +11,7 @@ from .serializers import (
     ProjectShortSerializer,
     ServiceSerializer,
     SkillSerializer,
+    TagSerializer,
     TestimonialSerializer,
     ProjectSerializer,
 )
@@ -270,9 +272,9 @@ def getPortfolioDetailSectionData(user, portfolio):
     portfolioData = ProjectSerializer(instance=portfolio).data
 
     category = portfolio.category
-    related_projects = Project.objects.filter(category=category).exclude(
-        id=portfolio.id
-    )
+    related_projects = Project.objects.filter(
+        category=category, user_profile=user.user_profile
+    ).exclude(id=portfolio.id)
     if related_projects.count() > 2:
         related_projects = related_projects[:2]
     related_projects_data = ProjectShortSerializer(
@@ -317,25 +319,57 @@ def getBlogDetailSectionData(user, blog):
     if not user.user_profile.display_blog:
         return {"display_blog": False, "layout": {}, "section": {}}
 
-    blog = BlogSerializer(instance=blog)
+    # main blog
+    blogSerializer = BlogSerializer(instance=blog)
 
-    # category = portfolio.category
-    # related_projects = Project.objects.filter(category=category).exclude(
-    #     id=portfolio.id
-    # )
-    # if related_projects.count() > 2:
-    #     related_projects = related_projects[:2]
-    # related_projects_data = ProjectShortSerializer(
-    #     instance=related_projects, many=True
-    # ).data
+    # related_posts
+    category = blog.category
+    related_posts = Blog.objects.filter(
+        category=category, user_profile=user.user_profile
+    ).exclude(id=blog.id)
+    if related_posts.count() > 4:
+        related_posts = related_posts[:4]
+    related_posts_data = BlogShortGridSerializer(
+        instance=related_posts, many=True
+    ).data
+
+    # latest_posts
+    latest_posts = Blog.objects.filter(user_profile=user.user_profile).exclude(
+        id=blog.id
+    )
+    if latest_posts.count() > 4:
+        latest_posts = latest_posts[:4]
+    latest_posts_data = BlogShortGridSerializer(
+        instance=latest_posts, many=True
+    ).data
+
+    # all categories
+    all_categories = [
+        {
+            "name": category.title,
+            "count": category.category_blogs.filter(
+                display_article=True
+            ).count(),
+        }
+        for category in user.user_profile.blog_categories.all()
+    ]
+
+    # tag cloud - last 10 tag
+    tag_cloud = Tags.objects.filter(
+        user_profile=user.user_profile,
+    )
+    tag_cloud_serializer = TagSerializer(instance=tag_cloud, many=True)
 
     data = {
         "display_blog": True,
         "layout": getLayoutData(user),
         "section": {
-            "blog": blog.data,
+            "blog": blogSerializer.data,
             "site_title": user.user_profile.site_title,
-            # "related_projects": related_projects_data,
+            "related_posts": related_posts_data,
+            "all_categories": all_categories,
+            "latest_posts": latest_posts_data,
+            "tag_cloud": tag_cloud_serializer.data,
         },
     }
 

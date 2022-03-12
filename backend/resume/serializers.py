@@ -149,6 +149,18 @@ class BlogShortSerializer(serializers.ModelSerializer):
         )
 
 
+class BlogShortGridSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Blog
+        fields = (
+            "id",
+            "featured_image",
+            "title",
+            "slug",
+            "updated_at",
+        )
+
+
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tags

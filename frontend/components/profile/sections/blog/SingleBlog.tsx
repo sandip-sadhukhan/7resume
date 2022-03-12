@@ -19,7 +19,14 @@ const SingleBlog: React.FC<BlogPostSectionProps> = (
   const grayBackground = useColorModeValue("blue.50", "gray.700")
   const grayText = useColorModeValue("gray.600", "gray.300")
 
-  const { blog, site_title } = props
+  const {
+    blog,
+    site_title,
+    related_posts,
+    all_categories,
+    latest_posts,
+    tag_cloud,
+  } = props
 
   const portfolioBreadCrumbList: BreadcrumbType[] = [
     {
@@ -89,6 +96,10 @@ const SingleBlog: React.FC<BlogPostSectionProps> = (
           grayBackground={grayBackground}
           grayText={grayText}
           secondaryColor={secondaryColor}
+          related_posts={related_posts}
+          all_categories={all_categories}
+          latest_posts={latest_posts}
+          tag_cloud={tag_cloud}
         />
       </HStack>
     </VStack>
