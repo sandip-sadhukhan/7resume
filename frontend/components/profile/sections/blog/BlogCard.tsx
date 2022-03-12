@@ -2,12 +2,16 @@ import { Button, Heading, HStack, Image, Text, VStack } from "@chakra-ui/react"
 import dayjs from "dayjs"
 import Head from "next/head"
 import Link from "next/link"
-import { useRouter } from "next/router"
 import React from "react"
 import { AiOutlineEye } from "react-icons/ai"
 import { FaFacebookF, FaPinterestP, FaTwitter } from "react-icons/fa"
 import { FiBook, FiUser } from "react-icons/fi"
 import { GiBackwardTime } from "react-icons/gi"
+import {
+  FacebookShareButton,
+  PinterestShareButton,
+  TwitterShareButton,
+} from "react-share"
 import { BlogPostType } from "../../../../types/profile"
 import TagGroup from "./TagGroup"
 
@@ -16,14 +20,11 @@ interface BlogCardProps {
   secondaryColor: string
   grayBackground: string
   blog: BlogPostType
+  absoluteURL: string
 }
 
 const BlogCard: React.FC<BlogCardProps> = (props: BlogCardProps) => {
-  const router = useRouter()
-  const { asPath } = router
-  const frontendURL = process.env.NEXT_PUBLIC_FRONTEND_URL
-
-  const { grayText, secondaryColor, grayBackground, blog } = props
+  const { grayText, secondaryColor, grayBackground, blog, absoluteURL } = props
 
   return (
     <VStack as="main" shadow="lg" flex={7} align="start" borderRadius={5}>
@@ -87,75 +88,46 @@ const BlogCard: React.FC<BlogCardProps> = (props: BlogCardProps) => {
         </VStack>
         {/* Social Share */}
         <HStack py={6} spacing={3}>
-          <Button
-            as="a"
-            href="#"
-            target="_blank"
-            rounded="full"
-            size="sm"
-            px={4}
-            variant="outline"
-            colorScheme="blue"
-          >
-            <a
-              href={`http://www.facebook.com/share.php?u=${encodeURIComponent(
-                frontendURL + asPath
-              )}`}
-              target="_blank"
-              rel="noreferrer"
+          <FacebookShareButton url={absoluteURL} quote={blog.title}>
+            <Button
+              rounded="full"
+              size="sm"
+              px={4}
+              variant="outline"
+              colorScheme="blue"
             >
-              <HStack spacing={1}>
-                <FaFacebookF />
-                <Text>Share</Text>
-              </HStack>
-            </a>
-          </Button>
-          <Button
-            as="a"
-            href="#"
-            target="_blank"
-            rounded="full"
-            size="sm"
-            px={4}
-            variant="outline"
-            colorScheme="cyan"
-          >
-            <a
-              href={`http://twitter.com/intent/tweet?status=${encodeURIComponent(
-                frontendURL + asPath
-              )}`}
-              target="_blank"
-              rel="noreferrer"
+              <FaFacebookF />
+              <Text ps={1}>Share</Text>
+            </Button>
+          </FacebookShareButton>
+          <TwitterShareButton url={absoluteURL} title={blog.title}>
+            <Button
+              rounded="full"
+              size="sm"
+              px={4}
+              variant="outline"
+              colorScheme="cyan"
             >
-              <HStack spacing={1}>
-                <FaTwitter />
-                <Text>Tweet</Text>
-              </HStack>
-            </a>
-          </Button>
-          <Button
-            as="a"
-            href="#"
-            target="_blank"
-            rounded="full"
-            size="sm"
-            px={4}
-            variant="outline"
-            colorScheme="red"
+              <FaTwitter />
+              <Text ps={1}>Tweet</Text>
+            </Button>
+          </TwitterShareButton>
+          <PinterestShareButton
+            url={absoluteURL}
+            media={`${process.env.NEXT_PUBLIC_BASE_API_URL}${blog.featured_image}`}
+            description={blog.description}
           >
-            <a
-              href={`https://pinterest.com/pin/create/bookmarklet/?url={${
-                frontendURL + asPath
-              }}`}
-              target="_blank"
-              rel="noreferrer"
+            <Button
+              rounded="full"
+              size="sm"
+              px={4}
+              variant="outline"
+              colorScheme="red"
             >
-              <HStack spacing={1}>
-                <FaPinterestP />
-                <Text>Pin</Text>
-              </HStack>
-            </a>
-          </Button>
+              <FaPinterestP />
+              <Text ps={1}>Pin</Text>
+            </Button>
+          </PinterestShareButton>
         </HStack>
       </VStack>
     </VStack>

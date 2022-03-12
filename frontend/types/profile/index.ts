@@ -217,6 +217,7 @@ export interface BlogGridType {
 
 export interface BlogPostSectionProps {
   blog: BlogPostType
+  site_title: string
 }
 
 export interface BlogPostType {

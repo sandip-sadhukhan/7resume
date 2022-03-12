@@ -334,6 +334,7 @@ def getBlogDetailSectionData(user, blog):
         "layout": getLayoutData(user),
         "section": {
             "blog": blog.data,
+            "site_title": user.user_profile.site_title,
             # "related_projects": related_projects_data,
         },
     }

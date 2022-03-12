@@ -9,6 +9,7 @@ import {
 import React from "react"
 import { FaAngleRight, FaHome } from "react-icons/fa"
 import { BreadcrumbType } from "../../../../types/profile"
+import Link from "next/link"
 
 interface HeadingBreadcrumbProps {
   grayBackground: string
@@ -44,8 +45,10 @@ const HeadingBreadcrumb: React.FC<HeadingBreadcrumbProps> = (
         </BreadcrumbItem>
         {breadcrumbList.map((breadcrumb, index) => (
           <BreadcrumbItem key={index}>
-            <BreadcrumbLink href={breadcrumb.link}>
-              {breadcrumb.text}
+            <BreadcrumbLink>
+              <Link href={breadcrumb.link ? breadcrumb.link : "#"}>
+                <a>{breadcrumb.text}</a>
+              </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
         ))}
