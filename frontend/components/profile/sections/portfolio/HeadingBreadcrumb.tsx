@@ -36,11 +36,15 @@ const HeadingBreadcrumb: React.FC<HeadingBreadcrumbProps> = (
       <Heading size="md">{title}</Heading>
       <Breadcrumb spacing={3} separator={<FaAngleRight color="gray.500" />}>
         <BreadcrumbItem>
-          <BreadcrumbLink href={homePageLink || "#"}>
-            <HStack>
-              <FaHome />
-              <Text>Home</Text>
-            </HStack>
+          <BreadcrumbLink>
+            <Link href={homePageLink || "#"}>
+              <a>
+                <HStack>
+                  <FaHome />
+                  <Text>Home</Text>
+                </HStack>
+              </a>
+            </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         {breadcrumbList.map((breadcrumb, index) => (

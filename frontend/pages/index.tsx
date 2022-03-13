@@ -46,7 +46,7 @@ const Home: NextPage = () => {
             Sign Up and get your dashboard, start building your website.
           </Text>
           <Button colorScheme="blackAlpha" size="lg">
-            <Link href="/sandip">
+            <Link href="/login">
               <a>
                 <Flex align="center" gap={1}>
                   <Text>Start Making Your Profile</Text>

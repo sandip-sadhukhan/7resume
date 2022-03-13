@@ -7,6 +7,8 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
+import Link from "next/link"
+import { useRouter } from "next/router"
 import React from "react"
 import { PricingPlanType } from "../../../../types/profile"
 
@@ -28,6 +30,8 @@ const PricingBox: React.FC<PricingBoxProps> = (props: PricingBoxProps) => {
     features,
     plan_icon_path,
   } = props
+
+  const username = useRouter().query.username as string
 
   return (
     <VStack
@@ -81,15 +85,13 @@ const PricingBox: React.FC<PricingBoxProps> = (props: PricingBoxProps) => {
           <Text fontSize={18}>/ {price_duration}</Text>
         </Flex>
       </Flex>
-      <Button
-        as="a"
-        href="#"
-        color="#fff"
-        bgColor={secondaryColor}
-        rounded="full"
-      >
-        Hire Me
-      </Button>
+      <Link href={`/u/${username}/contact-me`}>
+        <a>
+          <Button color="#fff" bgColor={secondaryColor} rounded="full">
+            Hire Me
+          </Button>
+        </a>
+      </Link>
     </VStack>
   )
 }

@@ -1,8 +1,8 @@
 import type { NextPage } from "next"
-import Layout from "../../../components/profile/Layout"
-import BlogSection from "../../../components/profile/sections/blog"
-import { BlogSectionProps, LayoutProps } from "../../../types/profile"
-import Error from "../../error"
+import Layout from "../../../../components/profile/Layout"
+import BlogSection from "../../../../components/profile/sections/blog"
+import { BlogSectionProps, LayoutProps } from "../../../../types/profile"
+import Error from "../../../error"
 
 interface BlogPageProps {
   display_blog: boolean

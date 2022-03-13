@@ -25,7 +25,7 @@ const SearchBox: React.FC<SearchBoxProps> = (props: SearchBoxProps) => {
 
   const onSearch = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault()
-    router.push(`/${username}/blog/search/${searchText}`)
+    router.push(`/u/${username}/blog/search/${searchText}`)
   }
 
   return (

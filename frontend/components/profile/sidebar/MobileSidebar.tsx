@@ -103,26 +103,26 @@ const MobileSidebar: React.FC<MobileSidebarProps> = (
           title="Home"
           NavIcon={AiFillHome}
           hoverColor={hoverColor}
-          link={`/${username}`}
+          link={`/u/${username}`}
           secondaryColor={secondaryColor}
-          active={pathname === "/[username]"}
+          active={pathname === "/u/[username]"}
         />
         <NavItem
           title="About Me"
           NavIcon={FaUserTie}
           hoverColor={hoverColor}
-          link={`/${username}/about-me`}
+          link={`/u/${username}/about-me`}
           secondaryColor={secondaryColor}
-          active={pathname === "/[username]/about-me"}
+          active={pathname === "/u/[username]/about-me"}
         />
         {props.display_resume ? (
           <NavItem
             title="Resume"
             NavIcon={AiOutlineFilePdf}
             hoverColor={hoverColor}
-            link={`/${username}/resume`}
+            link={`/u/${username}/resume`}
             secondaryColor={secondaryColor}
-            active={pathname === "/[username]/resume"}
+            active={pathname === "/u/[username]/resume"}
           />
         ) : null}
         {props.display_portfolio ? (
@@ -130,9 +130,9 @@ const MobileSidebar: React.FC<MobileSidebarProps> = (
             title="Portfolio"
             NavIcon={BsFileEarmarkPostFill}
             hoverColor={hoverColor}
-            link={`/${username}/portfolio`}
+            link={`/u/${username}/portfolio`}
             secondaryColor={secondaryColor}
-            active={pathname.startsWith("/[username]/portfolio")}
+            active={pathname.startsWith("/u/[username]/portfolio")}
           />
         ) : null}
         {props.display_blog ? (
@@ -140,27 +140,27 @@ const MobileSidebar: React.FC<MobileSidebarProps> = (
             title="Blog"
             NavIcon={FaBloggerB}
             hoverColor={hoverColor}
-            link={`/${username}/blog`}
+            link={`/u/${username}/blog`}
             secondaryColor={secondaryColor}
-            active={pathname.startsWith("/[username]/blog")}
+            active={pathname.startsWith("/u/[username]/blog")}
           />
         ) : null}
         <NavItem
           title="Contact Me"
           NavIcon={AiFillContacts}
           hoverColor={hoverColor}
-          link={`/${username}/contact-me`}
+          link={`/u/${username}/contact-me`}
           secondaryColor={secondaryColor}
-          active={pathname === "/[username]/contact-me"}
+          active={pathname === "/u/[username]/contact-me"}
         />
         {props.display_appointments ? (
           <NavItem
             title="Appointments"
             NavIcon={BsFillCalendarDateFill}
             hoverColor={hoverColor}
-            link={`/${username}/appointments`}
+            link={`/u/${username}/appointments`}
             secondaryColor={secondaryColor}
-            active={pathname === "/[username]/appointments"}
+            active={pathname === "/u/[username]/appointments"}
           />
         ) : null}
       </Flex>

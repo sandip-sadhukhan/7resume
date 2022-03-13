@@ -41,7 +41,7 @@ const BlogSection: React.FC<BlogSectionProps> = (props: BlogSectionProps) => {
             grayBackground={grayBackground}
             secondaryColor={secondaryColor}
             bannerImg={blog.featured_image}
-            link={`/${username}/blog/post/${blog.slug}`}
+            link={`/u/${username}/blog/post/${blog.slug}`}
             viewCount={blog.views}
             title={blog.title}
             date={blog.updated_at}

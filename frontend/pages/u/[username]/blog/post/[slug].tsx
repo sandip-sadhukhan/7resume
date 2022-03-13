@@ -1,8 +1,8 @@
 import React from "react"
-import Layout from "../../../../components/profile/Layout"
-import SingleBlog from "../../../../components/profile/sections/blog/SingleBlog"
-import { BlogPostSectionProps, LayoutProps } from "../../../../types/profile"
-import Error from "../../../error"
+import Layout from "../../../../../components/profile/Layout"
+import SingleBlog from "../../../../../components/profile/sections/blog/SingleBlog"
+import { BlogPostSectionProps, LayoutProps } from "../../../../../types/profile"
+import Error from "../../../../error"
 
 interface BlogPostProps {
   display_blog: boolean

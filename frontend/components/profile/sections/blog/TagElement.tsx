@@ -15,7 +15,7 @@ const TagElement: React.FC<TagElementProps> = (props: TagElementProps) => {
   return (
     <WrapItem>
       <Link
-        href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/${username}/blog/search/${text}`}
+        href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/u/${username}/blog/search/${text}`}
       >
         <a>
           <Button size="xs" fontSize={14} bgColor={bg}>

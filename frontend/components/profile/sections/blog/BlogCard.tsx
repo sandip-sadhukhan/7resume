@@ -69,7 +69,7 @@ const BlogCard: React.FC<BlogCardProps> = (props: BlogCardProps) => {
               </Text>
             </HStack>
             <Link
-              href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/${username}/blog/category/${blog.category_name}`}
+              href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/u/${username}/blog/category/${blog.category_name}`}
             >
               <a>
                 <HStack _hover={{ color: secondaryColor }}>

@@ -88,7 +88,7 @@ const BlogGrid: React.FC<BlogGridProps> = (props: BlogGridProps) => {
         <Text fontSize={12}>
           {dayjs(date).format("MMM DD, YYYY")} - In{" "}
           <Link
-            href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/${username}/blog/category/${category}`}
+            href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/u/${username}/blog/category/${category}`}
           >
             <a>{category}</a>
           </Link>

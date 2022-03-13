@@ -1,7 +1,7 @@
 import type { NextPage } from "next"
-import Layout from "../../components/profile/Layout"
-import AppointmentSection from "../../components/profile/sections/appointments"
-import { AppointmentSectionProps, LayoutProps } from "../../types/profile"
+import Layout from "../../../components/profile/Layout"
+import AppointmentSection from "../../../components/profile/sections/appointments"
+import { AppointmentSectionProps, LayoutProps } from "../../../types/profile"
 
 interface AppointmentsProps {
   layout: LayoutProps

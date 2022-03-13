@@ -1,7 +1,7 @@
 import type { NextPage } from "next"
-import Layout from "../../components/profile/Layout"
-import AboutSection from "../../components/profile/sections/about"
-import { AboutSectionProps, LayoutProps } from "../../types/profile"
+import Layout from "../../../components/profile/Layout"
+import AboutSection from "../../../components/profile/sections/about"
+import { AboutSectionProps, LayoutProps } from "../../../types/profile"
 
 interface AboutMeProps {
   layout: LayoutProps

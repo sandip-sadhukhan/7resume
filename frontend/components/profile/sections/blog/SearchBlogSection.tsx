@@ -24,7 +24,7 @@ const SearchBlogSection: React.FC<BlogSearchSectionProps> = (
   const portfolioBreadCrumbList: BreadcrumbType[] = [
     {
       text: "Blog",
-      link: `/${username}/blog`,
+      link: `/u/${username}/blog`,
     },
     {
       text: query,
@@ -42,7 +42,7 @@ const SearchBlogSection: React.FC<BlogSearchSectionProps> = (
       {/* Heading & Breadcrumb */}
       <HeadingBreadcrumb
         grayBackground={grayBackground}
-        homePageLink={`/${username}`}
+        homePageLink={`/u/${username}`}
         breadcrumbList={portfolioBreadCrumbList}
         title="Blog"
       />
@@ -63,7 +63,7 @@ const SearchBlogSection: React.FC<BlogSearchSectionProps> = (
               grayBackground={grayBackground}
               secondaryColor={secondaryColor}
               bannerImg={blog.featured_image}
-              link={`/${username}/blog/post/${blog.slug}`}
+              link={`/u/${username}/blog/post/${blog.slug}`}
               viewCount={blog.views}
               title={blog.title}
               date={dayjs(blog.updated_at).format("MMM DD, YYYY")}

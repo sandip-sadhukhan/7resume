@@ -20,7 +20,7 @@ const BlogTrailer: React.FC<BlogTrailerProps> = (props: BlogTrailerProps) => {
     <VStack>
       <HStack spacing={4} w="full">
         <Link
-          href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/${username}/blog/post/${slug}`}
+          href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/u/${username}/blog/post/${slug}`}
         >
           <a>
             <Image
@@ -32,7 +32,7 @@ const BlogTrailer: React.FC<BlogTrailerProps> = (props: BlogTrailerProps) => {
         </Link>
         <VStack align="start">
           <Link
-            href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/${username}/blog/post/${slug}`}
+            href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/u/${username}/blog/post/${slug}`}
           >
             <a>
               <Text

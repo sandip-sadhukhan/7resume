@@ -72,13 +72,13 @@ const Layout = (props: Props) => {
           >
             <HStack spacing={4}>
               <Avatar
-                src="/avatar-1.jpg"
+                src={`${process.env.NEXT_PUBLIC_BASE_API_URL}${props.layoutProps.profile_picture}`}
                 border={`4px solid ${
                   colorMode === "light" ? "#F98127" : "#009BFF"
                 }`}
               />
               <Heading as="h1" size="md" fontWeight={600}>
-                Sandip Sadhukhan
+                {props.layoutProps.name}
               </Heading>
             </HStack>
             <Flex

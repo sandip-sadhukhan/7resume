@@ -13,7 +13,7 @@ const SingleBlog: React.FC<BlogPostSectionProps> = (
   const router = useRouter()
   const username = router.query.username as string
   const slug = router.query.slug as string
-  const absoluteURL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/${username}/blog/post/${slug}`
+  const absoluteURL = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/u/${username}/blog/post/${slug}`
 
   const secondaryColor = useColorModeValue("#f7b733", "#00c6ff")
   const grayBackground = useColorModeValue("blue.50", "gray.700")
@@ -31,15 +31,15 @@ const SingleBlog: React.FC<BlogPostSectionProps> = (
   const portfolioBreadCrumbList: BreadcrumbType[] = [
     {
       text: "Blog",
-      link: `/${username}/blog`,
+      link: `/u/${username}/blog`,
     },
     {
       text: blog.category_name,
-      link: `/${username}/blog/category/${blog.category_name}`,
+      link: `/u/${username}/blog/category/${blog.category_name}`,
     },
     {
       text: blog.title,
-      link: `/${username}/blog/post/${blog.slug}`,
+      link: `/u/${username}/blog/post/${blog.slug}`,
     },
   ]
   return (
@@ -69,7 +69,7 @@ const SingleBlog: React.FC<BlogPostSectionProps> = (
       {/* Heading & Breadcrumb */}
       <HeadingBreadcrumb
         grayBackground={grayBackground}
-        homePageLink={`/${username}`}
+        homePageLink={`/u/${username}`}
         breadcrumbList={portfolioBreadCrumbList}
         title="Blog"
       />

@@ -1,7 +1,7 @@
 import type { NextPage } from "next"
-import Layout from "../../components/profile/Layout"
-import Contact from "../../components/profile/sections/contact"
-import { LayoutProps, ContactMeSectionProps } from "../../types/profile"
+import Layout from "../../../components/profile/Layout"
+import Contact from "../../../components/profile/sections/contact"
+import { LayoutProps, ContactMeSectionProps } from "../../../types/profile"
 
 interface ContactMeProps {
   layout: LayoutProps

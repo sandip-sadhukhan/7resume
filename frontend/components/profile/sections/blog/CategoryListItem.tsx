@@ -19,7 +19,7 @@ const CategoryListItem: React.FC<CategoryListItemProps> = (
   return (
     <HStack w="full" justifyContent="space-between" px={1}>
       <Link
-        href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/${username}/blog/category/${categoryName}`}
+        href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/u/${username}/blog/category/${categoryName}`}
       >
         <a>
           <Text
@@ -32,7 +32,7 @@ const CategoryListItem: React.FC<CategoryListItemProps> = (
         </a>
       </Link>
       <Link
-        href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/${username}/blog/category/${categoryName}`}
+        href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/u/${username}/blog/category/${categoryName}`}
       >
         <a>
           <Text

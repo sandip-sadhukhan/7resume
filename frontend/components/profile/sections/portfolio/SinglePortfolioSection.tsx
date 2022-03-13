@@ -46,7 +46,7 @@ const SinglePortfolioSection: React.FC<SinglePortfolioSectionProps> = (
   const portfolioBreadCrumbList: BreadcrumbType[] = [
     {
       text: "Portfolio",
-      link: `/${username}/portfolio`,
+      link: `/u/${username}/portfolio`,
     },
     {
       text: category_name,
@@ -73,7 +73,7 @@ const SinglePortfolioSection: React.FC<SinglePortfolioSectionProps> = (
       {/* Heading & Breadcrumb */}
       <HeadingBreadcrumb
         grayBackground={grayBackground}
-        homePageLink={`/${username}`}
+        homePageLink={`/u/${username}`}
         breadcrumbList={portfolioBreadCrumbList}
         title="Portfolio"
       />

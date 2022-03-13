@@ -1,8 +1,8 @@
 import type { NextPage } from "next"
-import Layout from "../../components/profile/Layout"
-import ResumeSection from "../../components/profile/sections/resume"
-import { ResumeSectionProps, LayoutProps } from "../../types/profile"
-import Error from "../error"
+import Layout from "../../../components/profile/Layout"
+import ResumeSection from "../../../components/profile/sections/resume"
+import { ResumeSectionProps, LayoutProps } from "../../../types/profile"
+import Error from "../../error"
 
 interface ResumePageProps {
   display_resume: boolean

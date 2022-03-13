@@ -1,8 +1,8 @@
 import type { NextPage } from "next"
-import Layout from "../../../components/profile/Layout"
-import PortfolioSection from "../../../components/profile/sections/portfolio"
-import { LayoutProps, PortfolioSectionProps } from "../../../types/profile"
-import Error from "../../error"
+import Layout from "../../../../components/profile/Layout"
+import PortfolioSection from "../../../../components/profile/sections/portfolio"
+import { LayoutProps, PortfolioSectionProps } from "../../../../types/profile"
+import Error from "../../../error"
 
 interface PortfolioPageProps {
   display_portfolio: boolean

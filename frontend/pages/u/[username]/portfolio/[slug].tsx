@@ -1,10 +1,10 @@
 import type { NextPage } from "next"
-import Layout from "../../../components/profile/Layout"
-import SinglePortfolioSection from "../../../components/profile/sections/portfolio/SinglePortfolioSection"
+import Layout from "../../../../components/profile/Layout"
+import SinglePortfolioSection from "../../../../components/profile/sections/portfolio/SinglePortfolioSection"
 import {
   LayoutProps,
   SinglePortfolioSectionProps,
-} from "../../../types/profile"
+} from "../../../../types/profile"
 
 interface SinglePortfolioPageProps {
   display_portfolio: boolean

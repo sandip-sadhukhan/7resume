@@ -1,8 +1,11 @@
 import React from "react"
-import Layout from "../../../../components/profile/Layout"
-import SearchBlogSection from "../../../../components/profile/sections/blog/SearchBlogSection"
-import { BlogSearchSectionProps, LayoutProps } from "../../../../types/profile"
-import Error from "../../../error"
+import Layout from "../../../../../components/profile/Layout"
+import SearchBlogSection from "../../../../../components/profile/sections/blog/SearchBlogSection"
+import {
+  BlogSearchSectionProps,
+  LayoutProps,
+} from "../../../../../types/profile"
+import Error from "../../../../error"
 
 interface BlogPageProps {
   display_blog: boolean
@@ -10,7 +13,7 @@ interface BlogPageProps {
   section: BlogSearchSectionProps
 }
 
-const BlogSearch: React.FC<BlogPageProps> = (props: BlogPageProps) => {
+const BlogCategory: React.FC<BlogPageProps> = (props: BlogPageProps) => {
   return (
     <>
       {props.display_blog === true ? (
@@ -35,7 +38,7 @@ export const getServerSideProps = async (context: ContextProps) => {
   const username = context.params.username
   const query = context.params.query
   // Fetch data from API
-  const url = `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/profile/${username}/blog/search/${query}`
+  const url = `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/profile/${username}/blog/category/${query}`
 
   const res = await fetch(url)
   const data = await res.json()
@@ -45,4 +48,4 @@ export const getServerSideProps = async (context: ContextProps) => {
   }
 }
 
-export default BlogSearch
+export default BlogCategory

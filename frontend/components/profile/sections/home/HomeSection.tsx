@@ -67,7 +67,7 @@ const HomeSection: React.FC<HomeSectionProps> = ({
           </Heading>
         </Flex>
         <HStack spacing={8} mt={10}>
-          <Link href={`/${username}/contact-me`}>
+          <Link href={`/u/${username}/contact-me`}>
             <a>
               <Button variant="solid" color="white" bgColor={secondaryColor}>
                 <AiFillContacts fontSize={20} />
@@ -75,7 +75,7 @@ const HomeSection: React.FC<HomeSectionProps> = ({
               </Button>
             </a>
           </Link>
-          <Link href={`/${username}/contact-me`}>
+          <Link href={`/u/${username}/contact-me`}>
             <a>
               <Button variant="solid" color="white" bgColor={secondaryColor}>
                 <RiSuitcaseLine fontSize={20} />
