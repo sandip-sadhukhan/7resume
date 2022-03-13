@@ -31,7 +31,6 @@ export const getServerSideProps = async (context: {
   const slug = context.params.slug as string
   // Fetch data from API
   const url = `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/profile/${username}/blog/post/${slug}/`
-  console.log(url)
 
   const res = await fetch(url)
   const data = await res.json()

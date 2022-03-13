@@ -24,8 +24,6 @@ const Contact: React.FC<ContactMeSectionProps> = (
     follow_me,
   } = props
 
-  console.log(gmap_iframe)
-
   return (
     <VStack
       align="start"
