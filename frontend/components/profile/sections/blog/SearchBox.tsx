@@ -13,11 +13,12 @@ import { BiSearch } from "react-icons/bi"
 interface SearchBoxProps {
   grayText: string
   secondaryColor: string
+  query?: string
 }
 
 const SearchBox: React.FC<SearchBoxProps> = (props: SearchBoxProps) => {
-  const { grayText, secondaryColor } = props
-  const [searchText, setSearchText] = useState("")
+  const { grayText, secondaryColor, query } = props
+  const [searchText, setSearchText] = useState(query !== undefined ? query : "")
 
   const router = useRouter()
   const username = router.query.username as string

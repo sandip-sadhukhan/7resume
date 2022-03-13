@@ -46,7 +46,6 @@ const BlogSection: React.FC<BlogSectionProps> = (props: BlogSectionProps) => {
             title={blog.title}
             date={blog.updated_at}
             category={blog.category_name}
-            categoryLink="#"
             description={blog.short_description}
           />
         ))}

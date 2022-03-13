@@ -1,5 +1,6 @@
 import { HStack, Text } from "@chakra-ui/react"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import React from "react"
 
 interface CategoryListItemProps {
@@ -12,10 +13,14 @@ interface CategoryListItemProps {
 const CategoryListItem: React.FC<CategoryListItemProps> = (
   props: CategoryListItemProps
 ) => {
+  const username = useRouter().query.username as string
+
   const { secondaryColor, grayText, categoryName, categoryCount } = props
   return (
     <HStack w="full" justifyContent="space-between" px={1}>
-      <Link href="#">
+      <Link
+        href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/${username}/blog/category/${categoryName}`}
+      >
         <a>
           <Text
             fontSize={14}
@@ -26,7 +31,9 @@ const CategoryListItem: React.FC<CategoryListItemProps> = (
           </Text>
         </a>
       </Link>
-      <Link href="#">
+      <Link
+        href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/${username}/blog/category/${categoryName}`}
+      >
         <a>
           <Text
             fontSize={14}

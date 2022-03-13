@@ -2,6 +2,7 @@ import { Button, Heading, HStack, Image, Text, VStack } from "@chakra-ui/react"
 import dayjs from "dayjs"
 import Head from "next/head"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import React from "react"
 import { AiOutlineEye } from "react-icons/ai"
 import { FaFacebookF, FaPinterestP, FaTwitter } from "react-icons/fa"
@@ -25,6 +26,8 @@ interface BlogCardProps {
 
 const BlogCard: React.FC<BlogCardProps> = (props: BlogCardProps) => {
   const { grayText, secondaryColor, grayBackground, blog, absoluteURL } = props
+
+  const username = useRouter().query.username as string
 
   return (
     <VStack
@@ -65,7 +68,9 @@ const BlogCard: React.FC<BlogCardProps> = (props: BlogCardProps) => {
                 {dayjs(blog.updated_at).format("MMM DD, YYYY")}
               </Text>
             </HStack>
-            <Link href="#">
+            <Link
+              href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/${username}/blog/category/${blog.category_name}`}
+            >
               <a>
                 <HStack _hover={{ color: secondaryColor }}>
                   <FiBook />

@@ -1,13 +1,16 @@
-from django.http import HttpRequest
+from typing import Type
+from django.http import HttpRequest, HttpResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status, permissions, serializers
 from accounts.models import UserAccount
-from .models import Blog, Message, Project, RequestedAppointment
+from .models import Blog, BlogCategory, Message, Project, RequestedAppointment
 from .selectors import (
     getAboutMeSectionData,
     getAppointmentSectionData,
+    getBlogCategoryData,
     getBlogDetailSectionData,
+    getBlogSearchData,
     getBlogSectionData,
     getContactMeSectionData,
     getHomeSectionData,
@@ -266,6 +269,59 @@ class BlogDetailProfilePageView(APIView):
         data = {
             "success": True,
             "data": getBlogDetailSectionData(user, blog),
+        }
+
+        return Response(data)
+
+
+class BlogSearchPageView(APIView):
+    def get(self, request, username: str, query: str) -> HttpResponse:
+        try:
+            user = UserAccount.objects.get(username=username)
+        except UserAccount.DoesNotExist:
+            return Response(
+                {
+                    "success": False,
+                    "error": "Username not exists",
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        data = {
+            "success": True,
+            "data": getBlogSearchData(user, query),
+        }
+
+        return Response(data)
+
+
+class BlogCategoryPageView(APIView):
+    def get(self, request, username: str, category_name: str) -> HttpResponse:
+        try:
+            user = UserAccount.objects.get(username=username)
+            category = BlogCategory.objects.get(
+                user_profile=user.user_profile, title__iexact=category_name
+            )
+        except UserAccount.DoesNotExist:
+            return Response(
+                {
+                    "success": False,
+                    "error": "Username not exists",
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except BlogCategory.DoesNotExist:  # type: ignore
+            return Response(
+                {
+                    "success": False,
+                    "error": "Blog Category not exists",
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        data = {
+            "success": True,
+            "data": getBlogCategoryData(user, category),
         }
 
         return Response(data)

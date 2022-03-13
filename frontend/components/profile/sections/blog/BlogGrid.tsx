@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react"
 import dayjs from "dayjs"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import React from "react"
 import { BsArrowRight } from "react-icons/bs"
 import { FaEye } from "react-icons/fa"
@@ -22,7 +23,6 @@ interface BlogGridProps {
   title: string
   date: string
   category: string
-  categoryLink: string
   description: string
 }
 
@@ -36,9 +36,10 @@ const BlogGrid: React.FC<BlogGridProps> = (props: BlogGridProps) => {
     title,
     date,
     category,
-    categoryLink,
     description,
   } = props
+
+  const username = useRouter().query.username as string
 
   return (
     <VStack shadow="lg" bgColor={grayBackground} w="full">
@@ -86,7 +87,9 @@ const BlogGrid: React.FC<BlogGridProps> = (props: BlogGridProps) => {
         </Heading>
         <Text fontSize={12}>
           {dayjs(date).format("MMM DD, YYYY")} - In{" "}
-          <Link href={categoryLink}>
+          <Link
+            href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/${username}/blog/category/${category}`}
+          >
             <a>{category}</a>
           </Link>
         </Text>

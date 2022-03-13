@@ -39,6 +39,14 @@ urlpatterns = [
         apis.BlogDetailProfilePageView.as_view(),
     ),
     path(
+        "profile/<str:username>/blog/search/<str:query>/",
+        apis.BlogSearchPageView.as_view(),
+    ),
+    path(
+        "profile/<str:username>/blog/category/<str:category_name>/",
+        apis.BlogCategoryPageView.as_view(),
+    ),
+    path(
         "profile/<str:username>/appointments/",
         apis.AppointmentProfilePageView.as_view(),
     ),

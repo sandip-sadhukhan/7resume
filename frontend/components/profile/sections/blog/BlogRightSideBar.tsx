@@ -18,6 +18,7 @@ interface BlogRightSideBarProps {
   all_categories: PortfolioCategoryType[]
   latest_posts: IBlogPostSuggestion[]
   tag_cloud: TagType[]
+  query?: string
 }
 
 const BlogRightSideBar: React.FC<BlogRightSideBarProps> = (
@@ -31,6 +32,7 @@ const BlogRightSideBar: React.FC<BlogRightSideBarProps> = (
     latest_posts,
     related_posts,
     tag_cloud,
+    query,
   } = props
   const whiteBackground = useColorModeValue("white", "gray.600")
 
@@ -43,15 +45,21 @@ const BlogRightSideBar: React.FC<BlogRightSideBarProps> = (
       w="full"
     >
       {/* Search Blog */}
-      <SearchBox grayText={grayText} secondaryColor={secondaryColor} />
+      <SearchBox
+        query={query}
+        grayText={grayText}
+        secondaryColor={secondaryColor}
+      />
 
       {/* Related Post */}
-      <BlogTrailerGroup
-        grayBackground={grayBackground}
-        secondaryColor={secondaryColor}
-        title="Related Posts"
-        posts={related_posts}
-      />
+      {related_posts.length > 0 ? (
+        <BlogTrailerGroup
+          grayBackground={grayBackground}
+          secondaryColor={secondaryColor}
+          title="Related Posts"
+          posts={related_posts}
+        />
+      ) : null}
 
       {/* All Categories */}
       <VStack p={4} bgColor={grayBackground} w="full" align="start" spacing={4}>

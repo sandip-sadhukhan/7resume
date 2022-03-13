@@ -1,3 +1,4 @@
+from django.db.models import Q
 from .models import Blog, Project, Tags
 from .serializers import (
     AppointmentSerializer,
@@ -373,6 +374,112 @@ def getBlogDetailSectionData(user, blog):
         },
     }
 
+    return data
+
+
+def getBlogSearchData(user, query: str):
+    if not user.user_profile.display_blog:
+        return {"display_blog": False, "layout": {}, "section": {}}
+
+    blogs = (
+        Blog.objects.filter(
+            user_profile=user.user_profile,
+        )
+        .filter(
+            Q(tags__title__iexact=query)
+            | Q(title__icontains=query)
+            | Q(short_description__icontains=query)
+            | Q(meta_description__icontains=query)
+        )
+        .distinct()
+    )
+    serializer = BlogShortSerializer(instance=blogs, many=True)
+
+    # latest_posts
+    latest_posts = Blog.objects.filter(user_profile=user.user_profile)
+    if latest_posts.count() > 4:
+        latest_posts = latest_posts[:4]
+    latest_posts_data = BlogShortGridSerializer(
+        instance=latest_posts, many=True
+    ).data
+
+    # all categories
+    all_categories = [
+        {
+            "name": category.title,
+            "count": category.category_blogs.filter(
+                display_article=True
+            ).count(),
+        }
+        for category in user.user_profile.blog_categories.all()
+    ]
+
+    # tag cloud - last 10 tag
+    tag_cloud = Tags.objects.filter(
+        user_profile=user.user_profile,
+    )
+    tag_cloud_serializer = TagSerializer(instance=tag_cloud, many=True)
+
+    data = {
+        "display_blog": True,
+        "layout": getLayoutData(user),
+        "section": {
+            "blogs": serializer.data,
+            "latest_posts": latest_posts_data,
+            "all_categories": all_categories,
+            "tag_cloud": tag_cloud_serializer.data,
+        },
+    }
+
+    return data
+
+
+def getBlogCategoryData(user, category):
+    if not user.user_profile.display_blog:
+        return {"display_blog": False, "layout": {}, "section": {}}
+
+    blogs = Blog.objects.filter(
+        user_profile=user.user_profile,
+        category=category,
+    )
+
+    serializer = BlogShortSerializer(instance=blogs, many=True)
+
+    # latest_posts
+    latest_posts = Blog.objects.filter(user_profile=user.user_profile)
+    if latest_posts.count() > 4:
+        latest_posts = latest_posts[:4]
+    latest_posts_data = BlogShortGridSerializer(
+        instance=latest_posts, many=True
+    ).data
+
+    # all categories
+    all_categories = [
+        {
+            "name": category.title,
+            "count": category.category_blogs.filter(
+                display_article=True
+            ).count(),
+        }
+        for category in user.user_profile.blog_categories.all()
+    ]
+
+    # tag cloud - last 10 tag
+    tag_cloud = Tags.objects.filter(
+        user_profile=user.user_profile,
+    )
+    tag_cloud_serializer = TagSerializer(instance=tag_cloud, many=True)
+
+    data = {
+        "display_blog": True,
+        "layout": getLayoutData(user),
+        "section": {
+            "blogs": serializer.data,
+            "latest_posts": latest_posts_data,
+            "all_categories": all_categories,
+            "tag_cloud": tag_cloud_serializer.data,
+        },
+    }
     return data
 
 

@@ -204,6 +204,13 @@ export interface BlogSectionProps {
   blogs: BlogGridType[]
 }
 
+export interface BlogSearchSectionProps {
+  blogs: BlogGridType[]
+  latest_posts: IBlogPostSuggestion[]
+  all_categories: PortfolioCategoryType[]
+  tag_cloud: TagType[]
+}
+
 export interface BlogGridType {
   id: number
   featured_image: string
