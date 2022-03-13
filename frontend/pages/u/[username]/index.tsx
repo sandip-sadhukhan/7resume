@@ -2,8 +2,10 @@ import type { NextPage } from "next"
 import Layout from "../../../components/profile/Layout"
 import HomeSection from "../../../components/profile/sections/home/HomeSection"
 import { LayoutProps } from "../../../types/profile"
+import Error from "../../error"
 
 interface UserHomeProps {
+  success: boolean
   layout: LayoutProps
   section: {
     name: string
@@ -12,15 +14,21 @@ interface UserHomeProps {
 }
 
 const UserHome: NextPage<UserHomeProps> = (props: UserHomeProps) => {
-  const { layout, section } = props
+  const { success, layout, section } = props
 
   return (
-    <Layout layoutProps={layout}>
-      <HomeSection
-        name={section.name}
-        professionList={section.my_positions.split("\r\n")}
-      />
-    </Layout>
+    <>
+      {success ? (
+        <Layout layoutProps={layout}>
+          <HomeSection
+            name={section.name}
+            professionList={section.my_positions.split("\r\n")}
+          />
+        </Layout>
+      ) : (
+        <Error />
+      )}
+    </>
   )
 }
 
@@ -35,7 +43,7 @@ export const getServerSideProps = async (context: {
   const data = await res.json()
 
   return {
-    props: { ...data.data },
+    props: { ...data.data, success: data.success },
   }
 }
 
