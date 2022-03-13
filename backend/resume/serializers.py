@@ -129,6 +129,9 @@ class ProjectSerializer(serializers.ModelSerializer):
             "featured_image_path",
             "description",
             "meta_description",
+            "facebook",
+            "twitter",
+            "pinterest",
         )
 
 

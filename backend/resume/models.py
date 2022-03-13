@@ -276,6 +276,10 @@ class Project(BaseModel):
     description = models.TextField()  # markdown field
     meta_description = models.TextField(blank=True)
 
+    facebook = models.URLField(max_length=500, blank=True)
+    twitter = models.URLField(max_length=500, blank=True)
+    pinterest = models.URLField(max_length=500, blank=True)
+
     class Meta:
         ordering = ("-published",)
 

@@ -198,6 +198,9 @@ export interface PortfolioType {
   featured_image_path: string
   description: string
   meta_description: string
+  facebook: string
+  twitter: string
+  pinterest: string
 }
 
 export interface BlogSectionProps {

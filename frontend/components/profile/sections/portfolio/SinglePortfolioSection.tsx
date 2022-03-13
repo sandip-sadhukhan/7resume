@@ -33,6 +33,9 @@ const SinglePortfolioSection: React.FC<SinglePortfolioSectionProps> = (
     featured_image_path,
     link,
     meta_description,
+    facebook,
+    twitter,
+    pinterest,
     published,
   } = props.portfolio
 
@@ -123,9 +126,21 @@ const SinglePortfolioSection: React.FC<SinglePortfolioSectionProps> = (
               </Text>
             </VStack>
             <HStack align="start" w="full" spacing={8} pt={10}>
-              <FaFacebookF />
-              <FaTwitter />
-              <FaPinterestP />
+              {facebook.length > 0 ? (
+                <a href={facebook} target="_blank" rel="noreferrer">
+                  <FaFacebookF />
+                </a>
+              ) : null}
+              {twitter.length > 0 ? (
+                <a href={facebook} target="_blank" rel="noreferrer">
+                  <FaTwitter />
+                </a>
+              ) : null}
+              {pinterest.length > 0 ? (
+                <a href={pinterest} target="_blank" rel="noreferrer">
+                  <FaPinterestP />
+                </a>
+              ) : null}
             </HStack>
           </VStack>
         </div>
