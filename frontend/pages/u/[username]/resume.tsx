@@ -5,17 +5,18 @@ import { ResumeSectionProps, LayoutProps } from "../../../types/profile"
 import Error from "../../error"
 
 interface ResumePageProps {
+  success: boolean
   display_resume: boolean
   layout: LayoutProps
   section: ResumeSectionProps
 }
 
 const Resume: NextPage<ResumePageProps> = (props: ResumePageProps) => {
-  const { display_resume, layout, section } = props
+  const { success, display_resume, layout, section } = props
 
   return (
     <>
-      {display_resume === true ? (
+      {display_resume === true && success ? (
         <Layout layoutProps={layout}>
           <ResumeSection {...section} />
         </Layout>
@@ -37,7 +38,7 @@ export const getServerSideProps = async (context: {
   const data = await res.json()
 
   return {
-    props: { ...data.data },
+    props: { ...data.data, success: data.success },
   }
 }
 

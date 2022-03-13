@@ -5,8 +5,10 @@ import {
   LayoutProps,
   SinglePortfolioSectionProps,
 } from "../../../../types/profile"
+import Error from "../../../error"
 
 interface SinglePortfolioPageProps {
+  success: boolean
   display_portfolio: boolean
   layout: LayoutProps
   section: SinglePortfolioSectionProps
@@ -16,9 +18,15 @@ const SinglePortfolio: NextPage<SinglePortfolioPageProps> = (
   props: SinglePortfolioPageProps
 ) => {
   return (
-    <Layout layoutProps={props.layout}>
-      <SinglePortfolioSection {...props.section} />
-    </Layout>
+    <>
+      {props.success ? (
+        <Layout layoutProps={props.layout}>
+          <SinglePortfolioSection {...props.section} />
+        </Layout>
+      ) : (
+        <Error />
+      )}
+    </>
   )
 }
 
@@ -34,7 +42,7 @@ export const getServerSideProps = async (context: {
   const data = await res.json()
 
   return {
-    props: { ...data.data },
+    props: { ...data.data, success: data.success },
   }
 }
 

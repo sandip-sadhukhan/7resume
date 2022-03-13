@@ -2,8 +2,10 @@ import type { NextPage } from "next"
 import Layout from "../../../components/profile/Layout"
 import AppointmentSection from "../../../components/profile/sections/appointments"
 import { AppointmentSectionProps, LayoutProps } from "../../../types/profile"
+import Error from "../../error"
 
 interface AppointmentsProps {
+  success: boolean
   layout: LayoutProps
   section: AppointmentSectionProps
 }
@@ -12,9 +14,15 @@ const Appointments: NextPage<AppointmentsProps> = (
   props: AppointmentsProps
 ) => {
   return (
-    <Layout layoutProps={props.layout}>
-      <AppointmentSection {...props.section} />
-    </Layout>
+    <>
+      {props.success ? (
+        <Layout layoutProps={props.layout}>
+          <AppointmentSection {...props.section} />
+        </Layout>
+      ) : (
+        <Error />
+      )}
+    </>
   )
 }
 export const getServerSideProps = async (context: {
@@ -28,7 +36,7 @@ export const getServerSideProps = async (context: {
   const data = await res.json()
 
   return {
-    props: { ...data.data },
+    props: { ...data.data, success: data.success },
   }
 }
 

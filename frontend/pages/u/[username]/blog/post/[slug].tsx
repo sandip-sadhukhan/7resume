@@ -5,6 +5,7 @@ import { BlogPostSectionProps, LayoutProps } from "../../../../../types/profile"
 import Error from "../../../../error"
 
 interface BlogPostProps {
+  success: boolean
   display_blog: boolean
   layout: LayoutProps
   section: BlogPostSectionProps
@@ -13,7 +14,7 @@ interface BlogPostProps {
 const BlogPost: React.FC<BlogPostProps> = (props: BlogPostProps) => {
   return (
     <>
-      {props.display_blog === true ? (
+      {props.display_blog === true && props.success ? (
         <Layout layoutProps={props.layout}>
           <SingleBlog {...props.section} />
         </Layout>
@@ -36,7 +37,7 @@ export const getServerSideProps = async (context: {
   const data = await res.json()
 
   return {
-    props: { ...data.data },
+    props: { ...data.data, success: data.success },
   }
 }
 

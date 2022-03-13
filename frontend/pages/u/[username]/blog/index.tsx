@@ -5,6 +5,7 @@ import { BlogSectionProps, LayoutProps } from "../../../../types/profile"
 import Error from "../../../error"
 
 interface BlogPageProps {
+  success: boolean
   display_blog: boolean
   layout: LayoutProps
   section: BlogSectionProps
@@ -13,7 +14,7 @@ interface BlogPageProps {
 const Blog: NextPage<BlogPageProps> = (props: BlogPageProps) => {
   return (
     <>
-      {props.display_blog === true ? (
+      {props.display_blog === true && props.success ? (
         <Layout layoutProps={props.layout}>
           <BlogSection {...props.section} />
         </Layout>
@@ -34,7 +35,7 @@ export const getServerSideProps = async (context: {
   const data = await res.json()
 
   return {
-    props: { ...data.data },
+    props: { ...data.data, success: data.success },
   }
 }
 

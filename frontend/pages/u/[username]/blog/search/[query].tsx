@@ -8,6 +8,7 @@ import {
 import Error from "../../../../error"
 
 interface BlogPageProps {
+  success: boolean
   display_blog: boolean
   layout: LayoutProps
   section: BlogSearchSectionProps
@@ -16,7 +17,7 @@ interface BlogPageProps {
 const BlogSearch: React.FC<BlogPageProps> = (props: BlogPageProps) => {
   return (
     <>
-      {props.display_blog === true ? (
+      {props.display_blog === true && props.success ? (
         <Layout layoutProps={props.layout}>
           <SearchBlogSection {...props.section} />
         </Layout>
@@ -44,7 +45,7 @@ export const getServerSideProps = async (context: ContextProps) => {
   const data = await res.json()
 
   return {
-    props: { ...data.data },
+    props: { ...data.data, success: data.success },
   }
 }
 

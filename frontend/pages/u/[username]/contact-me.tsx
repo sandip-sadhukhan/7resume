@@ -2,17 +2,25 @@ import type { NextPage } from "next"
 import Layout from "../../../components/profile/Layout"
 import Contact from "../../../components/profile/sections/contact"
 import { LayoutProps, ContactMeSectionProps } from "../../../types/profile"
+import Error from "../../error"
 
 interface ContactMeProps {
+  success: boolean
   layout: LayoutProps
   section: ContactMeSectionProps
 }
 
 const ContactMe: NextPage<ContactMeProps> = (props: ContactMeProps) => {
   return (
-    <Layout layoutProps={props.layout}>
-      <Contact {...props.section} />
-    </Layout>
+    <>
+      {props.success ? (
+        <Layout layoutProps={props.layout}>
+          <Contact {...props.section} />
+        </Layout>
+      ) : (
+        <Error />
+      )}
+    </>
   )
 }
 
@@ -27,7 +35,7 @@ export const getServerSideProps = async (context: {
   const data = await res.json()
 
   return {
-    props: { ...data.data },
+    props: { ...data.data, success: data.success },
   }
 }
 

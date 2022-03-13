@@ -5,6 +5,7 @@ import { LayoutProps, PortfolioSectionProps } from "../../../../types/profile"
 import Error from "../../../error"
 
 interface PortfolioPageProps {
+  success: boolean
   display_portfolio: boolean
   layout: LayoutProps
   section: PortfolioSectionProps
@@ -13,7 +14,7 @@ interface PortfolioPageProps {
 const Portfolio: NextPage<PortfolioPageProps> = (props: PortfolioPageProps) => {
   return (
     <>
-      {props.display_portfolio === true ? (
+      {props.display_portfolio === true && props.success ? (
         <Layout layoutProps={props.layout}>
           <PortfolioSection {...props.section} />
         </Layout>
@@ -35,7 +36,7 @@ export const getServerSideProps = async (context: {
   const data = await res.json()
 
   return {
-    props: { ...data.data },
+    props: { ...data.data, success: data.success },
   }
 }
 
