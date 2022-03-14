@@ -11,6 +11,7 @@ import {
 import { NextPage } from "next"
 import Head from "next/head"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import React, { ChangeEvent, FormEvent, useState } from "react"
 import { AiOutlineUnlock } from "react-icons/ai"
 import { RiUserFill } from "react-icons/ri"
@@ -19,6 +20,8 @@ const Login: NextPage = () => {
   const outerBg = useColorModeValue("gray.100", "gray.800")
   const innerBg = useColorModeValue("white", "gray.700")
   const headingColor = useColorModeValue("#63B3ED", "aqua")
+
+  const router = useRouter()
 
   interface IFormData {
     email: string
@@ -38,6 +41,7 @@ const Login: NextPage = () => {
 
   const onSubmit = (e: FormEvent<HTMLDivElement>) => {
     e.preventDefault()
+    router.push("/dashboard")
   }
 
   return (

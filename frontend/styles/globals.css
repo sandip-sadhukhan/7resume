@@ -5,3 +5,15 @@
 #main-page-full-image {
   background: linear-gradient(to right, #000000ad, #434343ab), url("/bg.jpg");
 }
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 0.5em;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgb(100, 99, 99);
+}
