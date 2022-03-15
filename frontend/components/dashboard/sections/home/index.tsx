@@ -31,12 +31,11 @@ const Home: React.FC = () => {
         py={5}
         color="white"
         w="full"
-        columns={4}
+        columns={[1, 2, 3, 4, 4]}
         spacingX={7}
         spacingY={5}
       >
         <StatisticsBox
-          // icon={<FaRegEye fontSize={30} />}
           Icon={FaRegEye}
           name="views"
           progressPercentage={85}

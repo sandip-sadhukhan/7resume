@@ -1,10 +1,11 @@
-import { HStack, Text } from "@chakra-ui/react"
+import { HStack, IconButton, Text } from "@chakra-ui/react"
 import Link from "next/link"
 import React from "react"
 import { FaBars, FaHome } from "react-icons/fa"
 
 interface HeaderMenuProps {
   currentMenu: string
+  onOpen: () => void
 }
 
 const HeaderMenu: React.FC<HeaderMenuProps> = (props: HeaderMenuProps) => {
@@ -22,7 +23,13 @@ const HeaderMenu: React.FC<HeaderMenuProps> = (props: HeaderMenuProps) => {
       spacing={3}
       fontSize={14}
     >
-      <FaBars cursor="pointer" color="gray" />
+      <IconButton
+        aria-label="toogle-menu"
+        bgColor="transparent"
+        onClick={props.onOpen}
+        icon={<FaBars cursor="pointer" color="gray" />}
+        display={["inline-flex", "inline-flex", "inline-flex", "none", "none"]}
+      />
       <Link href="/dashboard">
         <a>
           <HStack cursor="pointer" ps={2} color="gray" spacing={1}>
