@@ -14,13 +14,13 @@ const HeaderMenu: React.FC<HeaderMenuProps> = (props: HeaderMenuProps) => {
       as="nav"
       bgColor="white"
       shadow="sm"
-      px={6}
+      px={[2, 2, 3, 6, 6]}
       w="full"
       h="80px"
       align="start"
       justifyContent="start"
       alignItems="center"
-      spacing={3}
+      spacing={[2, 2, 2, 3, 3]}
       fontSize={14}
     >
       <IconButton
@@ -32,7 +32,12 @@ const HeaderMenu: React.FC<HeaderMenuProps> = (props: HeaderMenuProps) => {
       />
       <Link href="/dashboard">
         <a>
-          <HStack cursor="pointer" ps={2} color="gray" spacing={1}>
+          <HStack
+            cursor="pointer"
+            ps={[0, 0, 0, 2, 2]}
+            color="gray"
+            spacing={1}
+          >
             <FaHome />
             <Text>Home</Text>
           </HStack>

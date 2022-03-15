@@ -58,7 +58,14 @@ const Layout: React.FC<layoutProps> = (props: layoutProps) => {
           <HeaderMenu currentMenu={currentMenu} onOpen={onOpen} />
 
           {/* Main Content */}
-          <VStack as="section" w="full" minH="75vh" px={8} py={6} align="start">
+          <VStack
+            as="section"
+            w="full"
+            minH="75vh"
+            px={[3, 3, 5, 8, 8]}
+            py={[4, 4, 4, 6, 6]}
+            align="start"
+          >
             {children}
           </VStack>
 
