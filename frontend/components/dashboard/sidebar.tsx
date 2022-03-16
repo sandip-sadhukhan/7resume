@@ -55,7 +55,7 @@ const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
     >
       {/* Header */}
       <VStack
-        py={8}
+        py={6}
         px={8}
         w="full"
         pos="relative"
@@ -98,7 +98,6 @@ const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
 
       {/* Edit Profile */}
       <HStack
-        py={1}
         px={3}
         w="full"
         bgColor="blackAlpha.200"
@@ -128,17 +127,15 @@ const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
         </NextLink>
 
         {/* Logout */}
-        <NextLink href="/logout" passHref>
-          <HStack
-            as={Link}
-            _hover={{ color: "white" }}
-            px={3}
-            py={2}
-            cursor="pointer"
-          >
-            <GiPowerButton />
-          </HStack>
-        </NextLink>
+        <HStack
+          _hover={{ color: "white" }}
+          px={3}
+          py={2}
+          cursor="pointer"
+          onClick={() => alert("Logging out...")}
+        >
+          <GiPowerButton />
+        </HStack>
       </HStack>
 
       {/* Menus */}
