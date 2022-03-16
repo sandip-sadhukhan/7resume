@@ -25,18 +25,15 @@ const Layout: React.FC<layoutProps> = (props: layoutProps) => {
 
   return (
     <>
-      <HStack w="full" align="start" spacing={0}>
-        {/* SEO */}
-        <Head>
-          <meta charSet="UTF-8" />
-          <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
-          />
-          <link rel="shortcut icon" href="/favicon.png" type="image/png" />
-        </Head>
+      {/* SEO */}
+      <Head>
+        <meta charSet="UTF-8" />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+      </Head>
 
+      <HStack w="full" align="start" spacing={0}>
         {/* Sidebar */}
         <VStack
           w="22%"
@@ -50,32 +47,41 @@ const Layout: React.FC<layoutProps> = (props: layoutProps) => {
         <VStack
           as="main"
           w={["100%", "100%", "100%", "78%", "78%"]}
-          minH="100vh"
           bgColor="gray.200"
           align="start"
+          h="100vh"
+          maxH="fit-content"
+          overflow="hidden"
+          spacing={0}
         >
           {/* Header Menu */}
           <HeaderMenu currentMenu={currentMenu} onOpen={onOpen} />
 
-          {/* Main Content */}
           <VStack
             as="section"
             w="full"
-            minH="75vh"
-            px={[3, 3, 5, 8, 8]}
+            h="100vh"
+            overflowY="auto"
+            className="custom-scrollbar-2"
             py={[4, 4, 4, 6, 6]}
             align="start"
+            spacing={[5, 5, 5, 10, 10]}
           >
-            {children}
-          </VStack>
+            {/* Main Content */}
+            <VStack w="full" px={[3, 3, 5, 8, 8]}>
+              {children}
+            </VStack>
 
-          <Divider borderWidth="2px" bgColor="gray.400" w="99%" />
-
-          {/* Footer */}
-          <VStack as="footer" px={5} py={2} w="full" align="start">
-            <Text fontSize={13} fontWeight={700} color="gray.700">
-              &copy; Resume bus {new Date().getFullYear()}
-            </Text>
+            {/* Footer */}
+            <VStack w="98%">
+              <Divider borderWidth="2px" bgColor="gray.400" />
+              <VStack as="footer" w="full" align="start">
+                <Text fontSize={13} px={5} fontWeight={700} color="gray.700">
+                  &copy; Resume bus {new Date().getFullYear()}
+                </Text>
+              </VStack>
+            </VStack>
+            {/* content end */}
           </VStack>
         </VStack>
       </HStack>
