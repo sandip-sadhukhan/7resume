@@ -1,4 +1,4 @@
-import { Divider, Text, VStack } from "@chakra-ui/react"
+import { Button, Divider, HStack, Text, VStack } from "@chakra-ui/react"
 import React, { useState } from "react"
 import RadioBox from "./RadioBox"
 
@@ -46,7 +46,7 @@ const GeneralSettings: React.FC = () => {
     postAllowLatestPosts: false,
     postAllowRelatedPosts: false,
     postAllowTags: false,
-    postAllowComments: false,
+    postAllowComments: true,
     projectAllowRelatedProjects: false,
     projectAllowComments: false,
   })
@@ -55,7 +55,7 @@ const GeneralSettings: React.FC = () => {
     setFormData({ ...formData, [name]: val === "true" })
   }
   return (
-    <VStack w="full" align="start" spacing={4}>
+    <VStack w="full" align="start" spacing={6}>
       <VStack w="full" align="start" spacing={6}>
         {/* Display Sections */}
         <Text fontSize={14} fontWeight="semibold">
@@ -153,7 +153,74 @@ const GeneralSettings: React.FC = () => {
           name="Allow Popular Posts Widget to Appear"
           onChange={onChange}
         />
+        <Divider />
+
+        {/* Post page widgets */}
+        <Text fontSize={14} fontWeight="semibold">
+          Post page widgets appearance
+        </Text>
+        <Divider />
+        <RadioBox
+          keyItem="postAllowSearchBox"
+          name="Allow Search Box Widget to Appear"
+          value={formData.postAllowSearchBox}
+          onChange={onChange}
+        />
+        <RadioBox
+          keyItem="postAllowLatestPosts"
+          name="Allow Latest Posts Widget to Appear"
+          value={formData.postAllowLatestPosts}
+          onChange={onChange}
+        />
+        <RadioBox
+          value={formData.postAllowRelatedPosts}
+          keyItem="postAllowRelatedPosts"
+          name="Allow Related Posts Widget to Appear"
+          onChange={onChange}
+        />
+        <RadioBox
+          value={formData.postAllowTags}
+          keyItem="postAllowTags"
+          name="Allow Tags Widget to Appear"
+          onChange={onChange}
+        />
+        <RadioBox
+          value={formData.postAllowComments}
+          keyItem="postAllowComments"
+          name="Allow Comments Widget to Appear"
+          onChange={onChange}
+        />
+        <Divider />
+
+        {/* Project page widgets */}
+        <Text fontSize={14} fontWeight="semibold">
+          Project page widgets appearance
+        </Text>
+        <Divider />
+        <RadioBox
+          keyItem="projectAllowRelatedProjects"
+          name="Allow Related Posts to Appear"
+          value={formData.projectAllowRelatedProjects}
+          onChange={onChange}
+        />
+        <RadioBox
+          keyItem="projectAllowComments"
+          name="Allow Comments to Appear"
+          value={formData.projectAllowComments}
+          onChange={onChange}
+        />
       </VStack>
+      <HStack
+        w={300}
+        justifyContent={["start", "start", "start", "end", "end"]}
+      >
+        <Button size="sm" colorScheme="green" rounded={0}>
+          Save
+        </Button>
+        <Button size="sm" colorScheme="red" rounded={0}>
+          Cancel
+        </Button>
+      </HStack>
     </VStack>
   )
 }

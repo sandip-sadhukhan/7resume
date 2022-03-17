@@ -16,7 +16,7 @@ const HeaderMenu: React.FC<HeaderMenuProps> = (props: HeaderMenuProps) => {
       shadow="sm"
       px={[2, 2, 3, 6, 6]}
       w="full"
-      h="80px"
+      py={6}
       align="start"
       justifyContent="start"
       alignItems="center"

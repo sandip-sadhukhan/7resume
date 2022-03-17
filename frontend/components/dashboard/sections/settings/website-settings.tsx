@@ -246,6 +246,193 @@ const WebsiteSettings: React.FC = () => {
         </HStack>
       </HStack>
 
+      <HStack
+        w="full"
+        spacing={[0, 0, 2, 2, 2]}
+        flexDir={["column", "column", "row", "row", "row"]}
+        gap={3}
+        align="start"
+        alignItems="center"
+      >
+        <Text
+          fontSize={14}
+          w={["full", "full", 50, 100, 150]}
+          textAlign={["start", "start", "end", "end", "end"]}
+          color="gray"
+        >
+          Contact Form Image
+        </Text>
+        <HStack w="full" flex={1}>
+          <Input
+            size="sm"
+            w="full"
+            type="file"
+            placeholder="Favicon"
+            name="contactFormImage"
+            value={contactFormImage}
+            onChange={onChange}
+          />
+        </HStack>
+        <HStack px={4} align="start" w={["full", "full", 40, 40, 40]}>
+          <Image src="/avatar-1.jpg" alt="favicon" width={40} height={40} />
+        </HStack>
+      </HStack>
+      <HStack
+        w="full"
+        spacing={[0, 0, 2, 2, 2]}
+        flexDir={["column", "column", "row", "row", "row"]}
+        gap={3}
+        align="start"
+        alignItems="center"
+      >
+        <Text
+          fontSize={14}
+          w={["full", "full", 50, 100, 150]}
+          textAlign={["start", "start", "end", "end", "end"]}
+          color="gray"
+        >
+          Contact Form Image
+        </Text>
+        <HStack w="full" flex={1}>
+          <Input
+            size="sm"
+            w="full"
+            type="file"
+            placeholder="Favicon"
+            name="contactFormImage"
+            value={contactFormImage}
+            onChange={onChange}
+          />
+        </HStack>
+        <HStack px={4} align="start" w={["full", "full", 40, 40, 40]}>
+          <Image src="/avatar-1.jpg" alt="favicon" width={40} height={40} />
+        </HStack>
+      </HStack>
+      <HStack
+        w="full"
+        spacing={[0, 0, 2, 2, 2]}
+        flexDir={["column", "column", "row", "row", "row"]}
+        gap={3}
+        align="start"
+        alignItems="center"
+      >
+        <Text
+          fontSize={14}
+          w={["full", "full", 50, 100, 150]}
+          textAlign={["start", "start", "end", "end", "end"]}
+          color="gray"
+        >
+          Contact Form Image
+        </Text>
+        <HStack w="full" flex={1}>
+          <Input
+            size="sm"
+            w="full"
+            type="file"
+            placeholder="Favicon"
+            name="contactFormImage"
+            value={contactFormImage}
+            onChange={onChange}
+          />
+        </HStack>
+        <HStack px={4} align="start" w={["full", "full", 40, 40, 40]}>
+          <Image src="/avatar-1.jpg" alt="favicon" width={40} height={40} />
+        </HStack>
+      </HStack>
+      <HStack
+        w="full"
+        spacing={[0, 0, 2, 2, 2]}
+        flexDir={["column", "column", "row", "row", "row"]}
+        gap={3}
+        align="start"
+        alignItems="center"
+      >
+        <Text
+          fontSize={14}
+          w={["full", "full", 50, 100, 150]}
+          textAlign={["start", "start", "end", "end", "end"]}
+          color="gray"
+        >
+          Contact Form Image
+        </Text>
+        <HStack w="full" flex={1}>
+          <Input
+            size="sm"
+            w="full"
+            type="file"
+            placeholder="Favicon"
+            name="contactFormImage"
+            value={contactFormImage}
+            onChange={onChange}
+          />
+        </HStack>
+        <HStack px={4} align="start" w={["full", "full", 40, 40, 40]}>
+          <Image src="/avatar-1.jpg" alt="favicon" width={40} height={40} />
+        </HStack>
+      </HStack>
+      <HStack
+        w="full"
+        spacing={[0, 0, 2, 2, 2]}
+        flexDir={["column", "column", "row", "row", "row"]}
+        gap={3}
+        align="start"
+        alignItems="center"
+      >
+        <Text
+          fontSize={14}
+          w={["full", "full", 50, 100, 150]}
+          textAlign={["start", "start", "end", "end", "end"]}
+          color="gray"
+        >
+          Contact Form Image
+        </Text>
+        <HStack w="full" flex={1}>
+          <Input
+            size="sm"
+            w="full"
+            type="file"
+            placeholder="Favicon"
+            name="contactFormImage"
+            value={contactFormImage}
+            onChange={onChange}
+          />
+        </HStack>
+        <HStack px={4} align="start" w={["full", "full", 40, 40, 40]}>
+          <Image src="/avatar-1.jpg" alt="favicon" width={40} height={40} />
+        </HStack>
+      </HStack>
+      <HStack
+        w="full"
+        spacing={[0, 0, 2, 2, 2]}
+        flexDir={["column", "column", "row", "row", "row"]}
+        gap={3}
+        align="start"
+        alignItems="center"
+      >
+        <Text
+          fontSize={14}
+          w={["full", "full", 50, 100, 150]}
+          textAlign={["start", "start", "end", "end", "end"]}
+          color="gray"
+        >
+          Contact Form Image
+        </Text>
+        <HStack w="full" flex={1}>
+          <Input
+            size="sm"
+            w="full"
+            type="file"
+            placeholder="Favicon"
+            name="contactFormImage"
+            value={contactFormImage}
+            onChange={onChange}
+          />
+        </HStack>
+        <HStack px={4} align="start" w={["full", "full", 40, 40, 40]}>
+          <Image src="/avatar-1.jpg" alt="favicon" width={40} height={40} />
+        </HStack>
+      </HStack>
+
       <Divider />
 
       <HStack

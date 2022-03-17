@@ -24,7 +24,7 @@ const Layout: React.FC<layoutProps> = (props: layoutProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
-    <>
+    <HStack w="full" align="start" spacing={0}>
       {/* SEO */}
       <Head>
         <meta charSet="UTF-8" />
@@ -32,27 +32,31 @@ const Layout: React.FC<layoutProps> = (props: layoutProps) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="shortcut icon" href="/favicon.png" type="image/png" />
       </Head>
+      {/* Sidebar */}
+      <VStack
+        w="22%"
+        align="start"
+        display={["none", "none", "none", "flex", "flex"]}
+      >
+        <Sidebar />
+      </VStack>
 
-      <HStack w="full" align="start" spacing={0}>
-        {/* Sidebar */}
+      {/* Main Section */}
+      <VStack
+        as="main"
+        w={["100%", "100%", "100%", "78%", "78%"]}
+        align="start"
+      >
         <VStack
-          w="22%"
-          align="start"
-          display={["none", "none", "none", "flex", "flex"]}
-        >
-          <Sidebar />
-        </VStack>
-
-        {/* Main Section */}
-        <VStack
-          as="main"
-          w={["100%", "100%", "100%", "78%", "78%"]}
+          w="full"
           bgColor="gray.200"
           align="start"
           h="100vh"
-          maxH="fit-content"
-          overflow="hidden"
+          // maxH="fit-content"
+          // overflow="hidden"
           spacing={0}
+          overflowY="auto"
+          className="custom-scrollbar-2"
         >
           {/* Header Menu */}
           <HeaderMenu currentMenu={currentMenu} onOpen={onOpen} />
@@ -60,9 +64,6 @@ const Layout: React.FC<layoutProps> = (props: layoutProps) => {
           <VStack
             as="section"
             w="full"
-            h="100vh"
-            overflowY="auto"
-            className="custom-scrollbar-2"
             py={[4, 4, 4, 6, 6]}
             align="start"
             spacing={[5, 5, 5, 10, 10]}
@@ -84,14 +85,14 @@ const Layout: React.FC<layoutProps> = (props: layoutProps) => {
             {/* content end */}
           </VStack>
         </VStack>
-      </HStack>
+      </VStack>
       <Drawer isOpen={isOpen} placement="left" onClose={onClose} size="full">
         <DrawerOverlay />
         <DrawerContent>
           <Sidebar onClose={onClose} />
         </DrawerContent>
       </Drawer>
-    </>
+    </HStack>
   )
 }
 

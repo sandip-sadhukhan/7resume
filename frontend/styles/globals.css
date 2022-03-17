@@ -1,5 +1,6 @@
 html {
-  overflow: hidden;
+  background: green;
+  /* overflow: hidden; */
 }
 
 #headerSidebar {
