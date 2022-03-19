@@ -42,6 +42,7 @@ const ContactInformationContent = () => {
         flexDir={["column", "column", "row", "row", "row"]}
         gap={4}
         align="start"
+        spacing={0}
       >
         <Text
           fontSize={13}
@@ -109,7 +110,10 @@ const ContactInformationContent = () => {
       </HStack>
 
       <Divider />
-      <HStack ps={175} justifyContent="end">
+      <HStack
+        ps={["full", "full", 110, 150, 175]}
+        justifyContent={["start", "start", "end", "end", "end"]}
+      >
         <Button size="sm" rounded={0} colorScheme="green">
           Save
         </Button>
