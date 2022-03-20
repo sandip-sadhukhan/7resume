@@ -3,7 +3,7 @@ import React from "react"
 import Layout from "../../../../components/dashboard/layout"
 import EditProjectSection from "../../../../components/dashboard/sections/project/edit-project"
 
-const NewCategory: NextPage = () => {
+const EditProject: NextPage = () => {
   return (
     <Layout currentMenu="Edit Project">
       <EditProjectSection />
@@ -11,4 +11,4 @@ const NewCategory: NextPage = () => {
   )
 }
 
-export default NewCategory
+export default EditProject
