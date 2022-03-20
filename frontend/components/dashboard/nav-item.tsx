@@ -18,13 +18,13 @@ const NavItem: React.FC<NavItemProps> = (props: NavItemProps) => {
   const pathname = useRouter().pathname
 
   let current: boolean = pathname.startsWith(link)
-  console.log(pathname)
+
   if (link === "/dashboard") {
     current = pathname === link
   }
 
   // dropdown
-  const [dropdown, setDropdown] = useState(current)
+  const [dropdown, setDropdown] = useState(false)
 
   return (
     <>

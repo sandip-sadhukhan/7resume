@@ -188,7 +188,7 @@ const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
             <NavItem
               Icon={BiCategory}
               text="Projects Categories"
-              link="/dashboard/projects-categories"
+              link="/dashboard/projects/categories"
             />
             <Divider borderColor="whiteAlpha.200" />
             <NavItem
