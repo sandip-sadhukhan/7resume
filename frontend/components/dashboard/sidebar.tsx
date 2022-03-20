@@ -207,7 +207,7 @@ const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
             <NavItem
               Icon={BiCategory}
               text="Blog Categories"
-              link="/dashboard/blog-categories"
+              link="/dashboard/blog/categories"
             />
             <Divider borderColor="whiteAlpha.200" />
             <NavItem Icon={ImBlogger} text="Blog" link="/dashboard/blog" />

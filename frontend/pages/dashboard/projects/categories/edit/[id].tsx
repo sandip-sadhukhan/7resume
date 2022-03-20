@@ -1,14 +1,14 @@
 import { NextPage } from "next"
 import React from "react"
 import Layout from "../../../../../components/dashboard/layout"
-import EditCategorySection from "../../../../../components/dashboard/sections/project/category/edit-category"
+import EditProjectCategorySection from "../../../../../components/dashboard/sections/project/category/edit-project-category"
 
-const NewCategory: NextPage = () => {
+const NewProjectCategory: NextPage = () => {
   return (
-    <Layout currentMenu="Edit Category">
-      <EditCategorySection />
+    <Layout currentMenu="Edit Project Category">
+      <EditProjectCategorySection />
     </Layout>
   )
 }
 
-export default NewCategory
+export default NewProjectCategory

@@ -12,7 +12,7 @@ import Head from "next/head"
 import { useRouter } from "next/router"
 import React from "react"
 
-const EditCategorySection: React.FC = () => {
+const NewBlogCategorySection: React.FC = () => {
   const router = useRouter()
 
   return (
@@ -26,10 +26,10 @@ const EditCategorySection: React.FC = () => {
       rounded="sm"
     >
       <Head>
-        <title>Edit Project Category | Dashboard</title>
+        <title>New Blog Category | Dashboard</title>
       </Head>
       <Heading pb={2} as="h3" size="md" fontWeight="normal">
-        Edit Project Category
+        New Blog Category
       </Heading>
       <Divider bgColor="blackAlpha.500" borderWidth="1px" />
 
@@ -78,4 +78,4 @@ const EditCategorySection: React.FC = () => {
   )
 }
 
-export default EditCategorySection
+export default NewBlogCategorySection

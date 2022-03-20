@@ -12,7 +12,7 @@ import Head from "next/head"
 import { useRouter } from "next/router"
 import React from "react"
 
-const NewCategorySection: React.FC = () => {
+const NewProjectCategorySection: React.FC = () => {
   const router = useRouter()
 
   return (
@@ -78,4 +78,4 @@ const NewCategorySection: React.FC = () => {
   )
 }
 
-export default NewCategorySection
+export default NewProjectCategorySection
