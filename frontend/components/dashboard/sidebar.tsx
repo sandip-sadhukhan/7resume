@@ -222,7 +222,7 @@ const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
             <NavItem
               Icon={BiCategory}
               text="Skills Categories"
-              link="/dashboard/skills-categories"
+              link="/dashboard/skills/categories"
             />
             <Divider borderColor="whiteAlpha.200" />
             <NavItem
@@ -263,7 +263,7 @@ const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
             <NavItem
               Icon={BsFillCalendar2EventFill}
               text="Requested Appointments"
-              link="/dashboard/requested-appointments"
+              link="/dashboard/appointments/requested"
             />
           </>
         </NavItem>
