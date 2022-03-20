@@ -17,8 +17,14 @@ const NavItem: React.FC<NavItemProps> = (props: NavItemProps) => {
 
   const pathname = useRouter().pathname
 
+  let current: boolean = pathname.startsWith(link)
+  console.log(pathname)
+  if (link === "/dashboard") {
+    current = pathname === link
+  }
+
   // dropdown
-  const [dropdown, setDropdown] = useState(pathname === link)
+  const [dropdown, setDropdown] = useState(current)
 
   return (
     <>
@@ -41,10 +47,10 @@ const NavItem: React.FC<NavItemProps> = (props: NavItemProps) => {
                 spacing={3}
                 _groupHover={{ color: "white" }}
               >
-                <Icon color={pathname == link ? "white" : "whiteAlpha.700"} />
+                <Icon color={current ? "white" : "whiteAlpha.700"} />
                 <Text
                   _groupHover={{ color: "white" }}
-                  color={pathname == link ? "white" : "whiteAlpha.700"}
+                  color={current ? "white" : "whiteAlpha.700"}
                 >
                   {text}
                 </Text>
@@ -78,10 +84,10 @@ const NavItem: React.FC<NavItemProps> = (props: NavItemProps) => {
               spacing={3}
               _groupHover={{ color: "white" }}
             >
-              <Icon color={pathname == link ? "white" : "whiteAlpha.700"} />
+              <Icon color={current ? "white" : "whiteAlpha.700"} />
               <Text
                 _groupHover={{ color: "white" }}
-                color={pathname === link ? "white" : "whiteAlpha.700"}
+                color={current ? "white" : "whiteAlpha.700"}
               >
                 {text}
               </Text>
