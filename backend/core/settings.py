@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 from decouple import config
 
@@ -26,7 +27,7 @@ MY_APPS = [
 THIRD_PARTY_APPS = [
     "corsheaders",
     "rest_framework",
-    "drf_yasg",
+    "drf_yasg",  # documentation of apis
 ]
 
 INSTALLED_APPS = [
@@ -135,3 +136,19 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "accounts.UserAccount"
 
 # Rest framework
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
+}
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=3),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=10),
+}
+
+FILE_UPLOAD_PERMISSIONS = 0o640

@@ -87,7 +87,9 @@ const AboutSection: React.FC<AboutSectionProps> = (
       ) : null}
 
       {/* Client Say */}
-      {props.display_testimonials === true ? (
+      {props.display_testimonials &&
+      props.testimonials &&
+      props.testimonials?.length > 0 ? (
         <ClientSay
           testimonials={props.testimonials as TestimonialType[]}
           grayBackground={grayBackground}

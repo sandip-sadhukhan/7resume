@@ -106,6 +106,8 @@ class ContactMeProfilePageView(APIView):
 
 # Contact Me form submit
 class ContactMessageSend(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     class MessageSerializer(serializers.ModelSerializer):
         class Meta:
             model = Message
@@ -142,6 +144,8 @@ class ContactMessageSend(APIView):
 
 # Resume Page
 class ResumeProfilePageView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def get(self, request: HttpRequest, username: str):
         try:
             user = UserAccount.objects.get(username=username)
@@ -164,6 +168,8 @@ class ResumeProfilePageView(APIView):
 
 # Portfolio Page
 class PortfolioProfilePageView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def get(self, request: HttpRequest, username: str):
         try:
             user = UserAccount.objects.get(username=username)
@@ -186,10 +192,16 @@ class PortfolioProfilePageView(APIView):
 
 # Portfolio Page
 class PortfolioDetailProfilePageView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def get(self, request: HttpRequest, username: str, slug: str):
         try:
             user = UserAccount.objects.get(username=username)
-            portfolio = Project.objects.get(slug=slug, display_project=True)
+            portfolio = Project.objects.get(
+                slug=slug,
+                display_project=True,
+                user_profile=user.user_profile,
+            )
         except UserAccount.DoesNotExist:
             return Response(
                 {
@@ -217,6 +229,8 @@ class PortfolioDetailProfilePageView(APIView):
 
 # Blog Page
 class BlogProfilePageView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def get(self, request: HttpRequest, username: str):
         try:
             user = UserAccount.objects.get(username=username)
@@ -238,12 +252,15 @@ class BlogProfilePageView(APIView):
 
 
 class BlogDetailProfilePageView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def get(self, request: HttpRequest, username: str, slug: str):
         try:
             user = UserAccount.objects.get(username=username)
             blog = Blog.objects.get(
                 slug=slug,
                 display_article=True,
+                user_profile=user.user_profile,
             )
         except UserAccount.DoesNotExist:
             return Response(
@@ -275,6 +292,8 @@ class BlogDetailProfilePageView(APIView):
 
 
 class BlogSearchPageView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def get(self, request, username: str, query: str) -> HttpResponse:
         try:
             user = UserAccount.objects.get(username=username)
@@ -296,11 +315,14 @@ class BlogSearchPageView(APIView):
 
 
 class BlogCategoryPageView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def get(self, request, username: str, category_name: str) -> HttpResponse:
         try:
             user = UserAccount.objects.get(username=username)
             category = BlogCategory.objects.get(
-                user_profile=user.user_profile, title__iexact=category_name
+                user_profile=user.user_profile,
+                title__iexact=category_name,
             )
         except UserAccount.DoesNotExist:
             return Response(
@@ -329,6 +351,8 @@ class BlogCategoryPageView(APIView):
 
 # Appointment Page
 class AppointmentProfilePageView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def get(self, request: HttpRequest, username: str):
         try:
             user = UserAccount.objects.get(username=username)
@@ -351,6 +375,8 @@ class AppointmentProfilePageView(APIView):
 
 # request appointment form submission
 class RequestedAppointmentFormView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     class RequestedAppointmentSerializer(serializers.ModelSerializer):
         class Meta:
             model = RequestedAppointment
