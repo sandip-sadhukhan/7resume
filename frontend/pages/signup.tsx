@@ -18,6 +18,7 @@ import { AiOutlineUnlock } from "react-icons/ai"
 import { RiUserFill } from "react-icons/ri"
 import { signup } from "../auth/actions"
 import { withAuth } from "../auth/context"
+import NotAuth from "../components/hocs/not-auth"
 import { IAction, IState } from "../types/auth"
 
 interface SignUpProps {
@@ -102,127 +103,129 @@ const SignUp: NextPage<SignUpProps> = (props: SignUpProps) => {
   }
 
   return (
-    <HStack w="full" minH="100vh" py={5} px={3} bgColor={outerBg}>
-      <Head>
-        <title>SignUp Page | Resume Bus</title>
-      </Head>
-      <Center
-        mx="auto"
-        bgColor={innerBg}
-        borderRadius={10}
-        shadow="lg"
-        w={["100%", "100%", "100%", "40%", "35%"]}
-        justifyContent="center"
-        alignItems="center"
-      >
-        <VStack p={10} w="full" spacing={10}>
-          <VStack spacing={4}>
-            <RiUserFill fontSize={45} color={headingColor} />
-            <Heading
-              color={headingColor}
-              size="lg"
-              fontWeight={400}
-              letterSpacing="wide"
-            >
-              SIGNUP
-            </Heading>
-          </VStack>
-          <VStack
-            onSubmit={onSubmit}
-            as="form"
-            spacing={4}
-            w="full"
-            align="start"
-          >
-            <Input
-              type="text"
-              placeholder="Full Name"
-              rounded="none"
-              name="name"
-              value={name}
-              onChange={onChange}
-              required
-              minLength={3}
-              disabled={loading}
-            />
-            <Input
-              rounded="none"
-              type="text"
-              placeholder="Username"
-              name="username"
-              value={username}
-              onChange={onChange}
-              required
-              minLength={3}
-              disabled={loading}
-            />
-            <Input
-              rounded="none"
-              type="email"
-              placeholder="Email"
-              name="email"
-              value={email}
-              onChange={onChange}
-              required
-              minLength={6}
-              disabled={loading}
-            />
-            <Input
-              rounded="none"
-              type="password"
-              placeholder="Password"
-              name="password"
-              value={password}
-              onChange={onChange}
-              required
-              minLength={6}
-              disabled={loading}
-            />
-            <Input
-              rounded="none"
-              type="password"
-              placeholder="Confirm Password"
-              name="confirmPassword"
-              value={confirmPassword}
-              onChange={onChange}
-              required
-              minLength={6}
-              disabled={loading}
-            />
-            <Text>
-              By creating your account, you are agree to our{" "}
-              <Link href="/terms-and-conditions">
-                <a style={{ color: headingColor }}>Terms and Condition</a>
-              </Link>{" "}
-              &#38;{" "}
-              <Link href="/privacy-policy">
-                <a style={{ color: headingColor }}>Privacy Policy</a>
-              </Link>
-            </Text>
-            <Button
-              type="submit"
+    <NotAuth>
+      <HStack w="full" minH="100vh" py={5} px={3} bgColor={outerBg}>
+        <Head>
+          <title>SignUp Page | Resume Bus</title>
+        </Head>
+        <Center
+          mx="auto"
+          bgColor={innerBg}
+          borderRadius={10}
+          shadow="lg"
+          w={["100%", "100%", "100%", "40%", "35%"]}
+          justifyContent="center"
+          alignItems="center"
+        >
+          <VStack p={10} w="full" spacing={10}>
+            <VStack spacing={4}>
+              <RiUserFill fontSize={45} color={headingColor} />
+              <Heading
+                color={headingColor}
+                size="lg"
+                fontWeight={400}
+                letterSpacing="wide"
+              >
+                SIGNUP
+              </Heading>
+            </VStack>
+            <VStack
+              onSubmit={onSubmit}
+              as="form"
+              spacing={4}
               w="full"
-              bgColor={headingColor}
-              color="black"
-              rounded="none"
-              isLoading={loading}
-              loadingText="Signing Up..."
+              align="start"
             >
-              <HStack>
-                <AiOutlineUnlock />
-                <Text>SIGNUP</Text>
-              </HStack>
-            </Button>
-            <Text alignSelf="center">
-              Already Have any account?{" "}
-              <Link href="/login">
-                <a style={{ color: headingColor }}>Login Here</a>
-              </Link>
-            </Text>
+              <Input
+                type="text"
+                placeholder="Full Name"
+                rounded="none"
+                name="name"
+                value={name}
+                onChange={onChange}
+                required
+                minLength={3}
+                disabled={loading}
+              />
+              <Input
+                rounded="none"
+                type="text"
+                placeholder="Username"
+                name="username"
+                value={username}
+                onChange={onChange}
+                required
+                minLength={3}
+                disabled={loading}
+              />
+              <Input
+                rounded="none"
+                type="email"
+                placeholder="Email"
+                name="email"
+                value={email}
+                onChange={onChange}
+                required
+                minLength={6}
+                disabled={loading}
+              />
+              <Input
+                rounded="none"
+                type="password"
+                placeholder="Password"
+                name="password"
+                value={password}
+                onChange={onChange}
+                required
+                minLength={6}
+                disabled={loading}
+              />
+              <Input
+                rounded="none"
+                type="password"
+                placeholder="Confirm Password"
+                name="confirmPassword"
+                value={confirmPassword}
+                onChange={onChange}
+                required
+                minLength={6}
+                disabled={loading}
+              />
+              <Text>
+                By creating your account, you are agree to our{" "}
+                <Link href="/terms-and-conditions">
+                  <a style={{ color: headingColor }}>Terms and Condition</a>
+                </Link>{" "}
+                &#38;{" "}
+                <Link href="/privacy-policy">
+                  <a style={{ color: headingColor }}>Privacy Policy</a>
+                </Link>
+              </Text>
+              <Button
+                type="submit"
+                w="full"
+                bgColor={headingColor}
+                color="black"
+                rounded="none"
+                isLoading={loading}
+                loadingText="Signing Up..."
+              >
+                <HStack>
+                  <AiOutlineUnlock />
+                  <Text>SIGNUP</Text>
+                </HStack>
+              </Button>
+              <Text alignSelf="center">
+                Already Have any account?{" "}
+                <Link href="/login">
+                  <a style={{ color: headingColor }}>Login Here</a>
+                </Link>
+              </Text>
+            </VStack>
           </VStack>
-        </VStack>
-      </Center>
-    </HStack>
+        </Center>
+      </HStack>
+    </NotAuth>
   )
 }
 

@@ -7,9 +7,10 @@ import {
   Text,
   VStack,
   Link,
+  useToast,
 } from "@chakra-ui/react"
 import NextLink from "next/link"
-import React from "react"
+import React, { Dispatch } from "react"
 import { AiOutlineProject } from "react-icons/ai"
 import { BiCategory, BiSupport } from "react-icons/bi"
 import {
@@ -33,13 +34,31 @@ import { MdPeopleAlt } from "react-icons/md"
 import { RiUserStarFill } from "react-icons/ri"
 import { IoIosPricetag } from "react-icons/io"
 import { useRouter } from "next/router"
+import { withAuth } from "../../auth/context"
+import { IAction } from "../../types/auth"
+import { logout } from "../../auth/actions"
 
 interface SidebarProps {
   onClose?: () => void
+  dispatch: Dispatch<IAction>
 }
 
 const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
   const pathname = useRouter().pathname
+
+  const toast = useToast()
+
+  const logoutUser = () => {
+    logout(props.dispatch)
+
+    toast({
+      title: "Logout Successfully!",
+      variant: "top-accent",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    })
+  }
 
   return (
     <VStack
@@ -132,7 +151,7 @@ const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
           px={3}
           py={2}
           cursor="pointer"
-          onClick={() => alert("Logging out...")}
+          onClick={logoutUser}
         >
           <GiPowerButton />
         </HStack>
@@ -272,4 +291,4 @@ const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
   )
 }
 
-export default Sidebar
+export default withAuth(Sidebar)

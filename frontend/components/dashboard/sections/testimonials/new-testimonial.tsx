@@ -5,8 +5,7 @@ import {
   Heading,
   HStack,
   Input,
-  Radio,
-  RadioGroup,
+  Select,
   Text,
   Textarea,
   VStack,
@@ -144,31 +143,15 @@ const NewTestimonialSection = () => {
             </Text>
           </Flex>
           <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
-            <RadioGroup defaultValue="2" w="full">
-              <HStack
-                w="full"
-                spacing={[0, 0, 8, 10, 10]}
-                flexDir={["column", "column", "row", "row", "row"]}
-                align="start"
-                gap={2}
-              >
-                <Radio size="sm" value="1">
-                  1 Star
-                </Radio>
-                <Radio size="sm" value="2">
-                  2 Star
-                </Radio>
-                <Radio size="sm" value="3">
-                  3 Star
-                </Radio>
-                <Radio size="sm" value="4">
-                  4 Star
-                </Radio>
-                <Radio size="sm" value="5">
-                  5 Star
-                </Radio>
-              </HStack>
-            </RadioGroup>
+            <Select>
+              <option value={1}>1 Star</option>
+              <option value={2}>2 Stars</option>
+              <option value={3}>3 Stars</option>
+              <option value={4}>4 Stars</option>
+              <option value={5} selected>
+                5 Stars
+              </option>
+            </Select>
           </Flex>
         </HStack>
         <Divider />

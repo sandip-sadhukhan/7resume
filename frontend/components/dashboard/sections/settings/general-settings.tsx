@@ -1,6 +1,6 @@
 import { Button, Divider, HStack, Text, VStack } from "@chakra-ui/react"
-import React, { useState } from "react"
-import RadioBox from "./RadioBox"
+import React, { ChangeEvent, useState } from "react"
+import SwitchBox from "./switch-box"
 
 const GeneralSettings: React.FC = () => {
   interface IFormData {
@@ -13,7 +13,7 @@ const GeneralSettings: React.FC = () => {
     displayTestimonials: boolean
     displayFunFacts: boolean
     displayAppointments: boolean
-    displayPricingPlan: boolean
+    displayPricingPlans: boolean
     blogAllowSearchBox: boolean
     blogAllowCategories: boolean
     blogAllowLatestPosts: boolean
@@ -29,7 +29,7 @@ const GeneralSettings: React.FC = () => {
 
   const [formData, setFormData] = useState<IFormData>({
     displayBlog: false,
-    displayClients: false,
+    displayClients: true,
     displayContactForm: false,
     displayPortfolio: false,
     displayResume: false,
@@ -37,7 +37,7 @@ const GeneralSettings: React.FC = () => {
     displayTestimonials: false,
     displayFunFacts: false,
     displayAppointments: false,
-    displayPricingPlan: false,
+    displayPricingPlans: false,
     blogAllowSearchBox: false,
     blogAllowCategories: false,
     blogAllowLatestPosts: false,
@@ -51,9 +51,12 @@ const GeneralSettings: React.FC = () => {
     projectAllowComments: false,
   })
 
-  const onChange = (name: string, val: string) => {
-    setFormData({ ...formData, [name]: val === "true" })
+  console.log(formData.displayClients)
+
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.checked })
   }
+
   return (
     <VStack w="full" align="start" spacing={6}>
       <VStack w="full" align="start" spacing={6}>
@@ -62,66 +65,77 @@ const GeneralSettings: React.FC = () => {
           Display Sections
         </Text>
         <Divider />
-        <RadioBox
-          keyItem="displayBlog"
-          name="Display Blog"
-          value={formData.displayBlog}
+
+        <SwitchBox
+          name="displayBlog"
+          label="Display Blog"
+          checked={formData.displayBlog}
           onChange={onChange}
         />
-        <RadioBox
-          keyItem="displayClients"
-          name="Display Clients"
-          value={formData.displayClients}
+
+        <SwitchBox
+          name="displayClients"
+          label="Display Clients"
+          checked={formData.displayClients}
           onChange={onChange}
         />
-        <RadioBox
-          keyItem="displayContactForm"
-          name="Display Contact Form"
-          value={formData.displayContactForm}
+
+        <SwitchBox
+          name="displayContactForm"
+          label="Display Contact Form"
+          checked={formData.displayContactForm}
           onChange={onChange}
         />
-        <RadioBox
-          keyItem="displayPortfolio"
-          name="Display Portfolio"
-          value={formData.displayPortfolio}
+
+        <SwitchBox
+          name="displayPortfolio"
+          label="Display Portfolio"
+          checked={formData.displayPortfolio}
           onChange={onChange}
         />
-        <RadioBox
-          keyItem="displayResume"
-          name="Display Resume"
-          value={formData.displayResume}
+
+        <SwitchBox
+          name="displayResume"
+          label="Display Resume"
+          checked={formData.displayResume}
           onChange={onChange}
         />
-        <RadioBox
-          keyItem="displayServices"
-          name="Display Services"
-          value={formData.displayServices}
+
+        <SwitchBox
+          name="displayServices"
+          label="Display Services"
+          checked={formData.displayServices}
           onChange={onChange}
         />
-        <RadioBox
-          keyItem="displayTestimonials"
-          name="Display Testimonials"
-          value={formData.displayTestimonials}
+
+        <SwitchBox
+          name="displayTestimonials"
+          label="Display Testimonials"
+          checked={formData.displayTestimonials}
           onChange={onChange}
         />
-        <RadioBox
-          keyItem="displayFunFacts"
-          name="Display Fun Facts"
-          value={formData.displayFunFacts}
+
+        <SwitchBox
+          name="displayFunFacts"
+          label="Display Fun Facts"
+          checked={formData.displayFunFacts}
           onChange={onChange}
         />
-        <RadioBox
-          keyItem="displayAppointments"
-          name="Display Appointments"
-          value={formData.displayAppointments}
+
+        <SwitchBox
+          name="displayAppointments"
+          label="Display Appointments"
+          checked={formData.displayAppointments}
           onChange={onChange}
         />
-        <RadioBox
-          keyItem="displayPricingPlan"
-          name="Display Pricing Plan"
-          value={formData.displayPricingPlan}
+
+        <SwitchBox
+          name="displayPricingPlans"
+          label="Display Pricing Plans"
+          checked={formData.displayPricingPlans}
           onChange={onChange}
         />
+
         <Divider />
 
         {/* Blog page widgets */}
@@ -129,28 +143,32 @@ const GeneralSettings: React.FC = () => {
           Blog page widgets appearance
         </Text>
         <Divider />
-        <RadioBox
-          keyItem="blogAllowSearchBox"
-          name="Allow Search Box Widget to Appear"
-          value={formData.blogAllowSearchBox}
+
+        <SwitchBox
+          checked={formData.blogAllowSearchBox}
+          name="blogAllowSearchBox"
+          label="Allow Search Box Widgets to Appear"
           onChange={onChange}
         />
-        <RadioBox
-          keyItem="blogAllowCategories"
-          name="Allow Categories Widget to Appear"
-          value={formData.blogAllowCategories}
+
+        <SwitchBox
+          checked={formData.blogAllowCategories}
+          name="blogAllowCategories"
+          label="Allow Categories Widgets to Appear"
           onChange={onChange}
         />
-        <RadioBox
-          value={formData.blogAllowLatestPosts}
-          keyItem="blogAllowLatestPosts"
-          name="Allow Latest Posts Widget to Appear"
+
+        <SwitchBox
+          checked={formData.blogAllowLatestPosts}
+          name="blogAllowLatestPosts"
+          label="Allow Latest Posts Widgets to Appear"
           onChange={onChange}
         />
-        <RadioBox
-          value={formData.blogAllowPopularPosts}
-          keyItem="blogAllowPopularPosts"
-          name="Allow Popular Posts Widget to Appear"
+
+        <SwitchBox
+          checked={formData.blogAllowPopularPosts}
+          name="blogAllowPopularPosts"
+          label="Allow Popular Posts Widgets to Appear"
           onChange={onChange}
         />
         <Divider />
@@ -160,34 +178,39 @@ const GeneralSettings: React.FC = () => {
           Post page widgets appearance
         </Text>
         <Divider />
-        <RadioBox
-          keyItem="postAllowSearchBox"
-          name="Allow Search Box Widget to Appear"
-          value={formData.postAllowSearchBox}
+
+        <SwitchBox
+          checked={formData.postAllowSearchBox}
+          name="postAllowSearchBox"
+          label="Allow Search Box Widgets to Appear"
           onChange={onChange}
         />
-        <RadioBox
-          keyItem="postAllowLatestPosts"
-          name="Allow Latest Posts Widget to Appear"
-          value={formData.postAllowLatestPosts}
+
+        <SwitchBox
+          checked={formData.postAllowLatestPosts}
+          name="postAllowLatestPosts"
+          label="Allow Latest Posts Widgets to Appear"
           onChange={onChange}
         />
-        <RadioBox
-          value={formData.postAllowRelatedPosts}
-          keyItem="postAllowRelatedPosts"
-          name="Allow Related Posts Widget to Appear"
+
+        <SwitchBox
+          checked={formData.postAllowRelatedPosts}
+          name="postAllowRelatedPosts"
+          label="Allow Related Posts Widgets to Appear"
           onChange={onChange}
         />
-        <RadioBox
-          value={formData.postAllowTags}
-          keyItem="postAllowTags"
-          name="Allow Tags Widget to Appear"
+
+        <SwitchBox
+          checked={formData.postAllowTags}
+          name="postAllowTags"
+          label="Allow Tags Widgets to Appear"
           onChange={onChange}
         />
-        <RadioBox
-          value={formData.postAllowComments}
-          keyItem="postAllowComments"
-          name="Allow Comments Widget to Appear"
+
+        <SwitchBox
+          checked={formData.postAllowComments}
+          name="postAllowComments"
+          label="Allow Comments Widgets to Appear"
           onChange={onChange}
         />
         <Divider />
@@ -197,19 +220,23 @@ const GeneralSettings: React.FC = () => {
           Project page widgets appearance
         </Text>
         <Divider />
-        <RadioBox
-          keyItem="projectAllowRelatedProjects"
-          name="Allow Related Posts to Appear"
-          value={formData.projectAllowRelatedProjects}
+
+        <SwitchBox
+          checked={formData.projectAllowRelatedProjects}
+          name="projectAllowRelatedProjects"
+          label="Allow Related Projects to Appear"
           onChange={onChange}
         />
-        <RadioBox
-          keyItem="projectAllowComments"
-          name="Allow Comments to Appear"
-          value={formData.projectAllowComments}
+
+        <SwitchBox
+          checked={formData.projectAllowComments}
+          name="projectAllowComments"
+          label="Allow Comments to Appear"
           onChange={onChange}
         />
+        <Divider />
       </VStack>
+
       <HStack
         w={300}
         justifyContent={["start", "start", "start", "end", "end"]}

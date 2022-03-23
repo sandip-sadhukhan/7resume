@@ -108,7 +108,7 @@ export const authenticate = async (
       type: LOGIN_FAIL,
     })
     localStorage.removeItem("token")
-    return [false, "Please Login to continue"]
+    return [false, "Please Login/Signup to continue"]
   }
 
   try {
@@ -131,7 +131,7 @@ export const authenticate = async (
         type: LOGIN_FAIL,
       })
       localStorage.removeItem("token")
-      return [false, "Please Login to continue"]
+      return [false, "Please Login/Signup to continue"]
     }
   } catch (err) {
     dispatch({

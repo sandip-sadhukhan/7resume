@@ -18,6 +18,7 @@ import { AiOutlineUnlock } from "react-icons/ai"
 import { RiUserFill } from "react-icons/ri"
 import { login } from "../auth/actions"
 import { withAuth } from "../auth/context"
+import NotAuth from "../components/hocs/not-auth"
 import { IAction, IState } from "../types/auth"
 
 interface LoginProps {
@@ -83,76 +84,78 @@ const Login: NextPage<LoginProps> = (props: LoginProps) => {
   }
 
   return (
-    <HStack w="full" minH="100vh" py={10} px={3} bgColor={outerBg}>
-      <Head>
-        <title>Login Page | Resume Bus</title>
-      </Head>
-      <Center
-        mx="auto"
-        bgColor={innerBg}
-        borderRadius={10}
-        shadow="lg"
-        w={["100%", "100%", "100%", "40%", "35%"]}
-        justifyContent="center"
-        alignItems="center"
-      >
-        <VStack p={10} w="full" spacing={10}>
-          <VStack spacing={4}>
-            <RiUserFill fontSize={45} color={headingColor} />
-            <Heading
-              color={headingColor}
-              size="lg"
-              fontWeight={400}
-              letterSpacing="wide"
-            >
-              LOGIN
-            </Heading>
+    <NotAuth>
+      <HStack w="full" minH="100vh" py={10} px={3} bgColor={outerBg}>
+        <Head>
+          <title>Login Page | Resume Bus</title>
+        </Head>
+        <Center
+          mx="auto"
+          bgColor={innerBg}
+          borderRadius={10}
+          shadow="lg"
+          w={["100%", "100%", "100%", "40%", "35%"]}
+          justifyContent="center"
+          alignItems="center"
+        >
+          <VStack p={10} w="full" spacing={10}>
+            <VStack spacing={4}>
+              <RiUserFill fontSize={45} color={headingColor} />
+              <Heading
+                color={headingColor}
+                size="lg"
+                fontWeight={400}
+                letterSpacing="wide"
+              >
+                LOGIN
+              </Heading>
+            </VStack>
+            <VStack spacing={4} w="full" as="form" onSubmit={onSubmit}>
+              <Input
+                rounded="none"
+                type="email"
+                placeholder="Email"
+                name="email"
+                value={email}
+                onChange={onChange}
+                required
+                disabled={loading}
+              />
+              <Input
+                rounded="none"
+                type="password"
+                placeholder="Password"
+                name="password"
+                value={password}
+                onChange={onChange}
+                required
+                disabled={loading}
+              />
+              <Button
+                w="full"
+                bgColor={headingColor}
+                color="black"
+                rounded="none"
+                type="submit"
+                loadingText="Logging Up..."
+                isLoading={loading}
+              >
+                <HStack>
+                  <AiOutlineUnlock />
+                  <Text>LOGIN</Text>
+                </HStack>
+              </Button>
+              <Text>
+                Don&apos;t Have any account?{" "}
+                <Link href="/signup">
+                  <a style={{ color: headingColor }}>Signup Here</a>
+                </Link>
+              </Text>
+            </VStack>
           </VStack>
-          <VStack spacing={4} w="full" as="form" onSubmit={onSubmit}>
-            <Input
-              rounded="none"
-              type="email"
-              placeholder="Email"
-              name="email"
-              value={email}
-              onChange={onChange}
-              required
-              disabled={loading}
-            />
-            <Input
-              rounded="none"
-              type="password"
-              placeholder="Password"
-              name="password"
-              value={password}
-              onChange={onChange}
-              required
-              disabled={loading}
-            />
-            <Button
-              w="full"
-              bgColor={headingColor}
-              color="black"
-              rounded="none"
-              type="submit"
-              loadingText="Logging Up..."
-              isLoading={loading}
-            >
-              <HStack>
-                <AiOutlineUnlock />
-                <Text>LOGIN</Text>
-              </HStack>
-            </Button>
-            <Text>
-              Don&apos;t Have any account?{" "}
-              <Link href="/signup">
-                <a style={{ color: headingColor }}>Signup Here</a>
-              </Link>
-            </Text>
-          </VStack>
-        </VStack>
-      </Center>
-    </HStack>
+        </Center>
+      </HStack>
+    </NotAuth>
   )
 }
 
