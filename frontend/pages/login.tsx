@@ -6,22 +6,35 @@ import {
   Input,
   Text,
   useColorModeValue,
+  useToast,
   VStack,
 } from "@chakra-ui/react"
 import { NextPage } from "next"
 import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import React, { ChangeEvent, FormEvent, useState } from "react"
+import React, { ChangeEvent, Dispatch, FormEvent, useState } from "react"
 import { AiOutlineUnlock } from "react-icons/ai"
 import { RiUserFill } from "react-icons/ri"
+import { login } from "../auth/actions"
+import { withAuth } from "../auth/context"
+import { IAction, IState } from "../types/auth"
 
-const Login: NextPage = () => {
+interface LoginProps {
+  state: IState
+  dispatch: Dispatch<IAction>
+}
+
+const Login: NextPage<LoginProps> = (props: LoginProps) => {
   const outerBg = useColorModeValue("gray.100", "gray.800")
   const innerBg = useColorModeValue("white", "gray.700")
   const headingColor = useColorModeValue("#63B3ED", "aqua")
 
+  const toast = useToast()
+
   const router = useRouter()
+
+  const { state, dispatch } = props
 
   interface IFormData {
     email: string
@@ -33,14 +46,39 @@ const Login: NextPage = () => {
     password: "",
   })
 
+  const [loading, setLoading] = useState<boolean>(false)
+
   const { email, password } = formData
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const onSubmit = (e: FormEvent<HTMLDivElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLDivElement>) => {
     e.preventDefault()
+    setLoading(true)
+    const [success, message] = await login(email, password, dispatch)
+    if (success) {
+      toast({
+        title: message,
+        status: "success",
+        variant: "top-accent",
+        duration: 3000,
+        isClosable: true,
+      })
+    } else {
+      toast({
+        title: message,
+        status: "error",
+        variant: "top-accent",
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+    setLoading(false)
+  }
+
+  if (state.loading === false && state.isAuthenticated === true) {
     router.push("/dashboard")
   }
 
@@ -79,6 +117,7 @@ const Login: NextPage = () => {
               value={email}
               onChange={onChange}
               required
+              disabled={loading}
             />
             <Input
               rounded="none"
@@ -88,6 +127,7 @@ const Login: NextPage = () => {
               value={password}
               onChange={onChange}
               required
+              disabled={loading}
             />
             <Button
               w="full"
@@ -95,6 +135,8 @@ const Login: NextPage = () => {
               color="black"
               rounded="none"
               type="submit"
+              loadingText="Logging Up..."
+              isLoading={loading}
             >
               <HStack>
                 <AiOutlineUnlock />
@@ -114,4 +156,4 @@ const Login: NextPage = () => {
   )
 }
 
-export default Login
+export default withAuth(Login)

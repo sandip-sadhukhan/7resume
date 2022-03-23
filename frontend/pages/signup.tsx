@@ -12,19 +12,29 @@ import {
 import { NextPage } from "next"
 import Head from "next/head"
 import Link from "next/link"
-import React, { ChangeEvent, FormEvent, useState } from "react"
+import { useRouter } from "next/router"
+import React, { ChangeEvent, Dispatch, FormEvent, useState } from "react"
 import { AiOutlineUnlock } from "react-icons/ai"
 import { RiUserFill } from "react-icons/ri"
+import { signup } from "../auth/actions"
+import { withAuth } from "../auth/context"
+import { IAction, IState } from "../types/auth"
 
-const SignUp: NextPage = () => {
+interface SignUpProps {
+  state: IState
+  dispatch: Dispatch<IAction>
+}
+
+const SignUp: NextPage<SignUpProps> = (props: SignUpProps) => {
   const outerBg = useColorModeValue("gray.100", "gray.800")
   const innerBg = useColorModeValue("white", "gray.700")
   const headingColor = useColorModeValue("#63B3ED", "aqua")
 
+  const router = useRouter()
   const toast = useToast()
 
   interface IFormData {
-    fullName: string
+    name: string
     username: string
     email: string
     password: string
@@ -32,33 +42,63 @@ const SignUp: NextPage = () => {
   }
 
   const [formData, setFormData] = useState<IFormData>({
-    fullName: "",
+    name: "",
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
   })
+  const [loading, setLoading] = useState<boolean>(false)
 
-  const { fullName, username, email, password, confirmPassword } = formData
+  const { name, username, email, password, confirmPassword } = formData
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const onSubmit = (e: FormEvent<HTMLDivElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLDivElement>) => {
     e.preventDefault()
+    setLoading(true)
     // check both passwords
     if (password !== confirmPassword) {
       toast({
-        title: "Error",
-        description: "Both Passwords didn't match!",
+        title: "Both Passwords didn't match!",
+        variant: "top-accent",
         status: "error",
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
       })
     } else {
-      // submit
+      const [success, message] = await signup(
+        username,
+        name,
+        email,
+        password,
+        props.dispatch
+      )
+      if (success) {
+        toast({
+          title: "Signup Successfully!",
+          status: "success",
+          variant: "top-accent",
+          duration: 3000,
+          isClosable: true,
+        })
+      } else {
+        toast({
+          title: message,
+          status: "error",
+          variant: "top-accent",
+          duration: 3000,
+          isClosable: true,
+        })
+      }
     }
+    setLoading(false)
+  }
+
+  if (props.state.loading === false && props.state.isAuthenticated === true) {
+    router.push("/dashboard")
   }
 
   return (
@@ -98,11 +138,12 @@ const SignUp: NextPage = () => {
               type="text"
               placeholder="Full Name"
               rounded="none"
-              name="fullName"
-              value={fullName}
+              name="name"
+              value={name}
               onChange={onChange}
               required
               minLength={3}
+              disabled={loading}
             />
             <Input
               rounded="none"
@@ -113,6 +154,7 @@ const SignUp: NextPage = () => {
               onChange={onChange}
               required
               minLength={3}
+              disabled={loading}
             />
             <Input
               rounded="none"
@@ -123,6 +165,7 @@ const SignUp: NextPage = () => {
               onChange={onChange}
               required
               minLength={6}
+              disabled={loading}
             />
             <Input
               rounded="none"
@@ -133,6 +176,7 @@ const SignUp: NextPage = () => {
               onChange={onChange}
               required
               minLength={6}
+              disabled={loading}
             />
             <Input
               rounded="none"
@@ -143,6 +187,7 @@ const SignUp: NextPage = () => {
               onChange={onChange}
               required
               minLength={6}
+              disabled={loading}
             />
             <Text>
               By creating your account, you are agree to our{" "}
@@ -160,6 +205,8 @@ const SignUp: NextPage = () => {
               bgColor={headingColor}
               color="black"
               rounded="none"
+              isLoading={loading}
+              loadingText="Signing Up..."
             >
               <HStack>
                 <AiOutlineUnlock />
@@ -179,4 +226,4 @@ const SignUp: NextPage = () => {
   )
 }
 
-export default SignUp
+export default withAuth(SignUp)
