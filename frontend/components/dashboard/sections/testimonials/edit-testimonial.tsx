@@ -8,6 +8,7 @@ import {
   Select,
   Text,
   Textarea,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import Head from "next/head"
@@ -16,11 +17,12 @@ import React from "react"
 import Image from "../../../image"
 
 const EditTestimonialSection = () => {
+  const bgColor = useColorModeValue("white", "gray.700")
   const router = useRouter()
 
   return (
     <VStack
-      bgColor="white"
+      bgColor={bgColor}
       w="full"
       align="start"
       py={5}

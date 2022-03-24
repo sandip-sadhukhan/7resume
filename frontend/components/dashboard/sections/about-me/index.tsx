@@ -1,4 +1,4 @@
-import { HStack, Text, VStack } from "@chakra-ui/react"
+import { HStack, Text, useColorModeValue, VStack } from "@chakra-ui/react"
 import Head from "next/head"
 import React, { useState } from "react"
 import { BiChart } from "react-icons/bi"
@@ -9,6 +9,10 @@ import SocialLinksContent from "./social-links"
 import StatisticsContent from "./statistics"
 
 const AboutMeSection: React.FC = () => {
+  const selectedBg = useColorModeValue("white", "gray.700")
+  const unselectedBg = useColorModeValue("blackAlpha.50", "whiteAlpha.50")
+  const textColor = useColorModeValue("gray.700", "gray.100")
+
   type pageTypes =
     | "AboutMe"
     | "ContactInformation"
@@ -40,7 +44,7 @@ const AboutMeSection: React.FC = () => {
             <HStack
               align="start"
               alignItems="center"
-              bgColor={page === "AboutMe" ? "white" : "whiteAlpha.500"}
+              bgColor={page === "AboutMe" ? selectedBg : unselectedBg}
               py={2}
               px={4}
               w="full"
@@ -54,7 +58,7 @@ const AboutMeSection: React.FC = () => {
               align="start"
               alignItems="center"
               bgColor={
-                page === "ContactInformation" ? "white" : "whiteAlpha.500"
+                page === "ContactInformation" ? selectedBg : unselectedBg
               }
               py={2}
               px={4}
@@ -68,7 +72,7 @@ const AboutMeSection: React.FC = () => {
             <HStack
               align="start"
               alignItems="center"
-              bgColor={page === "Statistics" ? "white" : "whiteAlpha.500"}
+              bgColor={page === "Statistics" ? selectedBg : unselectedBg}
               py={2}
               px={4}
               w="full"
@@ -82,7 +86,7 @@ const AboutMeSection: React.FC = () => {
             <HStack
               align="start"
               alignItems="center"
-              bgColor={page === "SocialLinks" ? "white" : "whiteAlpha.500"}
+              bgColor={page === "SocialLinks" ? selectedBg : unselectedBg}
               py={2}
               px={4}
               w="full"
@@ -97,9 +101,9 @@ const AboutMeSection: React.FC = () => {
           <VStack
             as="section"
             w={["full", "full", "80%", "80%", "82%"]}
-            spacing={4}
             align="start"
-            bgColor="white"
+            bgColor={selectedBg}
+            color={textColor}
             px={5}
             py={8}
           >

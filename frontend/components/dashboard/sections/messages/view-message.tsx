@@ -1,15 +1,24 @@
-import { Button, Divider, HStack, Text, VStack } from "@chakra-ui/react"
+import {
+  Button,
+  Divider,
+  HStack,
+  Text,
+  useColorModeValue,
+  VStack,
+} from "@chakra-ui/react"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import React from "react"
 import { FaChevronLeft } from "react-icons/fa"
 
 const ViewMessageSection = () => {
+  const bgColor = useColorModeValue("white", "gray.700")
   const router = useRouter()
+  const mailTextColor = useColorModeValue("gray", "gray.400")
 
   return (
     <VStack
-      bgColor="white"
+      bgColor={bgColor}
       w="full"
       align="start"
       py={10}
@@ -38,7 +47,7 @@ const ViewMessageSection = () => {
         <VStack w="full" align="start" spacing={0} fontSize={14} pb={3}>
           <HStack fontSize={14}>
             <Text fontWeight="semibold">Sandip Sadhukhan</Text>
-            <Text color="gray" fontSize={13}>
+            <Text color={mailTextColor} fontSize={13}>
               (sandip.sendme@gmail.com) to
             </Text>
             <Text fontWeight="semibold">me</Text>

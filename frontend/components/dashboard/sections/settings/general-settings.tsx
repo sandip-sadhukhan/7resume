@@ -1,8 +1,17 @@
-import { Button, Divider, HStack, Text, VStack } from "@chakra-ui/react"
+import {
+  Button,
+  Divider,
+  HStack,
+  Text,
+  useColorModeValue,
+  VStack,
+} from "@chakra-ui/react"
 import React, { ChangeEvent, useState } from "react"
 import SwitchBox from "./switch-box"
 
 const GeneralSettings: React.FC = () => {
+  const textColor = useColorModeValue("gray.700", "gray.100")
+
   interface IFormData {
     displayBlog: boolean
     displayClients: boolean
@@ -51,14 +60,12 @@ const GeneralSettings: React.FC = () => {
     projectAllowComments: false,
   })
 
-  console.log(formData.displayClients)
-
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.checked })
   }
 
   return (
-    <VStack w="full" align="start" spacing={6}>
+    <VStack w="full" align="start" spacing={6} color={textColor}>
       <VStack w="full" align="start" spacing={6}>
         {/* Display Sections */}
         <Text fontSize={14} fontWeight="semibold">

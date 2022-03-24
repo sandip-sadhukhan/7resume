@@ -5,6 +5,7 @@ import {
   TabPanels,
   Tabs,
   Text,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import Head from "next/head"
@@ -16,6 +17,9 @@ import Seo from "./SEO"
 import WebsiteSettings from "./website-settings"
 
 const SettingsSection: React.FC = () => {
+  const bgColor = useColorModeValue("white", "gray.700")
+  const unSelectedBg = useColorModeValue("blackAlpha.50", "whiteAlpha.50")
+
   return (
     <>
       <Head>
@@ -25,8 +29,8 @@ const SettingsSection: React.FC = () => {
         <TabList gap={2}>
           <Tab
             _focus={{ ring: 0 }}
-            bgColor="blackAlpha.200"
-            _selected={{ bg: "white" }}
+            bgColor={unSelectedBg}
+            _selected={{ bg: bgColor }}
           >
             <VStack w="full">
               <FaHome />
@@ -36,8 +40,8 @@ const SettingsSection: React.FC = () => {
 
           <Tab
             _focus={{ ring: 0 }}
-            bgColor="blackAlpha.50"
-            _selected={{ bg: "white" }}
+            bgColor={unSelectedBg}
+            _selected={{ bg: bgColor }}
           >
             <VStack w="full">
               <FaCogs />
@@ -47,8 +51,8 @@ const SettingsSection: React.FC = () => {
 
           <Tab
             _focus={{ ring: 0 }}
-            bgColor="blackAlpha.50"
-            _selected={{ bg: "white" }}
+            bgColor={unSelectedBg}
+            _selected={{ bg: bgColor }}
           >
             <VStack w="full">
               <AiOutlineBarChart />
@@ -58,7 +62,7 @@ const SettingsSection: React.FC = () => {
         </TabList>
 
         <VStack
-          bgColor="white"
+          bgColor={bgColor}
           w="full"
           align="start"
           py={10}

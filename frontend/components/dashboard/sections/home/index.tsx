@@ -1,4 +1,10 @@
-import { Divider, Heading, SimpleGrid, VStack } from "@chakra-ui/react"
+import {
+  Divider,
+  Heading,
+  SimpleGrid,
+  VStack,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import React from "react"
 import { AiFillMessage, AiOutlineProject } from "react-icons/ai"
 import { FaBloggerB, FaRegEye } from "react-icons/fa"
@@ -9,9 +15,11 @@ import StatisticsBox from "./statictics-box"
 import Head from "next/head"
 
 const Home: React.FC = () => {
+  const bgColor = useColorModeValue("white", "gray.700")
+
   return (
     <VStack
-      bgColor="white"
+      bgColor={bgColor}
       w="full"
       align="start"
       py={5}

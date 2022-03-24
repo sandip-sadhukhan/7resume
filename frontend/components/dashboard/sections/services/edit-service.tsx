@@ -7,6 +7,7 @@ import {
   Input,
   Text,
   Textarea,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import Head from "next/head"
@@ -15,9 +16,11 @@ import React from "react"
 import Image from "../../../image"
 
 const EditService = () => {
+  const bgColor = useColorModeValue("white", "gray.700")
+
   return (
     <VStack
-      bgColor="white"
+      bgColor={bgColor}
       w="full"
       align="start"
       py={5}

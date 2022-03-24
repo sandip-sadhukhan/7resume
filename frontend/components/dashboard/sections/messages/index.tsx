@@ -10,6 +10,7 @@ import {
   Th,
   Thead,
   Tr,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import Head from "next/head"
@@ -18,9 +19,11 @@ import React from "react"
 import { FaEye, FaTrash } from "react-icons/fa"
 
 const MessagesSection = () => {
+  const bgColor = useColorModeValue("white", "gray.700")
+
   return (
     <VStack
-      bgColor="white"
+      bgColor={bgColor}
       w="full"
       align="start"
       py={5}

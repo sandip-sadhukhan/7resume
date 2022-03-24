@@ -11,6 +11,7 @@ import {
   Thead,
   Tr,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import Head from "next/head"
 import Link from "next/link"
@@ -18,9 +19,11 @@ import React from "react"
 import { FaPencilAlt, FaPlusSquare, FaTrash } from "react-icons/fa"
 
 const BlogSection = () => {
+  const bgColor = useColorModeValue("white", "gray.700")
+
   return (
     <VStack
-      bgColor="white"
+      bgColor={bgColor}
       w="full"
       align="start"
       py={5}

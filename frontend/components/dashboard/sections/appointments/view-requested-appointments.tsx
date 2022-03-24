@@ -4,6 +4,7 @@ import {
   Heading,
   HStack,
   Text,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import Head from "next/head"
@@ -19,11 +20,13 @@ import {
 } from "react-icons/fa"
 
 const ViewRequestedAppointment = () => {
+  const bgColor = useColorModeValue("white", "gray.700")
+  const textColor = useColorModeValue("gray.600", "gray.400")
   const router = useRouter()
 
   return (
     <VStack
-      bgColor="white"
+      bgColor={bgColor}
       w="full"
       align="start"
       py={10}
@@ -66,7 +69,7 @@ const ViewRequestedAppointment = () => {
 
         <HStack
           fontSize={13}
-          color="gray.600"
+          color={textColor}
           spacing={[0, 0, 8, 10, 10]}
           gap={3}
           py={3}

@@ -1,8 +1,18 @@
-import { Button, Divider, HStack, Input, Text, VStack } from "@chakra-ui/react"
+import {
+  Button,
+  Divider,
+  HStack,
+  Input,
+  Text,
+  useColorModeValue,
+  VStack,
+} from "@chakra-ui/react"
 import Image from "../../../image"
 import React, { ChangeEvent, FormEvent, useState } from "react"
 
 const WebsiteSettings: React.FC = () => {
+  const textColor = useColorModeValue("gray.700", "gray.100")
+
   interface IFormData {
     siteTitle: ""
     webmasterEmail: ""
@@ -41,7 +51,7 @@ const WebsiteSettings: React.FC = () => {
   }
 
   return (
-    <VStack w="full" align="start" spacing={4}>
+    <VStack w="full" align="start" spacing={4} color={textColor}>
       {/* Site Title */}
       <HStack
         w="full"
@@ -57,7 +67,6 @@ const WebsiteSettings: React.FC = () => {
           fontSize={14}
           w={["full", "full", 50, 100, 150]}
           textAlign={["start", "start", "end", "end", "end"]}
-          color="gray"
         >
           Site Title
         </Text>
@@ -89,7 +98,6 @@ const WebsiteSettings: React.FC = () => {
           fontSize={14}
           w={["full", "full", 50, 100, 150]}
           textAlign={["start", "start", "end", "end", "end"]}
-          color="gray"
         >
           Webmaster Email
         </Text>
@@ -121,7 +129,6 @@ const WebsiteSettings: React.FC = () => {
           fontSize={14}
           w={["full", "full", 50, 100, 150]}
           textAlign={["start", "start", "end", "end", "end"]}
-          color="gray"
         >
           Favicon
         </Text>
@@ -156,7 +163,6 @@ const WebsiteSettings: React.FC = () => {
           fontSize={14}
           w={["full", "full", 50, 100, 150]}
           textAlign={["start", "start", "end", "end", "end"]}
-          color="gray"
         >
           Start Page Background
         </Text>
@@ -191,7 +197,6 @@ const WebsiteSettings: React.FC = () => {
           fontSize={14}
           w={["full", "full", 50, 100, 150]}
           textAlign={["start", "start", "end", "end", "end"]}
-          color="gray"
         >
           About Me Image
         </Text>
@@ -226,7 +231,6 @@ const WebsiteSettings: React.FC = () => {
           fontSize={14}
           w={["full", "full", 50, 100, 150]}
           textAlign={["start", "start", "end", "end", "end"]}
-          color="gray"
         >
           Contact Form Image
         </Text>
@@ -258,7 +262,6 @@ const WebsiteSettings: React.FC = () => {
           fontSize={14}
           w={["full", "full", 50, 100, 150]}
           textAlign={["start", "start", "end", "end", "end"]}
-          color="gray"
         >
           Contact Form Image
         </Text>
@@ -289,7 +292,6 @@ const WebsiteSettings: React.FC = () => {
           fontSize={14}
           w={["full", "full", 50, 100, 150]}
           textAlign={["start", "start", "end", "end", "end"]}
-          color="gray"
         >
           Contact Form Image
         </Text>
@@ -320,7 +322,6 @@ const WebsiteSettings: React.FC = () => {
           fontSize={14}
           w={["full", "full", 50, 100, 150]}
           textAlign={["start", "start", "end", "end", "end"]}
-          color="gray"
         >
           Contact Form Image
         </Text>
@@ -351,7 +352,6 @@ const WebsiteSettings: React.FC = () => {
           fontSize={14}
           w={["full", "full", 50, 100, 150]}
           textAlign={["start", "start", "end", "end", "end"]}
-          color="gray"
         >
           Contact Form Image
         </Text>
@@ -382,7 +382,6 @@ const WebsiteSettings: React.FC = () => {
           fontSize={14}
           w={["full", "full", 50, 100, 150]}
           textAlign={["start", "start", "end", "end", "end"]}
-          color="gray"
         >
           Contact Form Image
         </Text>
@@ -413,7 +412,6 @@ const WebsiteSettings: React.FC = () => {
           fontSize={14}
           w={["full", "full", 50, 100, 150]}
           textAlign={["start", "start", "end", "end", "end"]}
-          color="gray"
         >
           Contact Form Image
         </Text>

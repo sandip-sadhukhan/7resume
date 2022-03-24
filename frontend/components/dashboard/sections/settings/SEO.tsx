@@ -4,13 +4,16 @@ import {
   HStack,
   Text,
   Textarea,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import React from "react"
 
 const Seo: React.FC = () => {
+  const textColor = useColorModeValue("gray.700", "gray.100")
+
   return (
-    <VStack w="full" spacing={4} align="start">
+    <VStack w="full" spacing={4} align="start" color={textColor}>
       {/* SEO */}
       <HStack
         w="full"
@@ -26,7 +29,6 @@ const Seo: React.FC = () => {
           fontSize={14}
           w={["full", "full", 100, 100, 150]}
           textAlign={["start", "start", "end", "end", "end"]}
-          color="gray"
         >
           Meta Description
         </Text>

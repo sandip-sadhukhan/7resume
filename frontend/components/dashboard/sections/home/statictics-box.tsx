@@ -1,4 +1,10 @@
-import { HStack, Progress, Text, VStack } from "@chakra-ui/react"
+import {
+  HStack,
+  Progress,
+  Text,
+  useColorModeValue,
+  VStack,
+} from "@chakra-ui/react"
 import React from "react"
 import { IconType } from "react-icons/lib"
 
@@ -16,6 +22,9 @@ const StatisticsBox: React.FC<StatisticsBoxProps> = (
   const { Icon, name, valueCount, progressPercentage, bg } = props
 
   const currencyFormatter = new Intl.NumberFormat("en-IN")
+
+  const progressScheme = useColorModeValue("whiteAlpha", "gray")
+  const progressBg = useColorModeValue("blackAlpha", "whiteAlpha")
 
   return (
     <VStack
@@ -50,8 +59,10 @@ const StatisticsBox: React.FC<StatisticsBoxProps> = (
       </HStack>
       <Progress
         w="full"
-        colorScheme="whiteAlpha"
-        background="blackAlpha"
+        // colorScheme="blackAlpha"
+        // background="white"
+        colorScheme={progressScheme}
+        background={progressBg}
         size="xs"
         value={progressPercentage}
       />

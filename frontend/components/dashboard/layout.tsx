@@ -7,6 +7,7 @@ import {
   Text,
   useDisclosure,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import Head from "next/head"
 import React from "react"
@@ -23,6 +24,9 @@ const Layout: React.FC<layoutProps> = (props: layoutProps) => {
   const { currentMenu, children } = props
 
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const bgColor = useColorModeValue("gray.200", "gray.800")
+  const footerColor = useColorModeValue("gray.600", "gray.400")
 
   return (
     <IsAuth>
@@ -54,7 +58,7 @@ const Layout: React.FC<layoutProps> = (props: layoutProps) => {
         >
           <VStack
             w="full"
-            bgColor="gray.200"
+            bgColor={bgColor}
             align="start"
             h="100vh"
             // maxH="fit-content"
@@ -82,7 +86,12 @@ const Layout: React.FC<layoutProps> = (props: layoutProps) => {
               <VStack w="98%">
                 <Divider borderWidth="2px" bgColor="gray.400" />
                 <VStack as="footer" w="full" align="start">
-                  <Text fontSize={13} px={5} fontWeight={700} color="gray.700">
+                  <Text
+                    fontSize={13}
+                    px={5}
+                    fontWeight={700}
+                    color={footerColor}
+                  >
                     &copy; Resume bus {new Date().getFullYear()}
                   </Text>
                 </VStack>

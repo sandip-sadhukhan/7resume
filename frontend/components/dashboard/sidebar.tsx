@@ -8,11 +8,12 @@ import {
   VStack,
   Link,
   useToast,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import NextLink from "next/link"
 import React, { Dispatch } from "react"
 import { AiOutlineProject } from "react-icons/ai"
-import { BiCategory, BiSupport } from "react-icons/bi"
+import { BiCategory, BiLinkExternal, BiSupport } from "react-icons/bi"
 import {
   FaBriefcase,
   FaGraduationCap,
@@ -44,6 +45,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
+  const bgColor = useColorModeValue("blackAlpha.800", "whiteAlpha.200")
   const pathname = useRouter().pathname
 
   const toast = useToast()
@@ -68,7 +70,7 @@ const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
       h="100vh"
       overflowY="auto"
       as="aside"
-      bgColor="blackAlpha.800"
+      bgColor={bgColor}
       pb={10}
       className="custom-scrollbar"
     >
@@ -167,6 +169,9 @@ const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
         fontWeight="normal"
         spacing={2}
       >
+        <NavItem Icon={BiLinkExternal} text="Visit you site" link="/u/sandip" />
+        <Divider borderColor="whiteAlpha.200" />
+
         <NavItem Icon={FaHome} text="Dashboard" link="/dashboard" />
         <Divider borderColor="whiteAlpha.200" />
 

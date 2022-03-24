@@ -6,15 +6,19 @@ import {
   HStack,
   Input,
   Text,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import Head from "next/head"
 import React from "react"
 
 const AppointmentsSection = () => {
+  const bgColor = useColorModeValue("white", "gray.700")
+  const textColor = useColorModeValue("gray", "gray.400")
+
   return (
     <VStack
-      bgColor="white"
+      bgColor={bgColor}
       w="full"
       align="start"
       py={5}
@@ -62,13 +66,13 @@ const AppointmentsSection = () => {
               {day}
             </Checkbox>
             <HStack>
-              <Text fontSize={13} color="gray" minW={70}>
+              <Text fontSize={13} color={textColor} minW={70}>
                 Start Time
               </Text>
-              <Input size="sm" type="time" />
+              <Input size="sm" type="time" color={textColor} />
             </HStack>
             <HStack>
-              <Text fontSize={13} color="gray" minW={70}>
+              <Text fontSize={13} color={textColor} minW={70}>
                 End Time
               </Text>
               <Input size="sm" type="time" />

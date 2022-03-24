@@ -10,6 +10,7 @@ import {
   Th,
   Thead,
   Tr,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import Head from "next/head"
@@ -19,9 +20,11 @@ import { FaPencilAlt, FaPlusSquare, FaTrash } from "react-icons/fa"
 import Image from "../../../image"
 
 const ClientsSection = () => {
+  const bgColor = useColorModeValue("white", "gray.700")
+
   return (
     <VStack
-      bgColor="white"
+      bgColor={bgColor}
       w="full"
       align="start"
       py={5}

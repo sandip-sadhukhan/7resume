@@ -6,12 +6,15 @@ import {
   HStack,
   Input,
   Text,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import Head from "next/head"
 import React, { ChangeEvent, FormEvent, useState } from "react"
 
 const EditProfileSection: React.FC = () => {
+  const bgColor = useColorModeValue("white", "gray.700")
+
   interface IFormData {
     name: string
     username: string
@@ -39,7 +42,7 @@ const EditProfileSection: React.FC = () => {
 
   return (
     <VStack
-      bgColor="white"
+      bgColor={bgColor}
       w="full"
       align="start"
       py={5}

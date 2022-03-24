@@ -6,18 +6,21 @@ import {
   HStack,
   Input,
   Text,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import React from "react"
+import Image from "../../../image"
 
-const NewClientSection = () => {
+const EditClientSection = () => {
+  const bgColor = useColorModeValue("white", "gray.700")
   const router = useRouter()
 
   return (
     <VStack
-      bgColor="white"
+      bgColor={bgColor}
       w="full"
       align="start"
       py={5}
@@ -26,10 +29,10 @@ const NewClientSection = () => {
       rounded="sm"
     >
       <Head>
-        <title>New Client | Dashboard</title>
+        <title>Edit Client | Dashboard</title>
       </Head>
       <Heading pb={2} as="h3" size="md" fontWeight="normal">
-        New Client
+        Edit Client
       </Heading>
       <Divider bgColor="blackAlpha.500" borderWidth="1px" />
 
@@ -87,6 +90,14 @@ const NewClientSection = () => {
           <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
             <Input w="full" size="sm" placeholder="image" type="file" />
           </Flex>
+          <Flex>
+            <Image
+              src="/avatar-1.jpg"
+              alt="character's image"
+              height={40}
+              width={40}
+            />
+          </Flex>
         </HStack>
         <Divider />
 
@@ -111,4 +122,4 @@ const NewClientSection = () => {
   )
 }
 
-export default NewClientSection
+export default EditClientSection

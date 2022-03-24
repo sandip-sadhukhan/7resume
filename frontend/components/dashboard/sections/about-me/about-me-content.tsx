@@ -7,13 +7,14 @@ import {
   Input,
   Textarea,
   Button,
+  VStack,
 } from "@chakra-ui/react"
 import Image from "../../../image"
 import { FaDownload } from "react-icons/fa"
 
 const AboutMeContent = () => {
   return (
-    <>
+    <VStack w="full" spacing={4} align="start">
       <HStack
         w="full"
         spacing={[0, 0, 5, 5, 5]}
@@ -36,6 +37,7 @@ const AboutMeContent = () => {
         spacing={[0, 0, 5, 5, 5]}
         flexDir={["column", "column", "row", "row", "row"]}
         gap={3}
+        align="start"
       >
         <Text
           w={["full", "full", 50, 50, 200]}
@@ -45,7 +47,7 @@ const AboutMeContent = () => {
           Profile Picture
         </Text>
         <Input size="sm" w="85%" type="file" placeholder="Name" />
-        <Flex px={4}>
+        <Flex px={[0, 0, 4, 4, 4]}>
           <Image
             width={40}
             height={40}
@@ -133,6 +135,7 @@ const AboutMeContent = () => {
         spacing={[0, 0, 5, 5, 5]}
         flexDir={["column", "column", "row", "row", "row"]}
         gap={3}
+        align="start"
       >
         <Text
           w={["full", "full", 50, 50, 200]}
@@ -142,14 +145,17 @@ const AboutMeContent = () => {
           Upload Resume
         </Text>
         <Input size="sm" w="73%" type="file" />
-        <HStack w={200} as="a" href="#" target="_blank" px={5}>
+        <HStack as="a" href="#" target="_blank" px={[0, 0, 5, 5, 5]} minW={200}>
           <FaDownload fontSize={14} />
           <Text fontSize={13}>Download Resume</Text>
         </HStack>
       </HStack>
       <Divider />
 
-      <HStack w={245} justifyContent="end">
+      <HStack
+        w={["full", "full", 245, 245, 245]}
+        justifyContent={["start", "start", "end", "end", "end"]}
+      >
         <Button size="sm" rounded={0} colorScheme="green">
           Save
         </Button>
@@ -157,7 +163,7 @@ const AboutMeContent = () => {
           Cancel
         </Button>
       </HStack>
-    </>
+    </VStack>
   )
 }
 
