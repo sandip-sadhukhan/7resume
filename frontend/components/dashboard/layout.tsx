@@ -10,7 +10,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import Head from "next/head"
-import React from "react"
+import React, { useRef } from "react"
+import { BsArrowUpCircle } from "react-icons/bs"
 import IsAuth from "../hocs/is-auth"
 import HeaderMenu from "./header-menu"
 import Sidebar from "./sidebar"
@@ -26,7 +27,17 @@ const Layout: React.FC<layoutProps> = (props: layoutProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const bgColor = useColorModeValue("gray.200", "gray.800")
-  const footerColor = useColorModeValue("gray.600", "gray.400")
+  const footerColor = useColorModeValue("gray.600", "gray.500")
+  const dividerWidth = useColorModeValue("2px", "1px")
+
+  const mainContentDiv = useRef<HTMLDivElement | null>(null)
+
+  const scrollTop = () => {
+    console.log("click")
+    if (mainContentDiv.current) {
+      mainContentDiv.current.scrollTop = 0
+    }
+  }
 
   return (
     <IsAuth>
@@ -66,6 +77,8 @@ const Layout: React.FC<layoutProps> = (props: layoutProps) => {
             spacing={0}
             overflowY="auto"
             className="custom-scrollbar-2"
+            ref={mainContentDiv}
+            scrollBehavior="smooth"
           >
             {/* Header Menu */}
             <HeaderMenu currentMenu={currentMenu} onOpen={onOpen} />
@@ -84,16 +97,24 @@ const Layout: React.FC<layoutProps> = (props: layoutProps) => {
 
               {/* Footer */}
               <VStack w="98%">
-                <Divider borderWidth="2px" bgColor="gray.400" />
+                <Divider borderWidth={dividerWidth} bgColor={footerColor} />
                 <VStack as="footer" w="full" align="start">
-                  <Text
-                    fontSize={13}
+                  <HStack
+                    w="full"
+                    align="start"
+                    alignItems="center"
+                    justifyContent="space-between"
                     px={5}
-                    fontWeight={700}
-                    color={footerColor}
                   >
-                    &copy; Resume bus {new Date().getFullYear()}
-                  </Text>
+                    <Text fontSize={13} fontWeight={700} color={footerColor}>
+                      &copy; Resume bus {new Date().getFullYear()}
+                    </Text>
+                    <BsArrowUpCircle
+                      fontSize={18}
+                      cursor="pointer"
+                      onClick={() => scrollTop()}
+                    />
+                  </HStack>
                 </VStack>
               </VStack>
               {/* content end */}
