@@ -1,380 +1,172 @@
-from typing import Type
 from django.http import HttpRequest, HttpResponse
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import status, permissions, serializers
 from accounts.models import UserAccount
-from .models import Blog, BlogCategory, Message, Project, RequestedAppointment
-from .selectors import (
-    getAboutMeSectionData,
-    getAppointmentSectionData,
-    getBlogCategoryData,
-    getBlogDetailSectionData,
-    getBlogSearchData,
-    getBlogSectionData,
-    getContactMeSectionData,
-    getHomeSectionData,
-    getPortfolioDetailSectionData,
-    getPortfolioSectionData,
-    getResumeSectionData,
-)
+from .models import Blog, BlogCategory, RequestedAppointment
+from . import selectors, services
 
 
-# Home Page
-class HomeProfilePageView(APIView):
-    """
-    Get the all data for home profile page
-    """
+class HomeProfilePage(APIView):
+    """Get the all data for home profile page"""
 
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request, username, format=None):
-        try:
-            user = UserAccount.objects.get(username=username)
-        except UserAccount.DoesNotExist:
-            return Response(
-                {
-                    "success": False,
-                    "error": "Username not exists",
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
+    def get(self, request: Request, username: str) -> Response:
+        homeSectionData = selectors.getHomeSectionData(username=username)
 
-        data = {
-            "success": True,
-            "data": getHomeSectionData(user),
-        }
-
-        return Response(data)
+        return Response(homeSectionData)
 
 
-# About Me
-class AboutMeProfilePageView(APIView):
-    """
-    Get the all data for about me profile page
-    """
+class AboutMeProfilePage(APIView):
+    """Get the all data for about me profile page"""
 
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request, username, format=None):
-        try:
-            user = UserAccount.objects.get(username=username)
-        except UserAccount.DoesNotExist:
-            return Response(
-                {
-                    "success": False,
-                    "error": "Username not exists",
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
+    def get(self, request: Request, username: str) -> Response:
+        aboutSectionData = selectors.getAboutMeSectionData(username=username)
 
-        data = {
-            "success": True,
-            "data": getAboutMeSectionData(user),
-        }
-
-        return Response(data)
+        return Response(aboutSectionData)
 
 
-# Contact Me
-class ContactMeProfilePageView(APIView):
-    """
-    Get the all data for contact me profile page
-    """
+class ContactMeProfilePage(APIView):
+    """Get the all data for contact me profile page"""
 
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request, username, format=None):
-        try:
-            user = UserAccount.objects.get(username=username)
-        except UserAccount.DoesNotExist:
-            return Response(
-                {
-                    "success": False,
-                    "error": "Username not exists",
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
+    def get(self, request: Request, username: str) -> Response:
+        contactMeSectionData = selectors.getContactMeSectionData(
+            username=username
+        )
 
-        data = {
-            "success": True,
-            "data": getContactMeSectionData(user),
-        }
-
-        return Response(data)
+        return Response(contactMeSectionData)
 
 
-# Contact Me form submit
 class ContactMessageSend(APIView):
+    """Sending Contact Message to User"""
+
     permission_classes = (permissions.AllowAny,)
 
-    class MessageSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = Message
-            fields = ("name", "email", "message")
+    class InputSerializer(serializers.Serializer):
+        name = serializers.CharField(max_length=100)
+        email = serializers.EmailField(max_length=100)
+        message = serializers.CharField()
 
-    def post(self, request, username, format=None):
-        try:
-            user = UserAccount.objects.get(username=username)
-        except UserAccount.DoesNotExist:
-            return Response(
-                {
-                    "success": False,
-                    "error": "Username not exists",
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
+    def post(self, request: Request, username: str) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        serializer = self.MessageSerializer(data=request.data)
-        if serializer.is_valid():
-            Message.objects.create(
-                user_profile=user.user_profile,
-                name=serializer.data["name"],
-                email=serializer.data["email"],
-                message=serializer.data["message"],
-            )
-            return Response(
-                {"success": True, "message": "Message Sent Successfully!"}
-            )
-        else:
-            return Response(
-                serializer.errors, status=status.HTTP_400_BAD_REQUEST
-            )
+        services.createContactMessage(
+            username=username, **serializer.validated_data
+        )
+
+        return Response(status=status.HTTP_201_CREATED)
 
 
-# Resume Page
-class ResumeProfilePageView(APIView):
+class ResumeProfilePage(APIView):
+    """Get the all data for contact me profile page"""
+
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request: HttpRequest, username: str):
-        try:
-            user = UserAccount.objects.get(username=username)
-        except UserAccount.DoesNotExist:
-            return Response(
-                {
-                    "success": False,
-                    "error": "Username not exists",
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
+    def get(self, request: Request, username: str) -> Response:
+        resumeSectionData = selectors.getResumeSectionData(username=username)
 
-        data = {
-            "success": True,
-            "data": getResumeSectionData(user),
-        }
-
-        return Response(data)
+        return Response(resumeSectionData)
 
 
-# Portfolio Page
-class PortfolioProfilePageView(APIView):
+class PortfolioProfilePage(APIView):
+    """Get the all data for portfolio profile page"""
+
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request: HttpRequest, username: str):
-        try:
-            user = UserAccount.objects.get(username=username)
-        except UserAccount.DoesNotExist:
-            return Response(
-                {
-                    "success": False,
-                    "error": "Username not exists",
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
+    def get(self, request: Request, username: str) -> Response:
+        portfolioSectionData = selectors.getPortfolioSectionData(
+            username=username
+        )
 
-        data = {
-            "success": True,
-            "data": getPortfolioSectionData(user),
-        }
-
-        return Response(data)
+        return Response(portfolioSectionData)
 
 
-# Portfolio Page
-class PortfolioDetailProfilePageView(APIView):
+class PortfolioDetailProfilePage(APIView):
+    """Get the all data for single portfolio item"""
+
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request: HttpRequest, username: str, slug: str):
-        try:
-            user = UserAccount.objects.get(username=username)
-            portfolio = Project.objects.get(
-                slug=slug,
-                display_project=True,
-                user_profile=user.user_profile,
-            )
-        except UserAccount.DoesNotExist:
-            return Response(
-                {
-                    "success": False,
-                    "error": "Username not exists",
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        except Project.DoesNotExist:  # type: ignore
-            return Response(
-                {
-                    "success": False,
-                    "error": "Portfolio not exists",
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
+    def get(self, request: Request, username: str, slug: str) -> Response:
+        portfolioDetailSectionData = selectors.getPortfolioDetailSectionData(
+            username=username, slug=slug
+        )
 
-        data = {
-            "success": True,
-            "data": getPortfolioDetailSectionData(user, portfolio),
-        }
-
-        return Response(data)
+        return Response(portfolioDetailSectionData)
 
 
-# Blog Page
-class BlogProfilePageView(APIView):
+class BlogProfilePage(APIView):
+    """Get the all data for blog page"""
+
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request: HttpRequest, username: str):
-        try:
-            user = UserAccount.objects.get(username=username)
-        except UserAccount.DoesNotExist:
-            return Response(
-                {
-                    "success": False,
-                    "error": "Username not exists",
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
+    def get(self, request: Request, username: str) -> Response:
+        blogSectionData = selectors.getBlogSectionData(username=username)
 
-        data = {
-            "success": True,
-            "data": getBlogSectionData(user),
-        }
-
-        return Response(data)
+        return Response(blogSectionData)
 
 
-class BlogDetailProfilePageView(APIView):
+class BlogDetailProfilePage(APIView):
+    """Get data for blog detail page"""
+
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request: HttpRequest, username: str, slug: str):
-        try:
-            user = UserAccount.objects.get(username=username)
-            blog = Blog.objects.get(
-                slug=slug,
-                display_article=True,
-                user_profile=user.user_profile,
-            )
-        except UserAccount.DoesNotExist:
-            return Response(
-                {
-                    "success": False,
-                    "error": "Username not exists",
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        except Blog.DoesNotExist:  # type: ignore
-            return Response(
-                {
-                    "success": False,
-                    "error": "Blog not exists",
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
+    def get(self, request: Request, username: str, slug: str):
+        singleBlogSectionData = selectors.getBlogDetailSectionData(
+            username=username, slug=slug
+        )
 
-        # increase views counter
-        blog.views += 1
-        blog.save()
-
-        data = {
-            "success": True,
-            "data": getBlogDetailSectionData(user, blog),
-        }
-
-        return Response(data)
+        return Response(singleBlogSectionData)
 
 
-class BlogSearchPageView(APIView):
+class BlogSearchPage(APIView):
+    """Get data for blog search page"""
+
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request, username: str, query: str) -> HttpResponse:
-        try:
-            user = UserAccount.objects.get(username=username)
-        except UserAccount.DoesNotExist:
-            return Response(
-                {
-                    "success": False,
-                    "error": "Username not exists",
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
+    def get(self, request: Request, username: str, query: str) -> Response:
+        blogSearchData = selectors.getBlogSearchData(
+            username=username, query=query
+        )
 
-        data = {
-            "success": True,
-            "data": getBlogSearchData(user, query),
-        }
-
-        return Response(data)
+        return Response(blogSearchData)
 
 
-class BlogCategoryPageView(APIView):
+class BlogCategoryPage(APIView):
+    """Get data for blog category page"""
+
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request, username: str, category_name: str) -> HttpResponse:
-        try:
-            user = UserAccount.objects.get(username=username)
-            category = BlogCategory.objects.get(
-                user_profile=user.user_profile,
-                title__iexact=category_name,
-            )
-        except UserAccount.DoesNotExist:
-            return Response(
-                {
-                    "success": False,
-                    "error": "Username not exists",
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        except BlogCategory.DoesNotExist:  # type: ignore
-            return Response(
-                {
-                    "success": False,
-                    "error": "Blog Category not exists",
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
+    def get(
+        self, request: Request, username: str, category_name: str
+    ) -> Response:
+        blogCategoryData = selectors.getBlogCategoryData(
+            username=username, categoryName=category_name
+        )
 
-        data = {
-            "success": True,
-            "data": getBlogCategoryData(user, category),
-        }
-
-        return Response(data)
+        return Response(blogCategoryData)
 
 
 # Appointment Page
-class AppointmentProfilePageView(APIView):
+class AppointmentProfilePage(APIView):
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request: HttpRequest, username: str):
-        try:
-            user = UserAccount.objects.get(username=username)
-        except UserAccount.DoesNotExist:
-            return Response(
-                {
-                    "success": False,
-                    "error": "Username not exists",
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
+    def get(self, request: Request, username: str) -> Response:
+        appointmentProfileData = selectors.getAppointmentSectionData(
+            username=username
+        )
 
-        data = {
-            "success": True,
-            "data": getAppointmentSectionData(user),
-        }
-
-        return Response(data)
+        return Response(appointmentProfileData)
 
 
 # request appointment form submission
-class RequestedAppointmentFormView(APIView):
+class RequestedAppointmentForm(APIView):
     permission_classes = (permissions.AllowAny,)
 
     class RequestedAppointmentSerializer(serializers.ModelSerializer):
@@ -424,3 +216,12 @@ class RequestedAppointmentFormView(APIView):
             return Response(
                 serializer.errors, status=status.HTTP_400_BAD_REQUEST
             )
+
+
+class Staticstics(APIView):
+    """Data for statistics page"""
+
+    def get(self, request):
+        statisticsData = selectors.getStatisticsData(user=request.user)
+
+        return Response(statisticsData)

@@ -4,6 +4,8 @@ from .models import UserAccount
 from resume.models import UserProfile, Appointment
 
 
+# when new user signup then user profile and
+# blank appointment will created automatically
 @receiver(post_save, sender=UserAccount)
 def createUserProfileAndAppointment(sender, instance, created, **kwargs):
     if created:

@@ -2,17 +2,18 @@ from django.urls import path
 from . import apis
 
 urlpatterns = [
+    # User Public Profile pages API
     path(
         "profile/<str:username>/home/",
-        apis.HomeProfilePageView.as_view(),
+        apis.HomeProfilePage.as_view(),
     ),
     path(
         "profile/<str:username>/about-me/",
-        apis.AboutMeProfilePageView.as_view(),
+        apis.AboutMeProfilePage.as_view(),
     ),
     path(
         "profile/<str:username>/contact-me/",
-        apis.ContactMeProfilePageView.as_view(),
+        apis.ContactMeProfilePage.as_view(),
     ),
     path(
         "profile/<str:username>/contact-me/send/",
@@ -20,38 +21,43 @@ urlpatterns = [
     ),
     path(
         "profile/<str:username>/resume/",
-        apis.ResumeProfilePageView.as_view(),
+        apis.ResumeProfilePage.as_view(),
     ),
     path(
         "profile/<str:username>/portfolio/",
-        apis.PortfolioProfilePageView.as_view(),
+        apis.PortfolioProfilePage.as_view(),
     ),
     path(
         "profile/<str:username>/portfolio/<str:slug>/",
-        apis.PortfolioDetailProfilePageView.as_view(),
+        apis.PortfolioDetailProfilePage.as_view(),
     ),
     path(
         "profile/<str:username>/blog/",
-        apis.BlogProfilePageView.as_view(),
+        apis.BlogProfilePage.as_view(),
     ),
     path(
         "profile/<str:username>/blog/post/<str:slug>/",
-        apis.BlogDetailProfilePageView.as_view(),
+        apis.BlogDetailProfilePage.as_view(),
     ),
     path(
         "profile/<str:username>/blog/search/<str:query>/",
-        apis.BlogSearchPageView.as_view(),
+        apis.BlogSearchPage.as_view(),
     ),
     path(
         "profile/<str:username>/blog/category/<str:category_name>/",
-        apis.BlogCategoryPageView.as_view(),
+        apis.BlogCategoryPage.as_view(),
     ),
     path(
         "profile/<str:username>/appointments/",
-        apis.AppointmentProfilePageView.as_view(),
+        apis.AppointmentProfilePage.as_view(),
     ),
     path(
         "profile/<str:username>/appointments/request/",
-        apis.RequestedAppointmentFormView.as_view(),
+        apis.RequestedAppointmentForm.as_view(),
+    ),
+    # User Dashboard APIs
+    path(
+        "dashboard/statistics/",
+        apis.Staticstics.as_view(),
     ),
 ]
