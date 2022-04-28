@@ -1,27 +1,29 @@
 import React from "react"
 import Layout from "../../../../../components/profile/Layout"
 import SingleBlog from "../../../../../components/profile/sections/blog/SingleBlog"
+import { IErrorProps } from "../../../../../types/pages"
 import { BlogPostSectionProps, LayoutProps } from "../../../../../types/profile"
+import fetchData from "../../../../../utils/fetchData"
 import Error from "../../../../error"
 
 interface BlogPostProps {
-  success: boolean
+  error?: IErrorProps
   display_blog: boolean
   layout: LayoutProps
   section: BlogPostSectionProps
 }
 
 const BlogPost: React.FC<BlogPostProps> = (props: BlogPostProps) => {
+  const { error, display_blog, layout, section } = props
+
+  if (error || !display_blog) {
+    return <Error {...error} />
+  }
+
   return (
-    <>
-      {props.display_blog === true && props.success ? (
-        <Layout layoutProps={props.layout}>
-          <SingleBlog {...props.section} />
-        </Layout>
-      ) : (
-        <Error />
-      )}
-    </>
+    <Layout layoutProps={layout}>
+      <SingleBlog {...section} />
+    </Layout>
   )
 }
 
@@ -30,15 +32,11 @@ export const getServerSideProps = async (context: {
 }) => {
   const username = context.params.username as string
   const slug = context.params.slug as string
-  // Fetch data from API
-  const url = `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/profile/${username}/blog/post/${slug}/`
 
-  const res = await fetch(url)
-  const data = await res.json()
+  const api = `/api/profile/${username}/blog/post/${slug}/`
+  const data = await fetchData(api)
 
-  return {
-    props: { ...data.data, success: data.success },
-  }
+  return data
 }
 
 export default BlogPost

@@ -1,42 +1,41 @@
 import type { NextPage } from "next"
 import Layout from "../../../../components/profile/Layout"
 import BlogSection from "../../../../components/profile/sections/blog"
+import { IErrorProps } from "../../../../types/pages"
 import { BlogSectionProps, LayoutProps } from "../../../../types/profile"
+import fetchData from "../../../../utils/fetchData"
 import Error from "../../../error"
 
 interface BlogPageProps {
-  success: boolean
+  error?: IErrorProps
   display_blog: boolean
   layout: LayoutProps
   section: BlogSectionProps
 }
 
 const Blog: NextPage<BlogPageProps> = (props: BlogPageProps) => {
+  const { error, display_blog, layout, section } = props
+
+  if (error || !display_blog) {
+    return <Error {...error} />
+  }
+
   return (
-    <>
-      {props.display_blog === true && props.success ? (
-        <Layout layoutProps={props.layout}>
-          <BlogSection {...props.section} />
-        </Layout>
-      ) : (
-        <Error />
-      )}
-    </>
+    <Layout layoutProps={layout}>
+      <BlogSection {...section} />
+    </Layout>
   )
 }
+
 export const getServerSideProps = async (context: {
   params: { username: string }
 }) => {
   const username = context.params.username as string
-  // Fetch data from API
-  const url = `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/profile/${username}/blog/`
 
-  const res = await fetch(url)
-  const data = await res.json()
+  const api = `/api/profile/${username}/blog/`
+  const data = await fetchData(api)
 
-  return {
-    props: { ...data.data, success: data.success },
-  }
+  return data
 }
 
 export default Blog

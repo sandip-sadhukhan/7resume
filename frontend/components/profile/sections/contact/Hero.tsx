@@ -9,6 +9,8 @@ import {
 } from "@chakra-ui/react"
 import React, { ChangeEvent, useState } from "react"
 import { useRouter } from "next/router"
+import axios from "../../../../utils/axiosInstance"
+import { AxiosError } from "axios"
 
 interface Props {
   secondaryColor: string
@@ -42,28 +44,26 @@ const Hero = (props: Props) => {
     e.preventDefault()
     setLoading(true)
 
-    const url = `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/profile/${username}/contact-me/send/`
     try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+      const url = `/api/profile/${username}/contact-me/send/`
+
+      await axios.post(url, {
+        ...formData,
       })
-      const data = await res.json()
 
       toast({
         title: "Done",
-        description: data["message"],
+        description: "Message sent successfully",
         status: "success",
         duration: 9000,
         isClosable: true,
       })
-    } catch (err) {
+    } catch (error) {
+      const err = error as AxiosError
+
       toast({
         title: "Error",
-        description: "Something went wrong 😨",
+        description: err.message,
         status: "error",
         duration: 9000,
         isClosable: true,

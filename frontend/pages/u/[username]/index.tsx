@@ -1,11 +1,13 @@
 import type { NextPage } from "next"
+import fetchData from "../../../utils/fetchData"
 import Layout from "../../../components/profile/Layout"
 import HomeSection from "../../../components/profile/sections/home/HomeSection"
 import { LayoutProps } from "../../../types/profile"
 import Error from "../../error"
+import { IErrorProps } from "../../../types/pages"
 
 interface UserHomeProps {
-  success: boolean
+  error?: IErrorProps
   layout: LayoutProps
   section: {
     name: string
@@ -14,20 +16,20 @@ interface UserHomeProps {
 }
 
 const UserHome: NextPage<UserHomeProps> = (props: UserHomeProps) => {
-  const { success, layout, section } = props
+  const { error, layout, section } = props
+
+  if (error) {
+    return <Error status={error.status} description={error.description} />
+  }
 
   return (
     <>
-      {success ? (
-        <Layout layoutProps={layout}>
-          <HomeSection
-            name={section.name}
-            professionList={section.my_positions.split("\r\n")}
-          />
-        </Layout>
-      ) : (
-        <Error />
-      )}
+      <Layout layoutProps={layout}>
+        <HomeSection
+          name={section.name}
+          professionList={section.my_positions.split("\r\n")}
+        />
+      </Layout>
     </>
   )
 }
@@ -36,15 +38,11 @@ export const getServerSideProps = async (context: {
   params: { username: string }
 }) => {
   const username = context.params.username as string
-  // Fetch data from API
-  const url = `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/profile/${username}/home/`
 
-  const res = await fetch(url)
-  const data = await res.json()
+  const api = `/api/profile/${username}/home/`
+  const data = await fetchData(api)
 
-  return {
-    props: { ...data.data, success: data.success },
-  }
+  return data
 }
 
 export default UserHome

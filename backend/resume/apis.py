@@ -169,53 +169,23 @@ class AppointmentProfilePage(APIView):
 class RequestedAppointmentForm(APIView):
     permission_classes = (permissions.AllowAny,)
 
-    class RequestedAppointmentSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = RequestedAppointment
-            fields = (
-                "subject",
-                "name",
-                "email",
-                "phone",
-                "appointment_time",
-                "message",
-            )
+    class InputSerializer(serializers.Serializer):
+        subject = serializers.CharField(max_length=300)
+        name = serializers.CharField(max_length=50)
+        email = serializers.EmailField(max_length=200)
+        phone = serializers.CharField(max_length=20)
+        appointment_time = serializers.DateTimeField()
+        message = serializers.CharField()
 
-    def post(self, request, username, format=None):
-        try:
-            user = UserAccount.objects.get(username=username)
-        except UserAccount.DoesNotExist:
-            return Response(
-                {
-                    "success": False,
-                    "error": "Username not exists",
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
+    def post(self, request: Request, username: str) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        serializer = self.RequestedAppointmentSerializer(
-            data=request.data,
+        services.createAppointmentRequest(
+            username=username, **serializer.validated_data
         )
-        if serializer.is_valid():
-            RequestedAppointment.objects.create(
-                user_profile=user.user_profile,
-                subject=serializer.data["subject"],
-                name=serializer.data["name"],
-                email=serializer.data["email"],
-                phone=serializer.data["phone"],
-                appointment_time=serializer.data["appointment_time"],
-                message=serializer.data["message"],
-            )
-            return Response(
-                {
-                    "success": True,
-                    "message": "Appointment Booked Successfully!",
-                }
-            )
-        else:
-            return Response(
-                serializer.errors, status=status.HTTP_400_BAD_REQUEST
-            )
+
+        return Response(status=status.HTTP_201_CREATED)
 
 
 class Staticstics(APIView):

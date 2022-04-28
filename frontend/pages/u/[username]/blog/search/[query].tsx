@@ -1,30 +1,32 @@
 import React from "react"
 import Layout from "../../../../../components/profile/Layout"
 import SearchBlogSection from "../../../../../components/profile/sections/blog/SearchBlogSection"
+import { IErrorProps } from "../../../../../types/pages"
 import {
   BlogSearchSectionProps,
   LayoutProps,
 } from "../../../../../types/profile"
+import fetchData from "../../../../../utils/fetchData"
 import Error from "../../../../error"
 
 interface BlogPageProps {
-  success: boolean
+  error?: IErrorProps
   display_blog: boolean
   layout: LayoutProps
   section: BlogSearchSectionProps
 }
 
 const BlogSearch: React.FC<BlogPageProps> = (props: BlogPageProps) => {
+  const { error, display_blog, layout, section } = props
+
+  if (error || !display_blog) {
+    return <Error {...error} />
+  }
+
   return (
-    <>
-      {props.display_blog === true && props.success ? (
-        <Layout layoutProps={props.layout}>
-          <SearchBlogSection {...props.section} />
-        </Layout>
-      ) : (
-        <Error />
-      )}
-    </>
+    <Layout layoutProps={layout}>
+      <SearchBlogSection {...section} />
+    </Layout>
   )
 }
 
@@ -38,15 +40,11 @@ interface ContextProps {
 export const getServerSideProps = async (context: ContextProps) => {
   const username = context.params.username
   const query = context.params.query
-  // Fetch data from API
-  const url = `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/profile/${username}/blog/search/${query}`
 
-  const res = await fetch(url)
-  const data = await res.json()
+  const api = `/api/profile/${username}/blog/search/${query}`
+  const data = await fetchData(api)
 
-  return {
-    props: { ...data.data, success: data.success },
-  }
+  return data
 }
 
 export default BlogSearch

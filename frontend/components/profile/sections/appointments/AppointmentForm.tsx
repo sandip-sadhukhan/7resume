@@ -8,12 +8,14 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react"
+import { AxiosError } from "axios"
 import { useRouter } from "next/router"
 import React, { ChangeEvent, FormEvent, useState } from "react"
 import { FaUser } from "react-icons/fa"
 import { FiEdit2, FiMail } from "react-icons/fi"
 import { MdCall, MdDateRange } from "react-icons/md"
 import { RequestedAppointmentType } from "../../../../types/profile"
+import axiosInstance from "../../../../utils/axiosInstance"
 
 interface AppointmentFormProps {
   secondaryColor: string
@@ -48,28 +50,26 @@ const AppointmentForm: React.FC<AppointmentFormProps> = (
     e.preventDefault()
     setLoading(true)
 
-    const url = `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/profile/${username}/appointments/request/`
     try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+      const api = `/api/profile/${username}/appointments/request/`
+
+      await axiosInstance.post(api, {
+        ...formData,
       })
-      const data = await res.json()
 
       toast({
         title: "Done",
-        description: data["message"],
+        description: "Appointment Booked",
         status: "success",
         duration: 9000,
         isClosable: true,
       })
-    } catch (err) {
+    } catch (error) {
+      const err = error as AxiosError
+
       toast({
         title: "Error",
-        description: "Something went wrong 😨",
+        description: err.message,
         status: "error",
         duration: 9000,
         isClosable: true,

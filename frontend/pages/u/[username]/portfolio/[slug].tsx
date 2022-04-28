@@ -1,14 +1,16 @@
 import type { NextPage } from "next"
 import Layout from "../../../../components/profile/Layout"
 import SinglePortfolioSection from "../../../../components/profile/sections/portfolio/SinglePortfolioSection"
+import { IErrorProps } from "../../../../types/pages"
 import {
   LayoutProps,
   SinglePortfolioSectionProps,
 } from "../../../../types/profile"
+import fetchData from "../../../../utils/fetchData"
 import Error from "../../../error"
 
 interface SinglePortfolioPageProps {
-  success: boolean
+  error?: IErrorProps
   display_portfolio: boolean
   layout: LayoutProps
   section: SinglePortfolioSectionProps
@@ -17,16 +19,16 @@ interface SinglePortfolioPageProps {
 const SinglePortfolio: NextPage<SinglePortfolioPageProps> = (
   props: SinglePortfolioPageProps
 ) => {
+  const { error, display_portfolio, layout, section } = props
+
+  if (error || !display_portfolio) {
+    return <Error {...error} />
+  }
+
   return (
-    <>
-      {props.success ? (
-        <Layout layoutProps={props.layout}>
-          <SinglePortfolioSection {...props.section} />
-        </Layout>
-      ) : (
-        <Error />
-      )}
-    </>
+    <Layout layoutProps={layout}>
+      <SinglePortfolioSection {...section} />
+    </Layout>
   )
 }
 
@@ -35,15 +37,11 @@ export const getServerSideProps = async (context: {
 }) => {
   const username = context.params.username as string
   const slug = context.params.slug as string
-  // Fetch data from API
-  const url = `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/profile/${username}/portfolio/${slug}/`
 
-  const res = await fetch(url)
-  const data = await res.json()
+  const api = `/api/profile/${username}/portfolio/${slug}/`
+  const data = fetchData(api)
 
-  return {
-    props: { ...data.data, success: data.success },
-  }
+  return data
 }
 
 export default SinglePortfolio

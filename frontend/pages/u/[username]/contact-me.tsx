@@ -1,26 +1,28 @@
 import type { NextPage } from "next"
 import Layout from "../../../components/profile/Layout"
 import Contact from "../../../components/profile/sections/contact"
+import { IErrorProps } from "../../../types/pages"
 import { LayoutProps, ContactMeSectionProps } from "../../../types/profile"
+import fetchData from "../../../utils/fetchData"
 import Error from "../../error"
 
 interface ContactMeProps {
-  success: boolean
+  error?: IErrorProps
   layout: LayoutProps
   section: ContactMeSectionProps
 }
 
 const ContactMe: NextPage<ContactMeProps> = (props: ContactMeProps) => {
+  const { error, layout, section } = props
+
+  if (error) {
+    return <Error {...error} />
+  }
+
   return (
-    <>
-      {props.success ? (
-        <Layout layoutProps={props.layout}>
-          <Contact {...props.section} />
-        </Layout>
-      ) : (
-        <Error />
-      )}
-    </>
+    <Layout layoutProps={layout}>
+      <Contact {...section} />
+    </Layout>
   )
 }
 
@@ -28,15 +30,11 @@ export const getServerSideProps = async (context: {
   params: { username: string }
 }) => {
   const username = context.params.username as string
-  // Fetch data from API
-  const url = `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/profile/${username}/contact-me/`
 
-  const res = await fetch(url)
-  const data = await res.json()
+  const api = `/api/profile/${username}/contact-me/`
+  const data = await fetchData(api)
 
-  return {
-    props: { ...data.data, success: data.success },
-  }
+  return data
 }
 
 export default ContactMe

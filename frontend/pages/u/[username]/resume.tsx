@@ -1,29 +1,29 @@
 import type { NextPage } from "next"
 import Layout from "../../../components/profile/Layout"
 import ResumeSection from "../../../components/profile/sections/resume"
+import { IErrorProps } from "../../../types/pages"
 import { ResumeSectionProps, LayoutProps } from "../../../types/profile"
+import fetchData from "../../../utils/fetchData"
 import Error from "../../error"
 
 interface ResumePageProps {
-  success: boolean
+  error?: IErrorProps
   display_resume: boolean
   layout: LayoutProps
   section: ResumeSectionProps
 }
 
 const Resume: NextPage<ResumePageProps> = (props: ResumePageProps) => {
-  const { success, display_resume, layout, section } = props
+  const { error, display_resume, layout, section } = props
+
+  if (error || !display_resume) {
+    return <Error {...error} />
+  }
 
   return (
-    <>
-      {display_resume === true && success ? (
-        <Layout layoutProps={layout}>
-          <ResumeSection {...section} />
-        </Layout>
-      ) : (
-        <Error />
-      )}
-    </>
+    <Layout layoutProps={layout}>
+      <ResumeSection {...section} />
+    </Layout>
   )
 }
 
@@ -31,15 +31,11 @@ export const getServerSideProps = async (context: {
   params: { username: string }
 }) => {
   const username = context.params.username as string
-  // Fetch data from API
-  const url = `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/profile/${username}/resume/`
 
-  const res = await fetch(url)
-  const data = await res.json()
+  const api = `/api/profile/${username}/resume/`
+  const data = await fetchData(api)
 
-  return {
-    props: { ...data.data, success: data.success },
-  }
+  return data
 }
 
 export default Resume
