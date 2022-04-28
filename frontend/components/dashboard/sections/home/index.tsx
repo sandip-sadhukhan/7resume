@@ -5,17 +5,52 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { AiFillMessage, AiOutlineProject } from "react-icons/ai"
+import axios from "../../../../utils/axiosInstance"
 import { FaBloggerB, FaRegEye } from "react-icons/fa"
 import { MdPeople, MdWork } from "react-icons/md"
 import { VscFeedback } from "react-icons/vsc"
 import { RiCustomerService2Fill } from "react-icons/ri"
 import StatisticsBox from "./statictics-box"
 import Head from "next/head"
+import { withAuth } from "../../../../auth/context"
+import { IState } from "../../../../types/auth"
 
-const Home: React.FC = () => {
+interface HomeSectionProps {
+  state: IState
+}
+
+const Home: React.FC<HomeSectionProps> = (props: HomeSectionProps) => {
   const bgColor = useColorModeValue("white", "gray.700")
+
+  interface IFetchData {
+    views: number
+    services: number
+    clients: number
+    projects: number
+    blog_posts: number
+    testimonials: number
+    skills: number
+    messages: number
+  }
+
+  const [data, setData] = useState<IFetchData | null>(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get("/api/dashboard/statistics/", {
+        headers: {
+          Authorization: `Bearer ${props.state.user?.access}`,
+        },
+      })
+      const data: IFetchData = response.data
+
+      setData({ ...data })
+    }
+
+    fetchData()
+  }, [props.state.user?.access])
 
   return (
     <VStack
@@ -46,57 +81,57 @@ const Home: React.FC = () => {
         <StatisticsBox
           Icon={FaRegEye}
           name="views"
-          progressPercentage={85}
-          valueCount={2586}
+          max={1000}
+          valueCount={data?.views}
           bg="blackAlpha.800"
         />
         <StatisticsBox
           Icon={RiCustomerService2Fill}
           name="services"
-          progressPercentage={35}
-          valueCount={4}
+          max={10}
+          valueCount={data?.services}
           bg="tomato"
         />
         <StatisticsBox
           Icon={MdPeople}
           name="clients"
-          progressPercentage={95}
-          valueCount={9}
+          max={10}
+          valueCount={data?.clients}
           bg="teal.400"
         />
         <StatisticsBox
           Icon={AiOutlineProject}
           name="projects"
-          progressPercentage={85}
-          valueCount={8}
+          max={10}
+          valueCount={data?.projects}
           bg="green.400"
         />
         <StatisticsBox
           Icon={FaBloggerB}
           name="blog posts"
-          progressPercentage={85}
-          valueCount={18}
+          max={10}
+          valueCount={data?.blog_posts}
           bg="purple.600"
         />
         <StatisticsBox
           Icon={VscFeedback}
           name="testimonials"
-          progressPercentage={90}
-          valueCount={5}
+          max={6}
+          valueCount={data?.testimonials}
           bg="blue.400"
         />
         <StatisticsBox
           Icon={MdWork}
           name="skills"
-          progressPercentage={85}
-          valueCount={8}
+          max={6}
+          valueCount={data?.skills}
           bg="red"
         />
         <StatisticsBox
           Icon={AiFillMessage}
           name="messages"
-          progressPercentage={85}
-          valueCount={12}
+          max={10}
+          valueCount={data?.messages}
           bg="orange"
         />
       </SimpleGrid>
@@ -104,4 +139,4 @@ const Home: React.FC = () => {
   )
 }
 
-export default Home
+export default withAuth(Home)

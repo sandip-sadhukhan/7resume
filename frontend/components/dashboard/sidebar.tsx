@@ -13,7 +13,7 @@ import {
 import NextLink from "next/link"
 import React, { Dispatch } from "react"
 import { AiOutlineProject } from "react-icons/ai"
-import { BiCategory, BiLinkExternal, BiSupport } from "react-icons/bi"
+import { BiCategory, BiSupport } from "react-icons/bi"
 import {
   FaBriefcase,
   FaGraduationCap,
@@ -32,15 +32,16 @@ import {
   BsFillChatLeftTextFill,
 } from "react-icons/bs"
 import { MdPeopleAlt } from "react-icons/md"
-import { RiUserStarFill } from "react-icons/ri"
+import { RiFileUserFill, RiUserStarFill } from "react-icons/ri"
 import { IoIosPricetag } from "react-icons/io"
 import { useRouter } from "next/router"
 import { withAuth } from "../../auth/context"
-import { IAction } from "../../types/auth"
+import { IAction, IState, IUser } from "../../types/auth"
 import { logout } from "../../auth/actions"
 
 interface SidebarProps {
   onClose?: () => void
+  state: IState
   dispatch: Dispatch<IAction>
 }
 
@@ -61,6 +62,8 @@ const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
       isClosable: true,
     })
   }
+
+  const { name, profile_picture, username } = props.state.user as IUser
 
   return (
     <VStack
@@ -99,7 +102,11 @@ const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
             _hover={{ textDecoration: "none" }}
             _focus={{ boxShadow: "none" }}
           >
-            <Avatar src="/avatar-1.jpg" size="lg" border="4px solid gray" />
+            <Avatar
+              src={`${process.env.NEXT_PUBLIC_BASE_API_URL}${profile_picture}`}
+              size="lg"
+              border="4px solid gray"
+            />
             <VStack align="start" spacing={1}>
               <Heading
                 size="md"
@@ -107,7 +114,7 @@ const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
                 letterSpacing="wide"
                 color="white"
               >
-                Sandip Sadhukhan
+                {name}
               </Heading>
               <Text color="whiteAlpha.700" fontSize={14}>
                 Admin Role
@@ -169,7 +176,11 @@ const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
         fontWeight="normal"
         spacing={2}
       >
-        <NavItem Icon={BiLinkExternal} text="Visit you site" link="/u/sandip" />
+        <NavItem
+          Icon={RiFileUserFill}
+          text="Visit you site"
+          link={`/u/${username}`}
+        />
         <Divider borderColor="whiteAlpha.200" />
 
         <NavItem Icon={FaHome} text="Dashboard" link="/dashboard" />

@@ -8,6 +8,11 @@ const TermsAndCondition: NextPage = () => {
     <Container maxW="container.lg" py={10}>
       <Head>
         <title>Terms and Condition Page | Resume Bus</title>
+        <meta
+          name="description"
+          content="Read our terms and condition to use our site"
+        />
+        <link rel="icon" href="/favicon.png" />
       </Head>
       <Heading pb={8} textAlign="center">
         Terms and Conditions for Resume Bus

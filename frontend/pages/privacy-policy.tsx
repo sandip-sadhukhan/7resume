@@ -8,6 +8,8 @@ const PrivacyPolicy: NextPage = () => {
     <Container maxW="container.lg" py={10}>
       <Head>
         <title>Privacy Policy Page | Resume Bus</title>
+        <meta name="description" content="Read our privacy policy page" />
+        <link rel="icon" href="/favicon.png" />
       </Head>
       <Heading pb={8} textAlign="center">
         Privacy Policy for Resume Bus

@@ -1,16 +1,21 @@
 import { Dispatch } from "react"
 
+export interface IUser {
+  access: string
+  username: string
+  name: string
+  profile_picture: string
+}
+
 export interface IState {
-  token: string | null
+  user: IUser | null
   isAuthenticated: boolean
   loading: boolean
 }
 
 export interface IAction {
   type: string
-  payload?: {
-    access: string
-  }
+  payload?: IUser
 }
 
 export interface IContext {

@@ -1,60 +1,81 @@
 import { Dispatch } from "react"
+import axios from "../../utils/axiosInstance"
 import { IAction } from "../../types/auth"
-import {
-  //   SIGNUP_SUCCESS,
-  SIGNUP_FAIL,
-  LOGIN_SUCCESS,
-  LOGIN_FAIL,
-  LOGOUT,
-} from "../constants"
+import { SIGNUP_FAIL, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT } from "../constants"
+import { AxiosError } from "axios"
 
-const BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL
+// remove items from localstorage
+const localStorageClear = () => {
+  localStorage.removeItem("token")
+  localStorage.removeItem("username")
+  localStorage.removeItem("name")
+  localStorage.removeItem("profile_pic")
+}
 
-const headers = {
-  "Content-Type": "application/json",
+// save items to localstorage
+const localStorageSave = (
+  token: string,
+  username: string,
+  name: string,
+  profile_picture: string
+) => {
+  localStorage.setItem("token", token)
+  localStorage.setItem("username", username)
+  localStorage.setItem("name", name)
+  localStorage.setItem("profile_pic", profile_picture)
 }
 
 // login action
+interface ILoginResult {
+  username: string
+  name: string
+  profile_picture: string
+  access: string
+}
 export const login = async (
   email: string,
   password: string,
   dispatch: Dispatch<IAction>
 ): Promise<[boolean, string]> => {
-  const body = JSON.stringify({ email, password })
-
   try {
-    const res = await fetch(`${BASE_API_URL}/api/token/`, {
-      method: "POST",
-      body,
-      headers,
+    const response = await axios.post("/api/accounts/login/", {
+      email,
+      password,
     })
-    const data = await res.json()
+    const data: ILoginResult = response.data
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: {
+        username: data.username,
+        name: data.name,
+        profile_picture: data.profile_picture,
+        access: data.access,
+      },
+    })
 
-    if (res.status === 200) {
-      dispatch({
-        type: LOGIN_SUCCESS,
-        payload: {
-          access: data.access,
-        },
-      })
+    localStorageSave(
+      data.access,
+      data.username,
+      data.name,
+      data.profile_picture
+    )
 
-      localStorage.setItem("token", data.access)
-      return [true, "Login Successfully"]
-    } else {
-      dispatch({
-        type: LOGIN_FAIL,
-      })
+    return [true, "Login Successfully"]
+  } catch (error) {
+    const err = error as AxiosError
 
-      localStorage.removeItem("token")
-      return [false, data.detail]
-    }
-  } catch (err) {
+    // Dispatch the data
     dispatch({
       type: LOGIN_FAIL,
     })
+    localStorageClear()
 
-    localStorage.removeItem("token")
-    return [false, "Something went Wrong"]
+    if (err.response?.status === 401) {
+      return [false, "Email or Password is incorrect."]
+    } else {
+      console.log(err)
+      return [false, `${err.message}`]
+    }
   }
 }
 
@@ -65,39 +86,45 @@ export const signup = async (
   password: string,
   dispatch: Dispatch<IAction>
 ): Promise<[boolean, string]> => {
-  const body = JSON.stringify({ username, name, email, password })
-
   try {
-    const res = await fetch(`${BASE_API_URL}/api/accounts/signup/`, {
-      method: "POST",
-      body,
-      headers,
+    await axios.post("/api/accounts/signup/", {
+      username,
+      name,
+      email,
+      password,
     })
-    const data = await res.json()
 
-    if (data.success) {
-      return await login(email, password, dispatch)
-    } else {
-      dispatch({
-        type: SIGNUP_FAIL,
-      })
-      localStorage.removeItem("token")
-      return [false, data.error]
-    }
-  } catch (err) {
+    return await login(email, password, dispatch)
+  } catch (error) {
+    const err = error as AxiosError
+
     dispatch({
       type: SIGNUP_FAIL,
     })
-    localStorage.removeItem("token")
-    return [false, "Signup Failed"]
+    localStorageClear()
+    console.log(err)
+
+    interface errorResponse {
+      data: {
+        error: string
+      }
+    }
+    const response = err.response as errorResponse
+
+    return [false, response.data.error]
   }
 }
 
 export const logout = (dispatch: Dispatch<IAction>) => {
   dispatch({ type: LOGOUT })
-  localStorage.removeItem("token")
+  localStorageClear()
 }
 
+interface IAuthenticateResult {
+  username: string
+  name: string
+  profile_picture: string
+}
 export const authenticate = async (
   dispatch: Dispatch<IAction>
 ): Promise<[boolean, string]> => {
@@ -107,37 +134,40 @@ export const authenticate = async (
     dispatch({
       type: LOGIN_FAIL,
     })
-    localStorage.removeItem("token")
+    localStorageClear()
     return [false, "Please Login/Signup to continue"]
   }
 
   try {
-    const res = await fetch(`${BASE_API_URL}/api/accounts/get-user/`, {
-      method: "GET",
+    const response = await axios.get("/api/accounts/get-user/", {
       headers: {
-        ...headers,
         Authorization: `Bearer ${token}`,
       },
     })
-    if (res.status === 200) {
-      dispatch({
-        type: LOGIN_SUCCESS,
-        payload: { access: token },
-      })
 
-      return [true, "Login Successfully"]
-    } else {
-      dispatch({
-        type: LOGIN_FAIL,
-      })
-      localStorage.removeItem("token")
-      return [false, "Please Login/Signup to continue"]
-    }
-  } catch (err) {
+    const data: IAuthenticateResult = await response.data
+
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: {
+        access: token,
+        username: data.username,
+        name: data.name,
+        profile_picture: data.profile_picture,
+      },
+    })
+
+    return [true, "Login Successfully"]
+  } catch (error) {
+    const err = error as AxiosError
+
     dispatch({
       type: LOGIN_FAIL,
     })
-    localStorage.removeItem("token")
+
+    localStorageClear()
+    console.log(err)
+
     return [false, "Please Login to continue"]
   }
 }
