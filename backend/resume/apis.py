@@ -1,10 +1,8 @@
-from django.http import HttpRequest, HttpResponse
+from django.forms import ValidationError
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import status, permissions, serializers
-from accounts.models import UserAccount
-from .models import Blog, BlogCategory, RequestedAppointment
 from . import selectors, services
 
 
@@ -191,7 +189,37 @@ class RequestedAppointmentForm(APIView):
 class Staticstics(APIView):
     """Data for statistics page"""
 
-    def get(self, request):
+    def get(self, request: Request) -> Response:
         statisticsData = selectors.getStatisticsData(user=request.user)
 
         return Response(statisticsData)
+
+
+class EditProfile(APIView):
+    """Set and get edit profile page data"""
+
+    class InputSerializer(serializers.Serializer):
+        name = serializers.CharField(max_length=255)
+        username = serializers.CharField(max_length=255)
+        email = serializers.CharField(max_length=255)
+        password = serializers.CharField(max_length=255)
+
+    def get(self, request: Request) -> Response:
+        data = selectors.getEditProfileData(user=request.user)
+
+        return Response(data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        try:
+            services.changeUserFields(
+                user=request.user, **serializer.validated_data
+            )
+        except ValidationError as e:
+            return Response(
+                {"error": e.args[0]}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        return Response()

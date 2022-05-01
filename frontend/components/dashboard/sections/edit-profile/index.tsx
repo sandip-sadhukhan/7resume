@@ -2,18 +2,35 @@ import {
   Button,
   Divider,
   Flex,
+  FormErrorMessage,
+  FormControl,
   Heading,
   HStack,
   Input,
   Text,
   useColorModeValue,
   VStack,
+  useToast,
 } from "@chakra-ui/react"
 import Head from "next/head"
-import React, { ChangeEvent, FormEvent, useState } from "react"
+import React, { useEffect } from "react"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { withAuth } from "../../../../auth/context"
+import { IState } from "../../../../types/auth"
+import axiosInstance from "../../../../utils/axiosInstance"
+import { AxiosError } from "axios"
 
-const EditProfileSection: React.FC = () => {
+interface EditProfileSectionProps {
+  state: IState
+}
+
+const EditProfileSection: React.FC<EditProfileSectionProps> = (
+  props: EditProfileSectionProps
+) => {
   const bgColor = useColorModeValue("white", "gray.700")
+
+  const toast = useToast()
+  const token = props.state.user?.access as string
 
   interface IFormData {
     name: string
@@ -22,22 +39,65 @@ const EditProfileSection: React.FC = () => {
     password: string
   }
 
-  const [formData, setFormData] = useState<IFormData>({
-    name: "",
-    username: "",
-    email: "",
-    password: "",
-  })
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<IFormData>()
 
-  const { name, username, email, password } = formData
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axiosInstance.get("/api/dashboard/edit-profile/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      const data: IFormData = response.data
+      // console.log(data)
+      setValue("name", data.name)
+      setValue("username", data.username)
+      setValue("email", data.email)
+    }
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+    fetchData()
+  }, [token, setValue])
 
-  const onSubmit = (e: FormEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    // submit
+  const onSubmit: SubmitHandler<IFormData> = async (formData: IFormData) => {
+    try {
+      await axiosInstance.post(
+        `/api/dashboard/edit-profile/`,
+        {
+          ...formData,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      // console.log(response.data)
+      toast({
+        status: "success",
+        title: "User Information Saved!",
+      })
+    } catch (error) {
+      const err = error as AxiosError
+      if (err.response?.status === 400) {
+        const data = err.response.data as { error: string }
+        toast({
+          status: "error",
+          title: data.error,
+        })
+      } else {
+        toast({
+          status: "error",
+          title: err.response?.statusText,
+        })
+      }
+      // console.log({ response: err.response })
+    }
   }
 
   return (
@@ -60,7 +120,7 @@ const EditProfileSection: React.FC = () => {
 
       <VStack
         as="form"
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         w="full"
         align="start"
         py={4}
@@ -84,17 +144,24 @@ const EditProfileSection: React.FC = () => {
             <Text color="red">*</Text>
           </HStack>
           <Flex w="full" flex={1}>
-            <Input
-              size="sm"
-              w="full"
-              type="text"
-              placeholder="Name"
-              name="name"
-              value={name}
-              onChange={onChange}
-              required
-              minLength={3}
-            />
+            <FormControl isInvalid={errors.name !== undefined}>
+              <Input
+                size="sm"
+                w="full"
+                type="text"
+                placeholder="Name"
+                {...register("name", {
+                  required: "Name is required",
+                  minLength: {
+                    value: 3,
+                    message: "Name should contain minimum 3 letters.",
+                  },
+                })}
+              />
+              <FormErrorMessage>
+                {errors.name && errors.name.message}
+              </FormErrorMessage>
+            </FormControl>
           </Flex>
         </HStack>
 
@@ -118,17 +185,24 @@ const EditProfileSection: React.FC = () => {
             <Text color="red">*</Text>
           </HStack>
           <Flex flex={1} w="full">
-            <Input
-              size="sm"
-              w="full"
-              type="text"
-              placeholder="Username"
-              name="username"
-              value={username}
-              onChange={onChange}
-              required
-              minLength={3}
-            />
+            <FormControl isInvalid={errors.username !== undefined}>
+              <Input
+                size="sm"
+                w="full"
+                type="text"
+                placeholder="Username"
+                {...register("username", {
+                  required: "Username is required",
+                  minLength: {
+                    value: 3,
+                    message: "Username should contain minimum 3 letters.",
+                  },
+                })}
+              />
+              <FormErrorMessage>
+                {errors.username && errors.username.message}
+              </FormErrorMessage>
+            </FormControl>
           </Flex>
         </HStack>
 
@@ -152,17 +226,28 @@ const EditProfileSection: React.FC = () => {
             <Text color="red">*</Text>
           </HStack>
           <Flex flex={1} w="full">
-            <Input
-              size="sm"
-              w="full"
-              type="email"
-              placeholder="Email"
-              name="email"
-              value={email}
-              onChange={onChange}
-              required
-              minLength={3}
-            />
+            <FormControl isInvalid={errors.email !== undefined}>
+              <Input
+                size="sm"
+                w="full"
+                type="email"
+                placeholder="Email"
+                {...register("email", {
+                  required: "Email is required",
+                  minLength: {
+                    value: 6,
+                    message: "Email should contain minimum 6 letters.",
+                  },
+                  pattern: {
+                    value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                    message: "Email is invalid",
+                  },
+                })}
+              />
+              <FormErrorMessage>
+                {errors.email && errors.email.message}
+              </FormErrorMessage>
+            </FormControl>
           </Flex>
         </HStack>
 
@@ -186,17 +271,24 @@ const EditProfileSection: React.FC = () => {
             <Text color="red">*</Text>
           </HStack>
           <Flex flex={1} w="full">
-            <Input
-              size="sm"
-              w="full"
-              type="password"
-              placeholder="Password"
-              name="password"
-              value={password}
-              onChange={onChange}
-              required
-              minLength={6}
-            />
+            <FormControl isInvalid={errors.password !== undefined}>
+              <Input
+                size="sm"
+                w="full"
+                type="password"
+                placeholder="Password"
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password should contain minimum 6 letters.",
+                  },
+                })}
+              />
+              <FormErrorMessage>
+                {errors.password && errors.password.message}
+              </FormErrorMessage>
+            </FormControl>
           </Flex>
         </HStack>
 
@@ -206,7 +298,14 @@ const EditProfileSection: React.FC = () => {
           w={["full", "full", 152, 182, 262]}
           justifyContent={["start", "start", "end", "end", "end"]}
         >
-          <Button type="submit" colorScheme="green" rounded={0} size="sm">
+          <Button
+            type="submit"
+            colorScheme="green"
+            rounded={0}
+            size="sm"
+            isLoading={isSubmitting}
+            loadingText="Saving"
+          >
             Save
           </Button>
         </HStack>
@@ -215,4 +314,4 @@ const EditProfileSection: React.FC = () => {
   )
 }
 
-export default EditProfileSection
+export default withAuth(EditProfileSection)

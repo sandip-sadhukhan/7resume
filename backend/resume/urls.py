@@ -60,4 +60,8 @@ urlpatterns = [
         "dashboard/statistics/",
         apis.Staticstics.as_view(),
     ),
+    path(
+        "dashboard/edit-profile/",
+        apis.EditProfile.as_view(),
+    ),
 ]

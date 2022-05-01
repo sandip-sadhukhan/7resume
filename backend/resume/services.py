@@ -1,3 +1,5 @@
+from django.core.exceptions import ValidationError
+from accounts.models import UserAccount
 from .models import Blog, Message, RequestedAppointment
 from . import selectors
 
@@ -42,3 +44,39 @@ def createAppointmentRequest(
         appointment_time=appointment_time,
         message=message,
     )
+
+
+def changeUserFields(
+    *, user: UserAccount, name: str, username: str, email: str, password: str
+) -> None:
+
+    # match password
+    if not user.check_password(password):
+        raise ValidationError(message="Wrong password!")
+
+    # name change
+    user.name = name
+
+    # username change
+    if (
+        UserAccount.objects.filter(username=username)
+        .exclude(username=user.username)
+        .count()
+        > 0
+    ):
+        raise ValidationError("Username is already exists")
+    else:
+        user.username = username
+
+    # email change
+    if (
+        UserAccount.objects.filter(email=email)
+        .exclude(email=user.email)
+        .count()
+        > 0
+    ):
+        raise ValidationError("Email is already exists")
+    else:
+        user.email = email
+
+    user.save()

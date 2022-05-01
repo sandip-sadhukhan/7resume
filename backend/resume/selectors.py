@@ -601,3 +601,13 @@ def getStatisticsData(*, user: UserAccount) -> dict[str, Any]:
         "messages": messages,
     }
     return data
+
+
+def getEditProfileData(*, user: UserAccount) -> dict[str, Any]:
+    data = {
+        "name": user.name,
+        "username": user.username,
+        "email": user.email,
+    }
+
+    return data
