@@ -64,4 +64,8 @@ urlpatterns = [
         "dashboard/edit-profile/",
         apis.EditProfile.as_view(),
     ),
+    path(
+        "dashboard/website-settings/",
+        apis.WebsiteSettings.as_view(),
+    ),
 ]

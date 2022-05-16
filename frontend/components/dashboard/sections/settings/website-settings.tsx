@@ -6,52 +6,153 @@ import {
   Text,
   useColorModeValue,
   VStack,
+  useToast,
 } from "@chakra-ui/react"
 import Image from "../../../image"
-import React, { ChangeEvent, FormEvent, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { useRouter } from "next/router"
+import axiosInstance from "../../../../utils/axiosInstance"
+import { withAuth } from "../../../../auth/context"
+import { IState } from "../../../../types/auth"
 
-const WebsiteSettings: React.FC = () => {
+interface WebsiteSettingsProps {
+  state: IState
+}
+
+const WebsiteSettings: React.FC<WebsiteSettingsProps> = (
+  props: WebsiteSettingsProps
+) => {
   const textColor = useColorModeValue("gray.700", "gray.100")
+  const router = useRouter()
+  const token = props.state.user?.access as string
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL
+
+  const toast = useToast()
 
   interface IFormData {
-    siteTitle: ""
-    webmasterEmail: ""
-    favicon: ""
-    startPageBackground: ""
-    aboutMeImage: ""
-    contactFormImage: ""
+    site_title: string | null
+    webmaster_email: string | null
+    favicon: string | null
+    start_page_background: string | null
+    about_me_image: string | null
+    contact_form_image: string | null
   }
 
-  const [formData, setFormData] = useState<IFormData>({
-    siteTitle: "",
-    webmasterEmail: "",
+  interface IPictures {
+    favicon: string | null
+    start_page_background: string | null
+    about_me_image: string | null
+    contact_form_image: string | null
+  }
+  const [pictures, setPictures] = useState<IPictures>({
     favicon: "",
-    startPageBackground: "",
-    aboutMeImage: "",
-    contactFormImage: "",
+    start_page_background: "",
+    about_me_image: "",
+    contact_form_image: "",
   })
 
   const {
-    siteTitle,
-    webmasterEmail,
-    favicon,
-    startPageBackground,
-    aboutMeImage,
-    contactFormImage,
-  } = formData
+    register,
+    handleSubmit,
+    setValue,
+    formState: { isSubmitting },
+  } = useForm<IFormData>()
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+  const updateData = useCallback(
+    (data: IFormData) => {
+      setValue("site_title", data.site_title)
+      setValue("webmaster_email", data.webmaster_email)
+      setPictures({
+        favicon: data.favicon,
+        start_page_background: data.start_page_background,
+        about_me_image: data.about_me_image,
+        contact_form_image: data.contact_form_image,
+      })
+    },
+    [setValue]
+  )
 
-  const onSubmit = (e: FormEvent<HTMLDivElement>) => {
-    e.preventDefault()
+  const fetchData = useCallback(async () => {
+    const response = await axiosInstance.get(
+      "/api/dashboard/website-settings/",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    const data: IFormData = response.data
+    updateData(data)
+  }, [token, updateData])
 
-    // submit
+  useEffect(() => {
+    fetchData()
+  }, [token, setValue, fetchData])
+
+  const onSubmit: SubmitHandler<IFormData> = async (data: IFormData) => {
+    const formData = new FormData()
+
+    formData.append("site_title", data.site_title || "")
+    formData.append("webmaster_email", data.webmaster_email || "")
+
+    if (data.favicon !== null && data.favicon.length === 1) {
+      formData.append("favicon", data.favicon[0])
+    }
+
+    if (
+      data.start_page_background !== null &&
+      data.start_page_background.length === 1
+    ) {
+      formData.append("start_page_background", data.start_page_background[0])
+    }
+
+    if (data.about_me_image !== null && data.about_me_image.length === 1) {
+      formData.append("about_me_image", data.about_me_image[0])
+    }
+
+    if (
+      data.contact_form_image !== null &&
+      data.contact_form_image.length === 1
+    ) {
+      formData.append("contact_form_image", data.contact_form_image[0])
+    }
+
+    const response = await axiosInstance.post(
+      "/api/dashboard/website-settings/",
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    )
+
+    const responseData: IFormData = response.data
+    updateData(responseData)
+    setValue("favicon", null)
+    setValue("start_page_background", null)
+    setValue("about_me_image", null)
+    setValue("contact_form_image", null)
+
+    toast({
+      title: "Settings Saved!",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    })
   }
 
   return (
-    <VStack w="full" align="start" spacing={4} color={textColor}>
+    <VStack
+      as="form"
+      onSubmit={handleSubmit(onSubmit)}
+      w="full"
+      align="start"
+      spacing={4}
+      color={textColor}
+    >
       {/* Site Title */}
       <HStack
         w="full"
@@ -60,8 +161,6 @@ const WebsiteSettings: React.FC = () => {
         gap={2}
         align="start"
         alignItems="center"
-        as="form"
-        onSubmit={onSubmit}
       >
         <Text
           fontSize={14}
@@ -76,9 +175,7 @@ const WebsiteSettings: React.FC = () => {
             w="full"
             type="text"
             placeholder="Name"
-            name="siteTitle"
-            value={siteTitle}
-            onChange={onChange}
+            {...register("site_title")}
           />
         </HStack>
       </HStack>
@@ -107,9 +204,7 @@ const WebsiteSettings: React.FC = () => {
             w="full"
             type="email"
             placeholder="Webmaster Email"
-            name="webmaterEmail"
-            value={webmasterEmail}
-            onChange={onChange}
+            {...register("webmaster_email")}
           />
         </HStack>
       </HStack>
@@ -137,20 +232,25 @@ const WebsiteSettings: React.FC = () => {
             size="sm"
             w="full"
             type="file"
-            placeholder="Favicon"
-            name="favicon"
-            value={favicon}
-            onChange={onChange}
+            {...register("favicon")}
+            accept=".png,.jpg,.jpeg"
           />
         </HStack>
         <HStack px={4} align="start" w={["full", "full", 40, 40, 40]}>
-          <Image src="/mailbox.png" alt="favicon" width={40} height={40} />
+          {pictures.favicon && (
+            <Image
+              src={`${BASE_URL}${pictures.favicon}`}
+              alt="favicon"
+              width={40}
+              height={40}
+            />
+          )}
         </HStack>
       </HStack>
 
       <Divider />
 
-      {/* Favicon */}
+      {/* Start Page Background */}
       <HStack
         w="full"
         spacing={[0, 0, 2, 2, 2]}
@@ -171,14 +271,18 @@ const WebsiteSettings: React.FC = () => {
             size="sm"
             w="full"
             type="file"
-            placeholder="Favicon"
-            name="startPageBackground"
-            value={startPageBackground}
-            onChange={onChange}
+            {...register("start_page_background")}
           />
         </HStack>
         <HStack px={4} align="start" w={["full", "full", 40, 40, 40]}>
-          <Image src="/mailbox.png" alt="favicon" width={40} height={40} />
+          {pictures.start_page_background && (
+            <Image
+              src={`${BASE_URL}${pictures.start_page_background}`}
+              alt="start page background"
+              width={40}
+              height={40}
+            />
+          )}
         </HStack>
       </HStack>
 
@@ -205,14 +309,18 @@ const WebsiteSettings: React.FC = () => {
             size="sm"
             w="full"
             type="file"
-            placeholder="Favicon"
-            name="aboutMeImage"
-            value={aboutMeImage}
-            onChange={onChange}
+            {...register("about_me_image")}
           />
         </HStack>
         <HStack px={4} align="start" w={["full", "full", 40, 40, 40]}>
-          <Image src="/mailbox.png" alt="favicon" width={40} height={40} />
+          {pictures.about_me_image && (
+            <Image
+              src={`${BASE_URL}${pictures.about_me_image}`}
+              alt="about me"
+              width={40}
+              height={40}
+            />
+          )}
         </HStack>
       </HStack>
 
@@ -240,207 +348,42 @@ const WebsiteSettings: React.FC = () => {
             w="full"
             type="file"
             placeholder="Favicon"
-            name="contactFormImage"
-            value={contactFormImage}
-            onChange={onChange}
+            {...register("contact_form_image")}
           />
         </HStack>
         <HStack px={4} align="start" w={["full", "full", 40, 40, 40]}>
-          <Image src="/avatar-1.jpg" alt="favicon" width={40} height={40} />
+          {pictures.contact_form_image && (
+            <Image
+              src={`${BASE_URL}${pictures.contact_form_image}`}
+              alt="favicon"
+              width={40}
+              height={40}
+            />
+          )}
         </HStack>
       </HStack>
-
-      <HStack
-        w="full"
-        spacing={[0, 0, 2, 2, 2]}
-        flexDir={["column", "column", "row", "row", "row"]}
-        gap={3}
-        align="start"
-        alignItems="center"
-      >
-        <Text
-          fontSize={14}
-          w={["full", "full", 50, 100, 150]}
-          textAlign={["start", "start", "end", "end", "end"]}
-        >
-          Contact Form Image
-        </Text>
-        <HStack w="full" flex={1}>
-          <Input
-            size="sm"
-            w="full"
-            type="file"
-            placeholder="Favicon"
-            name="contactFormImage"
-            value={contactFormImage}
-            onChange={onChange}
-          />
-        </HStack>
-        <HStack px={4} align="start" w={["full", "full", 40, 40, 40]}>
-          <Image src="/avatar-1.jpg" alt="favicon" width={40} height={40} />
-        </HStack>
-      </HStack>
-      <HStack
-        w="full"
-        spacing={[0, 0, 2, 2, 2]}
-        flexDir={["column", "column", "row", "row", "row"]}
-        gap={3}
-        align="start"
-        alignItems="center"
-      >
-        <Text
-          fontSize={14}
-          w={["full", "full", 50, 100, 150]}
-          textAlign={["start", "start", "end", "end", "end"]}
-        >
-          Contact Form Image
-        </Text>
-        <HStack w="full" flex={1}>
-          <Input
-            size="sm"
-            w="full"
-            type="file"
-            placeholder="Favicon"
-            name="contactFormImage"
-            value={contactFormImage}
-            onChange={onChange}
-          />
-        </HStack>
-        <HStack px={4} align="start" w={["full", "full", 40, 40, 40]}>
-          <Image src="/avatar-1.jpg" alt="favicon" width={40} height={40} />
-        </HStack>
-      </HStack>
-      <HStack
-        w="full"
-        spacing={[0, 0, 2, 2, 2]}
-        flexDir={["column", "column", "row", "row", "row"]}
-        gap={3}
-        align="start"
-        alignItems="center"
-      >
-        <Text
-          fontSize={14}
-          w={["full", "full", 50, 100, 150]}
-          textAlign={["start", "start", "end", "end", "end"]}
-        >
-          Contact Form Image
-        </Text>
-        <HStack w="full" flex={1}>
-          <Input
-            size="sm"
-            w="full"
-            type="file"
-            placeholder="Favicon"
-            name="contactFormImage"
-            value={contactFormImage}
-            onChange={onChange}
-          />
-        </HStack>
-        <HStack px={4} align="start" w={["full", "full", 40, 40, 40]}>
-          <Image src="/avatar-1.jpg" alt="favicon" width={40} height={40} />
-        </HStack>
-      </HStack>
-      <HStack
-        w="full"
-        spacing={[0, 0, 2, 2, 2]}
-        flexDir={["column", "column", "row", "row", "row"]}
-        gap={3}
-        align="start"
-        alignItems="center"
-      >
-        <Text
-          fontSize={14}
-          w={["full", "full", 50, 100, 150]}
-          textAlign={["start", "start", "end", "end", "end"]}
-        >
-          Contact Form Image
-        </Text>
-        <HStack w="full" flex={1}>
-          <Input
-            size="sm"
-            w="full"
-            type="file"
-            placeholder="Favicon"
-            name="contactFormImage"
-            value={contactFormImage}
-            onChange={onChange}
-          />
-        </HStack>
-        <HStack px={4} align="start" w={["full", "full", 40, 40, 40]}>
-          <Image src="/avatar-1.jpg" alt="favicon" width={40} height={40} />
-        </HStack>
-      </HStack>
-      <HStack
-        w="full"
-        spacing={[0, 0, 2, 2, 2]}
-        flexDir={["column", "column", "row", "row", "row"]}
-        gap={3}
-        align="start"
-        alignItems="center"
-      >
-        <Text
-          fontSize={14}
-          w={["full", "full", 50, 100, 150]}
-          textAlign={["start", "start", "end", "end", "end"]}
-        >
-          Contact Form Image
-        </Text>
-        <HStack w="full" flex={1}>
-          <Input
-            size="sm"
-            w="full"
-            type="file"
-            placeholder="Favicon"
-            name="contactFormImage"
-            value={contactFormImage}
-            onChange={onChange}
-          />
-        </HStack>
-        <HStack px={4} align="start" w={["full", "full", 40, 40, 40]}>
-          <Image src="/avatar-1.jpg" alt="favicon" width={40} height={40} />
-        </HStack>
-      </HStack>
-      <HStack
-        w="full"
-        spacing={[0, 0, 2, 2, 2]}
-        flexDir={["column", "column", "row", "row", "row"]}
-        gap={3}
-        align="start"
-        alignItems="center"
-      >
-        <Text
-          fontSize={14}
-          w={["full", "full", 50, 100, 150]}
-          textAlign={["start", "start", "end", "end", "end"]}
-        >
-          Contact Form Image
-        </Text>
-        <HStack w="full" flex={1}>
-          <Input
-            size="sm"
-            w="full"
-            type="file"
-            placeholder="Favicon"
-            name="contactFormImage"
-            value={contactFormImage}
-            onChange={onChange}
-          />
-        </HStack>
-        <HStack px={4} align="start" w={["full", "full", 40, 40, 40]}>
-          <Image src="/avatar-1.jpg" alt="favicon" width={40} height={40} />
-        </HStack>
-      </HStack>
-
       <Divider />
 
       <HStack
         w={["full", "full", 200, 245, 295]}
         justifyContent={["start", "start", "end", "end", "end"]}
       >
-        <Button size="sm" rounded={0} colorScheme="green">
+        <Button
+          type="submit"
+          size="sm"
+          rounded={0}
+          colorScheme="green"
+          isLoading={isSubmitting}
+          loadingText="Saving"
+        >
           Save
         </Button>
-        <Button size="sm" rounded={0} colorScheme="red">
+        <Button
+          onClick={() => router.back()}
+          size="sm"
+          rounded={0}
+          colorScheme="red"
+        >
           Cancel
         </Button>
       </HStack>
@@ -448,4 +391,4 @@ const WebsiteSettings: React.FC = () => {
   )
 }
 
-export default WebsiteSettings
+export default withAuth(WebsiteSettings)

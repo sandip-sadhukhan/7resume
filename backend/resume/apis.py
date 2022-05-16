@@ -3,6 +3,9 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import status, permissions, serializers
+from rest_framework.parsers import MultiPartParser, FormParser
+
+from .models import UserProfile
 from . import selectors, services
 
 
@@ -223,3 +226,48 @@ class EditProfile(APIView):
             )
 
         return Response()
+
+
+class WebsiteSettings(APIView):
+    """Set or get website settings"""
+
+    # parser_classes = [MultiPartParser, FormParser]
+
+    class InputSerializer(serializers.Serializer):
+        site_title = serializers.CharField(max_length=200, required=False)
+        webmaster_email = serializers.EmailField(
+            max_length=100, required=False
+        )
+        favicon = serializers.ImageField(required=False)
+        start_page_background = serializers.ImageField(required=False)
+        about_me_image = serializers.ImageField(required=False)
+        contact_form_image = serializers.ImageField(required=False)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = UserProfile
+            fields = (
+                "site_title",
+                "webmaster_email",
+                "favicon",
+                "start_page_background",
+                "about_me_image",
+                "contact_form_image",
+            )
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(instance=request.user.user_profile)
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.saveWebsiteSettings(
+            user=request.user, **serializer.validated_data
+        )
+        outputSerializer = self.OutputSerializer(
+            instance=request.user.user_profile
+        )
+
+        return Response(outputSerializer.data)
