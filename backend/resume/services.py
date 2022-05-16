@@ -109,3 +109,10 @@ def saveWebsiteSettings(
         userProfile.contact_form_image = contact_form_image
 
     userProfile.save()
+
+
+def saveSEOSettings(*, user: UserAccount, meta_description: str) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    userProfile.meta_description = meta_description
+    userProfile.save()

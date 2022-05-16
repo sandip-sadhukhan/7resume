@@ -6,14 +6,71 @@ import {
   Textarea,
   useColorModeValue,
   VStack,
+  useToast,
 } from "@chakra-ui/react"
-import React from "react"
+import React, { useEffect } from "react"
+import { useForm, SubmitHandler } from "react-hook-form"
+import { withAuth } from "../../../../auth/context"
+import { IState } from "../../../../types/auth"
+import axiosInstance from "../../../../utils/axiosInstance"
 
-const Seo: React.FC = () => {
+interface SeoProps {
+  state: IState
+}
+
+const Seo: React.FC<SeoProps> = (props: SeoProps) => {
   const textColor = useColorModeValue("gray.700", "gray.100")
+  const token = props.state.user?.access as string
+  const toast = useToast()
+
+  interface IFormData {
+    meta_description: string
+  }
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { isSubmitting },
+  } = useForm<IFormData>()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axiosInstance.get("/api/dashboard/seo-settings/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      const data: IFormData = response.data
+      setValue("meta_description", data.meta_description)
+    }
+
+    fetchData()
+  }, [token, setValue])
+
+  const onSubmit: SubmitHandler<IFormData> = async (formData: IFormData) => {
+    await axiosInstance.post("/api/dashboard/seo-settings/", formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    toast({
+      title: "Seo Settings saved",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    })
+  }
 
   return (
-    <VStack w="full" spacing={4} align="start" color={textColor}>
+    <VStack
+      as="form"
+      onSubmit={handleSubmit(onSubmit)}
+      w="full"
+      spacing={4}
+      align="start"
+      color={textColor}
+    >
       {/* SEO */}
       <HStack
         w="full"
@@ -36,9 +93,8 @@ const Seo: React.FC = () => {
           <Textarea
             size="sm"
             w="full"
-            name="metaDescription"
-            // value={siteTitle}
-            // onChange={onChange}
+            placeholder="Meta Description..."
+            {...register("meta_description")}
           ></Textarea>
         </HStack>
       </HStack>
@@ -49,7 +105,14 @@ const Seo: React.FC = () => {
         w={["full", "full", 240, 245, 295]}
         justifyContent={["start", "start", "end", "end", "end"]}
       >
-        <Button size="sm" rounded={0} colorScheme="green">
+        <Button
+          size="sm"
+          type="submit"
+          rounded={0}
+          colorScheme="green"
+          loadingText="Saving"
+          isLoading={isSubmitting}
+        >
           Save
         </Button>
         <Button size="sm" rounded={0} colorScheme="red">
@@ -60,4 +123,4 @@ const Seo: React.FC = () => {
   )
 }
 
-export default Seo
+export default withAuth(Seo)

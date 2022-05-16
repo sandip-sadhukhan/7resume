@@ -231,8 +231,6 @@ class EditProfile(APIView):
 class WebsiteSettings(APIView):
     """Set or get website settings"""
 
-    # parser_classes = [MultiPartParser, FormParser]
-
     class InputSerializer(serializers.Serializer):
         site_title = serializers.CharField(max_length=200, required=False)
         webmaster_email = serializers.EmailField(
@@ -271,3 +269,30 @@ class WebsiteSettings(APIView):
         )
 
         return Response(outputSerializer.data)
+
+
+class SEOSettings(APIView):
+    """Get or set seo related settings"""
+
+    class InputSerializer(serializers.Serializer):
+        meta_description = serializers.CharField(required=True)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = UserProfile
+            fields = ["meta_description"]
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(instance=request.user.user_profile)
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        print(serializer.validated_data)
+
+        services.saveSEOSettings(
+            user=request.user, **serializer.validated_data
+        )
+
+        return Response({"message": "SEO settings updated"})
