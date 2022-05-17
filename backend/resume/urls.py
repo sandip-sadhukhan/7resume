@@ -69,6 +69,10 @@ urlpatterns = [
         apis.WebsiteSettings.as_view(),
     ),
     path(
+        "dashboard/general-settings/",
+        apis.GeneralSettings.as_view(),
+    ),
+    path(
         "dashboard/seo-settings/",
         apis.SEOSettings.as_view(),
     ),

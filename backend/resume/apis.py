@@ -1,3 +1,4 @@
+from email import message
 from django.forms import ValidationError
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -271,6 +272,71 @@ class WebsiteSettings(APIView):
         return Response(outputSerializer.data)
 
 
+class GeneralSettings(APIView):
+    """Get or set general settings"""
+
+    class InputSerializer(serializers.Serializer):
+        display_resume = serializers.BooleanField(required=True)
+        display_portfolio = serializers.BooleanField(required=True)
+        display_blog = serializers.BooleanField(required=True)
+        display_appointments = serializers.BooleanField(required=True)
+        display_services = serializers.BooleanField(required=True)
+        display_fun_facts = serializers.BooleanField(required=True)
+        display_pricing_plans = serializers.BooleanField(required=True)
+        display_testimonials = serializers.BooleanField(required=True)
+        display_clients = serializers.BooleanField(required=True)
+        display_contact_form = serializers.BooleanField(required=True)
+        blog_allow_search_box = serializers.BooleanField(required=True)
+        blog_allow_categories = serializers.BooleanField(required=True)
+        blog_allow_latest_posts = serializers.BooleanField(required=True)
+        blog_allow_popular_posts = serializers.BooleanField(required=True)
+        post_allow_search_box = serializers.BooleanField(required=True)
+        post_allow_latest_posts = serializers.BooleanField(required=True)
+        post_allow_related_posts = serializers.BooleanField(required=True)
+        post_allow_tags = serializers.BooleanField(required=True)
+        project_allow_related_posts = serializers.BooleanField(required=True)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = UserProfile
+            fields = [
+                "display_resume",
+                "display_portfolio",
+                "display_blog",
+                "display_appointments",
+                "display_services",
+                "display_fun_facts",
+                "display_pricing_plans",
+                "display_testimonials",
+                "display_clients",
+                "display_contact_form",
+                "blog_allow_search_box",
+                "blog_allow_categories",
+                "blog_allow_latest_posts",
+                "blog_allow_popular_posts",
+                "post_allow_search_box",
+                "post_allow_latest_posts",
+                "post_allow_related_posts",
+                "post_allow_tags",
+                "project_allow_related_posts",
+            ]
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(instance=request.user.user_profile)
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.saveGeneralSettings(
+            user=request.user, **serializer.validated_data
+        )
+
+        return Response({"message": "General Settings Saved"})
+
+
 class SEOSettings(APIView):
     """Get or set seo related settings"""
 
@@ -289,7 +355,6 @@ class SEOSettings(APIView):
     def post(self, request: Request) -> Response:
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        print(serializer.validated_data)
 
         services.saveSEOSettings(
             user=request.user, **serializer.validated_data

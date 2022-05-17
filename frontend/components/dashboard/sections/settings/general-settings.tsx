@@ -5,67 +5,125 @@ import {
   Text,
   useColorModeValue,
   VStack,
+  useToast,
 } from "@chakra-ui/react"
-import React, { ChangeEvent, useState } from "react"
+import React, { useEffect } from "react"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { withAuth } from "../../../../auth/context"
+import { IState } from "../../../../types/auth"
+import axiosInstance from "../../../../utils/axiosInstance"
 import SwitchBox from "./switch-box"
 
-const GeneralSettings: React.FC = () => {
+interface GeneralSettingsProps {
+  state: IState
+}
+
+export interface IFormData {
+  display_resume: boolean
+  display_portfolio: boolean
+  display_blog: boolean
+  display_appointments: boolean
+  display_services: boolean
+  display_fun_facts: boolean
+  display_pricing_plans: boolean
+  display_testimonials: boolean
+  display_clients: boolean
+  display_contact_form: boolean
+  blog_allow_search_box: boolean
+  blog_allow_categories: boolean
+  blog_allow_latest_posts: boolean
+  blog_allow_popular_posts: boolean
+  post_allow_search_box: boolean
+  post_allow_latest_posts: boolean
+  post_allow_related_posts: boolean
+  post_allow_tags: boolean
+  project_allow_related_posts: boolean
+}
+
+export type CheckboxName =
+  | "display_resume"
+  | "display_portfolio"
+  | "display_blog"
+  | "display_appointments"
+  | "display_services"
+  | "display_fun_facts"
+  | "display_pricing_plans"
+  | "display_testimonials"
+  | "display_clients"
+  | "display_contact_form"
+  | "blog_allow_search_box"
+  | "blog_allow_categories"
+  | "blog_allow_latest_posts"
+  | "blog_allow_popular_posts"
+  | "post_allow_search_box"
+  | "post_allow_latest_posts"
+  | "post_allow_related_posts"
+  | "post_allow_tags"
+  | "project_allow_related_posts"
+
+const GeneralSettings: React.FC<GeneralSettingsProps> = (
+  props: GeneralSettingsProps
+) => {
+  const token = props.state.user?.access
   const textColor = useColorModeValue("gray.700", "gray.100")
+  const toast = useToast()
 
-  interface IFormData {
-    displayBlog: boolean
-    displayClients: boolean
-    displayContactForm: boolean
-    displayPortfolio: boolean
-    displayResume: boolean
-    displayServices: boolean
-    displayTestimonials: boolean
-    displayFunFacts: boolean
-    displayAppointments: boolean
-    displayPricingPlans: boolean
-    blogAllowSearchBox: boolean
-    blogAllowCategories: boolean
-    blogAllowLatestPosts: boolean
-    blogAllowPopularPosts: boolean
-    postAllowSearchBox: boolean
-    postAllowLatestPosts: boolean
-    postAllowRelatedPosts: boolean
-    postAllowTags: boolean
-    postAllowComments: boolean
-    projectAllowRelatedProjects: boolean
-    projectAllowComments: boolean
-  }
+  const {
+    handleSubmit,
+    setValue,
+    control,
+    formState: { isSubmitting },
+  } = useForm<IFormData>()
 
-  const [formData, setFormData] = useState<IFormData>({
-    displayBlog: false,
-    displayClients: true,
-    displayContactForm: false,
-    displayPortfolio: false,
-    displayResume: false,
-    displayServices: false,
-    displayTestimonials: false,
-    displayFunFacts: false,
-    displayAppointments: false,
-    displayPricingPlans: false,
-    blogAllowSearchBox: false,
-    blogAllowCategories: false,
-    blogAllowLatestPosts: false,
-    blogAllowPopularPosts: false,
-    postAllowSearchBox: false,
-    postAllowLatestPosts: false,
-    postAllowRelatedPosts: false,
-    postAllowTags: false,
-    postAllowComments: true,
-    projectAllowRelatedProjects: false,
-    projectAllowComments: false,
-  })
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axiosInstance.get(
+        "/api/dashboard/general-settings/",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      const data: IFormData = response.data
+      console.log(data)
+      for (const key in data) {
+        const attribute = key as CheckboxName
+        setValue(attribute, data[attribute])
+      }
+    }
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.checked })
+    fetchData()
+  }, [token, setValue])
+
+  const onSubmit: SubmitHandler<IFormData> = async (formData: IFormData) => {
+    const response = await axiosInstance.post(
+      "/api/dashboard/general-settings/",
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+
+    toast({
+      title: response.data?.message,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    })
   }
 
   return (
-    <VStack w="full" align="start" spacing={6} color={textColor}>
+    <VStack
+      as="form"
+      onSubmit={handleSubmit(onSubmit)}
+      w="full"
+      align="start"
+      spacing={6}
+      color={textColor}
+    >
       <VStack w="full" align="start" spacing={6}>
         {/* Display Sections */}
         <Text fontSize={14} fontWeight="semibold">
@@ -73,174 +131,147 @@ const GeneralSettings: React.FC = () => {
         </Text>
         <Divider />
 
-        <SwitchBox
-          name="displayBlog"
-          label="Display Blog"
-          checked={formData.displayBlog}
-          onChange={onChange}
-        />
+        <SwitchBox label="Display Blog" name="display_blog" control={control} />
 
         <SwitchBox
-          name="displayClients"
           label="Display Clients"
-          checked={formData.displayClients}
-          onChange={onChange}
+          control={control}
+          name="display_clients"
         />
 
         <SwitchBox
-          name="displayContactForm"
           label="Display Contact Form"
-          checked={formData.displayContactForm}
-          onChange={onChange}
+          control={control}
+          name="display_contact_form"
         />
 
         <SwitchBox
-          name="displayPortfolio"
           label="Display Portfolio"
-          checked={formData.displayPortfolio}
-          onChange={onChange}
+          control={control}
+          name="display_portfolio"
         />
 
         <SwitchBox
-          name="displayResume"
           label="Display Resume"
-          checked={formData.displayResume}
-          onChange={onChange}
+          control={control}
+          name="display_resume"
         />
 
         <SwitchBox
-          name="displayServices"
           label="Display Services"
-          checked={formData.displayServices}
-          onChange={onChange}
+          control={control}
+          name="display_services"
         />
 
         <SwitchBox
-          name="displayTestimonials"
           label="Display Testimonials"
-          checked={formData.displayTestimonials}
-          onChange={onChange}
+          control={control}
+          name="display_testimonials"
         />
 
         <SwitchBox
-          name="displayFunFacts"
           label="Display Fun Facts"
-          checked={formData.displayFunFacts}
-          onChange={onChange}
+          control={control}
+          name="display_fun_facts"
         />
 
         <SwitchBox
-          name="displayAppointments"
           label="Display Appointments"
-          checked={formData.displayAppointments}
-          onChange={onChange}
+          control={control}
+          name="display_appointments"
         />
 
         <SwitchBox
-          name="displayPricingPlans"
           label="Display Pricing Plans"
-          checked={formData.displayPricingPlans}
-          onChange={onChange}
+          control={control}
+          name="display_pricing_plans"
         />
 
         <Divider />
 
-        {/* Blog page widgets */}
+        {/* Blog page widgets  */}
         <Text fontSize={14} fontWeight="semibold">
           Blog page widgets appearance
         </Text>
         <Divider />
 
         <SwitchBox
-          checked={formData.blogAllowSearchBox}
-          name="blogAllowSearchBox"
           label="Allow Search Box Widgets to Appear"
-          onChange={onChange}
+          control={control}
+          name="blog_allow_search_box"
         />
 
         <SwitchBox
-          checked={formData.blogAllowCategories}
-          name="blogAllowCategories"
           label="Allow Categories Widgets to Appear"
-          onChange={onChange}
+          control={control}
+          name="blog_allow_categories"
         />
 
         <SwitchBox
-          checked={formData.blogAllowLatestPosts}
-          name="blogAllowLatestPosts"
           label="Allow Latest Posts Widgets to Appear"
-          onChange={onChange}
+          control={control}
+          name="blog_allow_latest_posts"
         />
 
         <SwitchBox
-          checked={formData.blogAllowPopularPosts}
-          name="blogAllowPopularPosts"
           label="Allow Popular Posts Widgets to Appear"
-          onChange={onChange}
+          control={control}
+          name="blog_allow_popular_posts"
         />
         <Divider />
 
-        {/* Post page widgets */}
+        {/* Post page widgets  */}
         <Text fontSize={14} fontWeight="semibold">
           Post page widgets appearance
         </Text>
         <Divider />
 
         <SwitchBox
-          checked={formData.postAllowSearchBox}
-          name="postAllowSearchBox"
           label="Allow Search Box Widgets to Appear"
-          onChange={onChange}
+          control={control}
+          name="post_allow_search_box"
         />
 
         <SwitchBox
-          checked={formData.postAllowLatestPosts}
-          name="postAllowLatestPosts"
           label="Allow Latest Posts Widgets to Appear"
-          onChange={onChange}
+          control={control}
+          name="post_allow_latest_posts"
         />
 
         <SwitchBox
-          checked={formData.postAllowRelatedPosts}
-          name="postAllowRelatedPosts"
           label="Allow Related Posts Widgets to Appear"
-          onChange={onChange}
+          control={control}
+          name="post_allow_related_posts"
         />
 
         <SwitchBox
-          checked={formData.postAllowTags}
-          name="postAllowTags"
           label="Allow Tags Widgets to Appear"
-          onChange={onChange}
+          control={control}
+          name="post_allow_tags"
         />
 
-        <SwitchBox
-          checked={formData.postAllowComments}
-          name="postAllowComments"
+        {/* <SwitchBox
           label="Allow Comments Widgets to Appear"
-          onChange={onChange}
-        />
+        /> */}
+
         <Divider />
 
-        {/* Project page widgets */}
+        {/* Project page widgets  */}
         <Text fontSize={14} fontWeight="semibold">
           Project page widgets appearance
         </Text>
         <Divider />
 
         <SwitchBox
-          checked={formData.projectAllowRelatedProjects}
-          name="projectAllowRelatedProjects"
           label="Allow Related Projects to Appear"
-          onChange={onChange}
+          control={control}
+          name="project_allow_related_posts"
         />
 
-        <SwitchBox
-          checked={formData.projectAllowComments}
-          name="projectAllowComments"
+        {/* <SwitchBox
           label="Allow Comments to Appear"
-          onChange={onChange}
-        />
+        />  */}
+
         <Divider />
       </VStack>
 
@@ -248,7 +279,14 @@ const GeneralSettings: React.FC = () => {
         w={300}
         justifyContent={["start", "start", "start", "end", "end"]}
       >
-        <Button size="sm" colorScheme="green" rounded={0}>
+        <Button
+          type="submit"
+          size="sm"
+          colorScheme="green"
+          rounded={0}
+          loadingText="Saving"
+          isLoading={isSubmitting}
+        >
           Save
         </Button>
         <Button size="sm" colorScheme="red" rounded={0}>
@@ -259,4 +297,4 @@ const GeneralSettings: React.FC = () => {
   )
 }
 
-export default GeneralSettings
+export default withAuth(GeneralSettings)

@@ -1,15 +1,17 @@
 import { FormControl, FormLabel, Switch } from "@chakra-ui/react"
-import React, { ChangeEvent } from "react"
+import React from "react"
+import { Control, Controller } from "react-hook-form"
+import { CheckboxName, IFormData } from "./general-settings"
 
 interface SwitchBoxProps {
-  name: string
   label: string
-  checked: boolean
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void
+  name: CheckboxName
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control?: Control<IFormData, any>
 }
 
 const SwitchBox: React.FC<SwitchBoxProps> = (props: SwitchBoxProps) => {
-  const { name, label, checked, onChange } = props
+  const { name, label, control } = props
 
   return (
     <FormControl
@@ -18,17 +20,23 @@ const SwitchBox: React.FC<SwitchBoxProps> = (props: SwitchBoxProps) => {
       alignItems="center"
       w={["full", "70%", "40%", "40%", "30%"]}
     >
-      <FormLabel fontSize={13} fontWeight="normal" htmlFor={name} mb="0">
+      <FormLabel fontSize={13} fontWeight="normal" mb="0">
         {label}
       </FormLabel>
-      <Switch
-        size="sm"
-        id="displayBlog"
-        ring={0}
-        _hover={{ ring: 0 }}
-        isChecked={checked}
+      <Controller
+        control={control}
         name={name}
-        onChange={onChange}
+        defaultValue={false}
+        render={({ field: { onChange, value, ref } }) => (
+          <Switch
+            size="sm"
+            ring={0}
+            _hover={{ ring: 0 }}
+            onChange={onChange}
+            isChecked={value}
+            ref={ref}
+          />
+        )}
       />
     </FormControl>
   )

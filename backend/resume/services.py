@@ -111,6 +111,54 @@ def saveWebsiteSettings(
     userProfile.save()
 
 
+def saveGeneralSettings(
+    *,
+    user: UserAccount,
+    display_resume: bool,
+    display_portfolio: bool,
+    display_blog: bool,
+    display_appointments: bool,
+    display_services: bool,
+    display_fun_facts: bool,
+    display_pricing_plans: bool,
+    display_testimonials: bool,
+    display_clients: bool,
+    display_contact_form: bool,
+    blog_allow_search_box: bool,
+    blog_allow_categories: bool,
+    blog_allow_latest_posts: bool,
+    blog_allow_popular_posts: bool,
+    post_allow_search_box: bool,
+    post_allow_latest_posts: bool,
+    post_allow_related_posts: bool,
+    post_allow_tags: bool,
+    project_allow_related_posts: bool,
+):
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    userProfile.display_resume = display_resume
+    userProfile.display_portfolio = display_portfolio
+    userProfile.display_blog = display_blog
+    userProfile.display_appointments = display_appointments
+    userProfile.display_services = display_services
+    userProfile.display_fun_facts = display_fun_facts
+    userProfile.display_pricing_plans = display_pricing_plans
+    userProfile.display_testimonials = display_testimonials
+    userProfile.display_clients = display_clients
+    userProfile.display_contact_form = display_contact_form
+    userProfile.blog_allow_search_box = blog_allow_search_box
+    userProfile.blog_allow_categories = blog_allow_categories
+    userProfile.blog_allow_latest_posts = blog_allow_latest_posts
+    userProfile.blog_allow_popular_posts = blog_allow_popular_posts
+    userProfile.post_allow_search_box = post_allow_search_box
+    userProfile.post_allow_latest_posts = post_allow_latest_posts
+    userProfile.post_allow_related_posts = post_allow_related_posts
+    userProfile.post_allow_tags = post_allow_tags
+    userProfile.project_allow_related_posts = project_allow_related_posts
+
+    userProfile.save()
+
+
 def saveSEOSettings(*, user: UserAccount, meta_description: str) -> None:
     userProfile: UserProfile = user.user_profile  # type: ignore
 

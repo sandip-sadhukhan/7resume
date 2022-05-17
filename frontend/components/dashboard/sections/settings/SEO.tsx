@@ -79,8 +79,6 @@ const Seo: React.FC<SeoProps> = (props: SeoProps) => {
         gap={2}
         align="start"
         alignItems="start"
-        as="form"
-        // onSubmit={onSubmit}
       >
         <Text
           fontSize={14}
