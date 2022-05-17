@@ -33,7 +33,6 @@ const Layout: React.FC<layoutProps> = (props: layoutProps) => {
   const mainContentDiv = useRef<HTMLDivElement | null>(null)
 
   const scrollTop = () => {
-    console.log("click")
     if (mainContentDiv.current) {
       mainContentDiv.current.scrollTop = 0
     }

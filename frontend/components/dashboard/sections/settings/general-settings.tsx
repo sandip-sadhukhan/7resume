@@ -86,7 +86,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = (
         }
       )
       const data: IFormData = response.data
-      console.log(data)
+      // console.log(data)
       for (const key in data) {
         const attribute = key as CheckboxName
         setValue(attribute, data[attribute])
