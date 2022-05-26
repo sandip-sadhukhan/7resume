@@ -361,3 +361,188 @@ class SEOSettings(APIView):
         )
 
         return Response({"message": "SEO settings updated"})
+
+
+class AboutMeSettings(APIView):
+    """About me related settings"""
+
+    class InputSerializer(serializers.Serializer):
+        name = serializers.CharField(max_length=255, min_length=3)
+        profile_picture = serializers.ImageField(required=False)
+        nationality = serializers.CharField(max_length=50, required=False)
+        about_me = serializers.CharField(required=False)
+        my_positions = serializers.CharField(min_length=3)
+        video_description = serializers.CharField(
+            max_length=100, required=False
+        )
+        resume = serializers.FileField(required=False)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        name = serializers.CharField(source="user.name")
+
+        class Meta:
+            model = UserProfile
+            fields = (
+                "name",
+                "profile_picture",
+                "nationality",
+                "about_me",
+                "my_positions",
+                "video_description",
+                "resume",
+            )
+
+    def get(self, request: Request) -> Response:
+        userProfile: UserProfile = request.user.user_profile
+        serializer = self.OutputSerializer(instance=userProfile)
+
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.saveAboutMeSettings(
+            user=request.user, **serializer.validated_data
+        )
+
+        return Response({"message": "Settings Saved!"})
+
+
+class ContactInformationSettings(APIView):
+    """Get and save contact information"""
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = UserProfile
+            fields = ["address", "gmap_iframe", "phone", "email"]
+
+    class InputSerializer(serializers.Serializer):
+        address = serializers.CharField()
+        gmap_iframe = serializers.CharField(max_length=2000)
+        phone = serializers.CharField()
+        email = serializers.CharField()
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(instance=request.user.user_profile)
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.saveContactInformation(
+            user=request.user, **serializer.validated_data
+        )
+
+        return Response({"message": "Contact Information is saved!"})
+
+
+class StatisticsSettings(APIView):
+    """
+    API endpoint, User can save & get Statistics Settings
+    """
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = UserProfile
+            fields = [
+                "projects",
+                "meetings",
+                "happy_clients",
+                "awards_won",
+                "experience",
+            ]
+
+    class InputSerializer(serializers.Serializer):
+        projects = serializers.IntegerField()
+        meetings = serializers.IntegerField()
+        happy_clients = serializers.IntegerField()
+        awards_won = serializers.IntegerField()
+        experience = serializers.IntegerField()
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(instance=request.user.user_profile)
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.saveStatisticalSettings(
+            user=request.user, **serializer.validated_data
+        )
+
+        return Response({"message": "Statistics Settings is saved!"})
+
+
+class SocialLinksSettings(APIView):
+    """
+    API endpoint, User can save & get Social Links Settings
+    """
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = UserProfile
+            fields = [
+                "facebook",
+                "twitter",
+                "instagram",
+                "whatsapp",
+                "youtube",
+                "linkedin",
+                "snapchat",
+                "github",
+                "pinterest",
+                "reddit",
+                "stackoverflow",
+                "behance",
+                "skype",
+                "vimeo",
+                "codepen",
+                "dribble",
+                "dropbox",
+                "flickr",
+                "rss",
+                "soundcloud",
+                "tumblr",
+                "yelp",
+            ]
+
+    class InputSerializer(serializers.Serializer):
+        facebook = serializers.URLField(max_length=200, allow_blank=True)
+        twitter = serializers.URLField(max_length=200, allow_blank=True)
+        instagram = serializers.URLField(max_length=200, allow_blank=True)
+        whatsapp = serializers.URLField(max_length=200, allow_blank=True)
+        youtube = serializers.URLField(max_length=200, allow_blank=True)
+        linkedin = serializers.URLField(max_length=200, allow_blank=True)
+        snapchat = serializers.URLField(max_length=200, allow_blank=True)
+        github = serializers.URLField(max_length=200, allow_blank=True)
+        pinterest = serializers.URLField(max_length=200, allow_blank=True)
+        reddit = serializers.URLField(max_length=200, allow_blank=True)
+        stackoverflow = serializers.URLField(max_length=200, allow_blank=True)
+        behance = serializers.URLField(max_length=200, allow_blank=True)
+        skype = serializers.URLField(max_length=200, allow_blank=True)
+        vimeo = serializers.URLField(max_length=200, allow_blank=True)
+        codepen = serializers.URLField(max_length=200, allow_blank=True)
+        dribble = serializers.URLField(max_length=200, allow_blank=True)
+        dropbox = serializers.URLField(max_length=200, allow_blank=True)
+        flickr = serializers.URLField(max_length=200, allow_blank=True)
+        rss = serializers.URLField(max_length=200, allow_blank=True)
+        soundcloud = serializers.URLField(max_length=200, allow_blank=True)
+        tumblr = serializers.URLField(max_length=200, allow_blank=True)
+        yelp = serializers.URLField(max_length=200, allow_blank=True)
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(instance=request.user.user_profile)
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.saveSocialLinksSettings(
+            user=request.user, **serializer.validated_data
+        )
+
+        return Response({"message": "Social Links Settings is saved!"})

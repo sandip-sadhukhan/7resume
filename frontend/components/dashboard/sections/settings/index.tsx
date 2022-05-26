@@ -9,16 +9,21 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import Head from "next/head"
+import dynamic from "next/dynamic"
 import React from "react"
 import { AiOutlineBarChart } from "react-icons/ai"
 import { FaCogs, FaHome } from "react-icons/fa"
-import GeneralSettings from "./general-settings"
-import Seo from "./SEO"
-import WebsiteSettings from "./website-settings"
+// import GeneralSettings from "./general-settings"
+// import Seo from "./SEO"
+// import WebsiteSettings from "./website-settings"
 
 const SettingsSection: React.FC = () => {
   const bgColor = useColorModeValue("white", "gray.700")
   const unSelectedBg = useColorModeValue("blackAlpha.50", "whiteAlpha.50")
+
+  const WebsiteSettings = dynamic(() => import("./website-settings"))
+  const GeneralSettings = dynamic(() => import("./general-settings"))
+  const SEOSettings = dynamic(() => import("./SEO"))
 
   return (
     <>
@@ -83,7 +88,7 @@ const SettingsSection: React.FC = () => {
 
             {/* SEO */}
             <TabPanel p={0}>
-              <Seo />
+              <SEOSettings />
             </TabPanel>
           </TabPanels>
         </VStack>

@@ -164,3 +164,126 @@ def saveSEOSettings(*, user: UserAccount, meta_description: str) -> None:
 
     userProfile.meta_description = meta_description
     userProfile.save()
+
+
+def saveAboutMeSettings(
+    *,
+    user: UserAccount,
+    name: str,
+    profile_picture: Optional[InMemoryUploadedFile] = None,
+    nationality: Optional[str] = None,
+    about_me: Optional[str] = None,
+    my_positions: str,
+    video_description: Optional[str] = None,
+    resume: Optional[InMemoryUploadedFile] = None,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    user.name = name
+    user.save()
+
+    if profile_picture is not None:
+        userProfile.profile_picture = profile_picture
+    if nationality is not None:
+        userProfile.nationality = nationality
+    if about_me is not None:
+        userProfile.about_me = about_me
+    userProfile.my_positions = my_positions
+    if video_description is not None:
+        userProfile.video_description = video_description
+    if resume is not None:
+        userProfile.resume = resume
+
+    userProfile.save()
+
+
+def saveContactInformation(
+    *,
+    user: UserAccount,
+    address: str,
+    gmap_iframe: str,
+    phone: str,
+    email: str,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    userProfile.address = address
+    userProfile.gmap_iframe = gmap_iframe
+    userProfile.phone = phone
+    userProfile.email = email
+
+    userProfile.save()
+
+
+def saveStatisticalSettings(
+    *,
+    user: UserAccount,
+    projects: int,
+    meetings: int,
+    happy_clients: int,
+    awards_won: int,
+    experience: int,
+):
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    userProfile.projects = projects
+    userProfile.meetings = meetings
+    userProfile.happy_clients = happy_clients
+    userProfile.awards_won = awards_won
+    userProfile.experience = experience
+
+    userProfile.save()
+
+
+def saveSocialLinksSettings(
+    *,
+    user: UserAccount,
+    facebook: str,
+    twitter: str,
+    instagram: str,
+    whatsapp: str,
+    youtube: str,
+    linkedin: str,
+    snapchat: str,
+    github: str,
+    pinterest: str,
+    reddit: str,
+    stackoverflow: str,
+    behance: str,
+    skype: str,
+    vimeo: str,
+    codepen: str,
+    dribble: str,
+    dropbox: str,
+    flickr: str,
+    rss: str,
+    soundcloud: str,
+    tumblr: str,
+    yelp: str,
+):
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    userProfile.facebook = facebook
+    userProfile.twitter = twitter
+    userProfile.instagram = instagram
+    userProfile.whatsapp = whatsapp
+    userProfile.youtube = youtube
+    userProfile.linkedin = linkedin
+    userProfile.snapchat = snapchat
+    userProfile.github = github
+    userProfile.pinterest = pinterest
+    userProfile.reddit = reddit
+    userProfile.stackoverflow = stackoverflow
+    userProfile.behance = behance
+    userProfile.skype = skype
+    userProfile.vimeo = vimeo
+    userProfile.codepen = codepen
+    userProfile.dribble = dribble
+    userProfile.dropbox = dropbox
+    userProfile.flickr = flickr
+    userProfile.rss = rss
+    userProfile.soundcloud = soundcloud
+    userProfile.tumblr = tumblr
+    userProfile.yelp = yelp
+
+    userProfile.save()

@@ -76,4 +76,20 @@ urlpatterns = [
         "dashboard/seo-settings/",
         apis.SEOSettings.as_view(),
     ),
+    path(
+        "dashboard/about-me-settings/",
+        apis.AboutMeSettings.as_view(),
+    ),
+    path(
+        "dashboard/contact-information-settings/",
+        apis.ContactInformationSettings.as_view(),
+    ),
+    path(
+        "dashboard/statistics-settings/",
+        apis.StatisticsSettings.as_view(),
+    ),
+    path(
+        "dashboard/social-links-settings/",
+        apis.SocialLinksSettings.as_view(),
+    ),
 ]
