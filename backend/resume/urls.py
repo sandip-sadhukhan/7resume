@@ -92,4 +92,12 @@ urlpatterns = [
         "dashboard/social-links-settings/",
         apis.SocialLinksSettings.as_view(),
     ),
+    path(
+        "dashboard/services/",
+        apis.ServiceList.as_view(),
+    ),
+    path(
+        "dashboard/service/<int:id>/",
+        apis.ServiceDetail.as_view(),
+    ),
 ]

@@ -1,8 +1,9 @@
 from typing import Optional
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.shortcuts import get_object_or_404
 from accounts.models import UserAccount
-from .models import Blog, Message, RequestedAppointment, UserProfile
+from .models import Blog, Message, RequestedAppointment, Service, UserProfile
 from . import selectors
 
 
@@ -287,3 +288,73 @@ def saveSocialLinksSettings(
     userProfile.yelp = yelp
 
     userProfile.save()
+
+
+def createService(
+    *,
+    user: UserAccount,
+    title: str,
+    description: str,
+    image: Optional[InMemoryUploadedFile] = None,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    service = Service.objects.create(
+        user_profile=userProfile,
+        title=title,
+        description=description,
+    )
+
+    if image is not None:
+        service.image = image
+        service.save()
+
+
+def getService(
+    *,
+    user: UserAccount,
+    serviceId: int,
+) -> Service:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    service = get_object_or_404(
+        Service,
+        user_profile=userProfile,
+        id=serviceId,
+    )
+
+    return service
+
+
+def editService(
+    *,
+    user: UserAccount,
+    serviceId: int,
+    title: str,
+    description: str,
+    image: Optional[InMemoryUploadedFile] = None,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    service = get_object_or_404(
+        Service,
+        user_profile=userProfile,
+        id=serviceId,
+    )
+
+    service.title = title
+    service.description = description
+    if image is not None:
+        service.image = image
+
+    service.save()
+
+
+def deleteService(
+    *,
+    user: UserAccount,
+    serviceId: int,
+) -> None:
+    service = getService(user=user, serviceId=serviceId)
+
+    service.delete()

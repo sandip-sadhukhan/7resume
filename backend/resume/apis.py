@@ -1,12 +1,10 @@
-from email import message
 from django.forms import ValidationError
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import status, permissions, serializers
-from rest_framework.parsers import MultiPartParser, FormParser
 
-from .models import UserProfile
+from .models import Service, UserProfile
 from . import selectors, services
 
 
@@ -546,3 +544,79 @@ class SocialLinksSettings(APIView):
         )
 
         return Response({"message": "Social Links Settings is saved!"})
+
+
+class ServiceList(APIView):
+    """
+    API endpoint, where user can create a service
+    and fetch all the services of a particular user
+    """
+
+    class InputSerializer(serializers.Serializer):
+        title = serializers.CharField(max_length=200)
+        description = serializers.CharField()
+        image = serializers.ImageField(required=False)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Service
+            fields = ["id", "title", "image"]
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(
+            instance=request.user.user_profile.services,
+            many=True,
+        )
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.createService(user=request.user, **serializer.validated_data)
+
+        return Response(
+            {"message": "Service created successfully"},
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class ServiceDetail(APIView):
+    """
+    API endpoint, where user can edit their service
+    and delete their service
+    """
+
+    class InputSerializer(serializers.Serializer):
+        title = serializers.CharField(max_length=200)
+        description = serializers.CharField()
+        image = serializers.ImageField(required=False)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Service
+            fields = ["id", "title", "description", "image"]
+
+    def get(self, request: Request, id: int) -> Response:
+        service = services.getService(user=request.user, serviceId=id)
+        serializer = self.OutputSerializer(instance=service)
+
+        return Response(serializer.data)
+
+    def patch(self, request: Request, id: int) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.editService(
+            user=request.user, serviceId=id, **serializer.validated_data
+        )
+
+        return Response({"message": "Service is saved!"})
+
+    def delete(self, request: Request, id: int) -> Response:
+        services.deleteService(
+            user=request.user,
+            serviceId=id,
+        )
+
+        return Response({"message": "Service is deleted!"})
