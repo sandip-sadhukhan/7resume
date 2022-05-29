@@ -4,7 +4,7 @@ from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import status, permissions, serializers
 
-from .models import Service, UserProfile
+from .models import PricingPlan, Service, UserProfile
 from . import selectors, services
 
 
@@ -620,3 +620,117 @@ class ServiceDetail(APIView):
         )
 
         return Response({"message": "Service is deleted!"})
+
+
+class PricingPlansList(APIView):
+    """
+    API endpoint, where user can create a pricing plans
+    and fetch all the pricing plan of a particular user
+    """
+
+    class InputSerializer(serializers.Serializer):
+        display_plan = serializers.BooleanField()
+        plan_name = serializers.CharField(max_length=200)
+        plan_price = serializers.CharField(max_length=20)
+        price_duration = serializers.CharField(max_length=50)
+        plan_currency = serializers.CharField(max_length=20)
+        is_featured = serializers.BooleanField()
+        feature_comment = serializers.CharField(
+            max_length=200,
+            allow_blank=True,
+        )
+        features = serializers.CharField()
+        plan_icon = serializers.ImageField(required=False)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = PricingPlan
+            fields = [
+                "id",
+                "plan_name",
+                "plan_price",
+                "plan_icon",
+            ]
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(
+            instance=request.user.user_profile.pricing_plans,
+            many=True,
+        )
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.createPricingPlan(
+            user=request.user, **serializer.validated_data
+        )
+
+        return Response(
+            {"message": "Pricing plan created successfully"},
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class PricingPlansDetail(APIView):
+    """
+    API endpoint, where user can edit their price plans
+    and delete their price plan
+    """
+
+    class InputSerializer(serializers.Serializer):
+        display_plan = serializers.BooleanField()
+        plan_name = serializers.CharField(max_length=200)
+        plan_price = serializers.CharField(max_length=20)
+        price_duration = serializers.CharField(max_length=50)
+        plan_currency = serializers.CharField(max_length=20)
+        is_featured = serializers.BooleanField()
+        feature_comment = serializers.CharField(
+            max_length=200,
+            allow_blank=True,
+        )
+        features = serializers.CharField()
+        plan_icon = serializers.ImageField(required=False)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = PricingPlan
+            fields = [
+                "id",
+                "display_plan",
+                "plan_name",
+                "plan_price",
+                "price_duration",
+                "plan_currency",
+                "is_featured",
+                "feature_comment",
+                "features",
+                "plan_icon",
+            ]
+
+    def get(self, request: Request, id: int) -> Response:
+        pricingPlan = services.getPricingPlan(
+            user=request.user, pricingPlanId=id
+        )
+        serializer = self.OutputSerializer(instance=pricingPlan)
+
+        return Response(serializer.data)
+
+    def patch(self, request: Request, id: int) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.editPricingPlan(
+            user=request.user, pricingPlanId=id, **serializer.validated_data
+        )
+
+        return Response({"message": "Pricing Plan is saved!"})
+
+    def delete(self, request: Request, id: int) -> Response:
+        services.deletePricingPlan(
+            user=request.user,
+            pricingPlanId=id,
+        )
+
+        return Response({"message": "Pricing Plan is deleted!"})

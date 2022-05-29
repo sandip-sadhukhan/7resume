@@ -3,7 +3,14 @@ from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.shortcuts import get_object_or_404
 from accounts.models import UserAccount
-from .models import Blog, Message, RequestedAppointment, Service, UserProfile
+from .models import (
+    Blog,
+    Message,
+    PricingPlan,
+    RequestedAppointment,
+    Service,
+    UserProfile,
+)
 from . import selectors
 
 
@@ -358,3 +365,98 @@ def deleteService(
     service = getService(user=user, serviceId=serviceId)
 
     service.delete()
+
+
+def createPricingPlan(
+    *,
+    user: UserAccount,
+    display_plan: bool,
+    plan_name: str,
+    plan_price: str,
+    price_duration: str,
+    plan_currency: str,
+    is_featured: bool,
+    feature_comment: str,
+    features: str,
+    plan_icon: Optional[InMemoryUploadedFile] = None,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    pricingPlan = PricingPlan.objects.create(
+        user_profile=userProfile,
+        display_plan=display_plan,
+        plan_name=plan_name,
+        plan_price=plan_price,
+        price_duration=price_duration,
+        plan_currency=plan_currency,
+        is_featured=is_featured,
+        feature_comment=feature_comment,
+        features=features,
+    )
+
+    if plan_icon is not None:
+        pricingPlan.plan_icon = plan_icon
+        pricingPlan.save()
+
+
+def getPricingPlan(
+    *,
+    user: UserAccount,
+    pricingPlanId: int,
+) -> PricingPlan:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    pricingPlan = get_object_or_404(
+        PricingPlan,
+        user_profile=userProfile,
+        id=pricingPlanId,
+    )
+
+    return pricingPlan
+
+
+def editPricingPlan(
+    *,
+    user: UserAccount,
+    pricingPlanId: int,
+    display_plan: bool,
+    plan_name: str,
+    plan_price: str,
+    price_duration: str,
+    plan_currency: str,
+    is_featured: bool,
+    feature_comment: str,
+    features: str,
+    plan_icon: Optional[InMemoryUploadedFile] = None,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    pricingPlan = get_object_or_404(
+        PricingPlan,
+        user_profile=userProfile,
+        id=pricingPlanId,
+    )
+
+    pricingPlan.display_plan = display_plan
+    pricingPlan.plan_name = plan_name
+    pricingPlan.plan_price = plan_price
+    pricingPlan.price_duration = price_duration
+    pricingPlan.plan_currency = plan_currency
+    pricingPlan.is_featured = is_featured
+    pricingPlan.feature_comment = feature_comment
+    pricingPlan.features = features
+
+    if plan_icon is not None:
+        pricingPlan.plan_icon = plan_icon
+
+    pricingPlan.save()
+
+
+def deletePricingPlan(
+    *,
+    user: UserAccount,
+    pricingPlanId: int,
+) -> None:
+    pricingPlan = getPricingPlan(user=user, pricingPlanId=pricingPlanId)
+
+    pricingPlan.delete()
