@@ -108,4 +108,12 @@ urlpatterns = [
         "dashboard/pricing-plan/<int:id>/",
         apis.PricingPlansDetail.as_view(),
     ),
+    path(
+        "dashboard/educations/",
+        apis.EducationList.as_view(),
+    ),
+    path(
+        "dashboard/education/<int:id>/",
+        apis.EducationDetail.as_view(),
+    ),
 ]

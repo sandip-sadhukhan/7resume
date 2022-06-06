@@ -4,7 +4,7 @@ from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import status, permissions, serializers
 
-from .models import PricingPlan, Service, UserProfile
+from .models import Education, PricingPlan, Service, UserProfile
 from . import selectors, services
 
 
@@ -598,7 +598,7 @@ class ServiceDetail(APIView):
             fields = ["id", "title", "description", "image"]
 
     def get(self, request: Request, id: int) -> Response:
-        service = services.getService(user=request.user, serviceId=id)
+        service = selectors.getService(user=request.user, serviceId=id)
         serializer = self.OutputSerializer(instance=service)
 
         return Response(serializer.data)
@@ -710,7 +710,7 @@ class PricingPlansDetail(APIView):
             ]
 
     def get(self, request: Request, id: int) -> Response:
-        pricingPlan = services.getPricingPlan(
+        pricingPlan = selectors.getPricingPlan(
             user=request.user, pricingPlanId=id
         )
         serializer = self.OutputSerializer(instance=pricingPlan)
@@ -734,3 +734,106 @@ class PricingPlansDetail(APIView):
         )
 
         return Response({"message": "Pricing Plan is deleted!"})
+
+
+class EducationList(APIView):
+    """
+    API endpoint, where user can create a education field
+    and fetch all the education field of a particular user
+    """
+
+    class InputSerializer(serializers.Serializer):
+        school = serializers.CharField(max_length=200)
+        field = serializers.CharField(max_length=100)
+        image = serializers.ImageField()
+        description = serializers.CharField(allow_blank=True)
+        date_from = serializers.DateField()
+        date_to = serializers.DateField(required=False)
+        currently_studying = serializers.BooleanField()
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Education
+            fields = [
+                "id",
+                "image",
+                "school",
+                "field",
+                "date_from",
+                "date_to",
+                "currently_studying",
+            ]
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(
+            instance=request.user.user_profile.educations,
+            many=True,
+        )
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.createEducation(
+            user=request.user, **serializer.validated_data
+        )
+
+        return Response(
+            {"message": "Education created successfully"},
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class EducationDetail(APIView):
+    """
+    API endpoint, where user can edit their education
+    and delete their education
+    """
+
+    class InputSerializer(serializers.Serializer):
+        school = serializers.CharField(max_length=200)
+        field = serializers.CharField(max_length=100)
+        image = serializers.ImageField(required=False)
+        description = serializers.CharField(allow_blank=True)
+        date_from = serializers.DateField()
+        date_to = serializers.DateField(required=False)
+        currently_studying = serializers.BooleanField()
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Education
+            fields = [
+                "id",
+                "image",
+                "school",
+                "field",
+                "description",
+                "date_from",
+                "date_to",
+                "currently_studying",
+            ]
+
+    def get(self, request: Request, id: int) -> Response:
+        education = selectors.getEducation(user=request.user, educationId=id)
+        serializer = self.OutputSerializer(instance=education)
+
+        return Response(serializer.data)
+
+    def patch(self, request: Request, id: int) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.editEducation(
+            user=request.user, educationId=id, **serializer.validated_data
+        )
+
+        return Response({"message": "Education is saved!"})
+
+    def delete(self, request: Request, id: int) -> Response:
+        services.deleteEducation(
+            user=request.user,
+            educationId=id,
+        )
+
+        return Response({"message": "Education is deleted!"})

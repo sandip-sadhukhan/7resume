@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from accounts.models import UserAccount
 from .models import (
     Blog,
+    Education,
     Message,
     PricingPlan,
     RequestedAppointment,
@@ -317,22 +318,6 @@ def createService(
         service.save()
 
 
-def getService(
-    *,
-    user: UserAccount,
-    serviceId: int,
-) -> Service:
-    userProfile: UserProfile = user.user_profile  # type: ignore
-
-    service = get_object_or_404(
-        Service,
-        user_profile=userProfile,
-        id=serviceId,
-    )
-
-    return service
-
-
 def editService(
     *,
     user: UserAccount,
@@ -362,7 +347,7 @@ def deleteService(
     user: UserAccount,
     serviceId: int,
 ) -> None:
-    service = getService(user=user, serviceId=serviceId)
+    service = selectors.getService(user=user, serviceId=serviceId)
 
     service.delete()
 
@@ -397,22 +382,6 @@ def createPricingPlan(
     if plan_icon is not None:
         pricingPlan.plan_icon = plan_icon
         pricingPlan.save()
-
-
-def getPricingPlan(
-    *,
-    user: UserAccount,
-    pricingPlanId: int,
-) -> PricingPlan:
-    userProfile: UserProfile = user.user_profile  # type: ignore
-
-    pricingPlan = get_object_or_404(
-        PricingPlan,
-        user_profile=userProfile,
-        id=pricingPlanId,
-    )
-
-    return pricingPlan
 
 
 def editPricingPlan(
@@ -457,6 +426,79 @@ def deletePricingPlan(
     user: UserAccount,
     pricingPlanId: int,
 ) -> None:
-    pricingPlan = getPricingPlan(user=user, pricingPlanId=pricingPlanId)
+    pricingPlan = selectors.getPricingPlan(
+        user=user, pricingPlanId=pricingPlanId
+    )
 
     pricingPlan.delete()
+
+
+def createEducation(
+    *,
+    user: UserAccount,
+    school: str,
+    field: str,
+    image: InMemoryUploadedFile,
+    description: str,
+    date_from: str,
+    currently_studying: bool,
+    date_to: Optional[str] = None,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    Education.objects.create(
+        user_profile=userProfile,
+        school=school,
+        field=field,
+        image=image,
+        description=description,
+        date_from=date_from,
+        date_to=date_to,
+        currently_studying=currently_studying,
+    )
+
+
+def editEducation(
+    *,
+    user: UserAccount,
+    educationId: int,
+    image: Optional[InMemoryUploadedFile] = None,
+    school: str,
+    field: str,
+    description: str,
+    date_from: str,
+    date_to: str,
+    currently_studying: bool,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    education = get_object_or_404(
+        Education,
+        user_profile=userProfile,
+        id=educationId,
+    )
+
+    education.school = school
+    education.field = field
+    education.description = description
+    education.date_from = date_from
+    education.date_to = date_to
+    education.currently_studying = currently_studying
+
+    if image is not None:
+        education.image = image
+
+    education.save()
+
+
+def deleteEducation(
+    *,
+    user: UserAccount,
+    educationId: int,
+) -> None:
+    education = selectors.getEducation(
+        user=user,
+        educationId=educationId,
+    )
+
+    education.delete()

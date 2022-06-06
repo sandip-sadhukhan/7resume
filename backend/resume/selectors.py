@@ -2,7 +2,16 @@ from typing import Any
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from accounts.models import UserAccount
-from .models import Blog, BlogCategory, Project, Tags, UserProfile
+from .models import (
+    Blog,
+    BlogCategory,
+    Education,
+    PricingPlan,
+    Project,
+    Service,
+    Tags,
+    UserProfile,
+)
 from . import serializers, services
 
 
@@ -611,3 +620,51 @@ def getEditProfileData(*, user: UserAccount) -> dict[str, Any]:
     }
 
     return data
+
+
+def getService(
+    *,
+    user: UserAccount,
+    serviceId: int,
+) -> Service:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    service = get_object_or_404(
+        Service,
+        user_profile=userProfile,
+        id=serviceId,
+    )
+
+    return service
+
+
+def getPricingPlan(
+    *,
+    user: UserAccount,
+    pricingPlanId: int,
+) -> PricingPlan:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    pricingPlan = get_object_or_404(
+        PricingPlan,
+        user_profile=userProfile,
+        id=pricingPlanId,
+    )
+
+    return pricingPlan
+
+
+def getEducation(
+    *,
+    user: UserAccount,
+    educationId: int,
+) -> Education:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    education = get_object_or_404(
+        Education,
+        user_profile=userProfile,
+        id=educationId,
+    )
+
+    return education
