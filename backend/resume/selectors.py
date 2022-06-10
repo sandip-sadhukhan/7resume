@@ -6,6 +6,7 @@ from .models import (
     Blog,
     BlogCategory,
     Education,
+    Experiences,
     PricingPlan,
     Project,
     Service,
@@ -668,3 +669,19 @@ def getEducation(
     )
 
     return education
+
+
+def getExperience(
+    *,
+    user: UserAccount,
+    experienceId: int,
+) -> Experiences:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    experience = get_object_or_404(
+        Experiences,
+        user_profile=userProfile,
+        id=experienceId,
+    )
+
+    return experience

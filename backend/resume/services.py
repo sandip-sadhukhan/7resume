@@ -1,11 +1,11 @@
 from typing import Optional
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from django.shortcuts import get_object_or_404
 from accounts.models import UserAccount
 from .models import (
     Blog,
     Education,
+    Experiences,
     Message,
     PricingPlan,
     RequestedAppointment,
@@ -328,11 +328,7 @@ def editService(
 ) -> None:
     userProfile: UserProfile = user.user_profile  # type: ignore
 
-    service = get_object_or_404(
-        Service,
-        user_profile=userProfile,
-        id=serviceId,
-    )
+    service = selectors.getService(user=user, serviceId=serviceId)
 
     service.title = title
     service.description = description
@@ -400,10 +396,8 @@ def editPricingPlan(
 ) -> None:
     userProfile: UserProfile = user.user_profile  # type: ignore
 
-    pricingPlan = get_object_or_404(
-        PricingPlan,
-        user_profile=userProfile,
-        id=pricingPlanId,
+    pricingPlan = selectors.getPricingPlan(
+        user=user, pricingPlanId=pricingPlanId
     )
 
     pricingPlan.display_plan = display_plan
@@ -472,11 +466,7 @@ def editEducation(
 ) -> None:
     userProfile: UserProfile = user.user_profile  # type: ignore
 
-    education = get_object_or_404(
-        Education,
-        user_profile=userProfile,
-        id=educationId,
-    )
+    education = selectors.getEducation(user=user, educationId=educationId)
 
     education.school = school
     education.field = field
@@ -502,3 +492,73 @@ def deleteEducation(
     )
 
     education.delete()
+
+
+def createExperience(
+    *,
+    user: UserAccount,
+    company: str,
+    image: InMemoryUploadedFile,
+    position: str,
+    description: str,
+    date_from: str,
+    currently_working: bool,
+    date_to: Optional[str] = None,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    Experiences.objects.create(
+        user_profile=userProfile,
+        company=company,
+        image=image,
+        position=position,
+        description=description,
+        date_from=date_from,
+        date_to=date_to,
+        currently_working=currently_working,
+    )
+
+
+def editExperience(
+    *,
+    user: UserAccount,
+    experienceId: int,
+    company: str,
+    image: Optional[InMemoryUploadedFile] = None,
+    position: str,
+    description: str,
+    date_from: str,
+    date_to: str,
+    currently_working: bool,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    experience = selectors.getExperience(
+        user=user,
+        experienceId=experienceId,
+    )
+
+    experience.company = company
+    experience.position = position
+    experience.description = description
+    experience.date_from = date_from
+    experience.date_to = date_to
+    experience.currently_working = currently_working
+
+    if image is not None:
+        experience.image = image
+
+    experience.save()
+
+
+def deleteExperience(
+    *,
+    user: UserAccount,
+    experienceId: int,
+) -> None:
+    experience = selectors.getExperience(
+        user=user,
+        experienceId=experienceId,
+    )
+
+    experience.delete()

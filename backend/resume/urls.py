@@ -116,4 +116,12 @@ urlpatterns = [
         "dashboard/education/<int:id>/",
         apis.EducationDetail.as_view(),
     ),
+    path(
+        "dashboard/experiences/",
+        apis.ExperienceList.as_view(),
+    ),
+    path(
+        "dashboard/experience/<int:id>/",
+        apis.ExperienceDetail.as_view(),
+    ),
 ]

@@ -4,7 +4,7 @@ from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import status, permissions, serializers
 
-from .models import Education, PricingPlan, Service, UserProfile
+from .models import Education, Experiences, PricingPlan, Service, UserProfile
 from . import selectors, services
 
 
@@ -837,3 +837,111 @@ class EducationDetail(APIView):
         )
 
         return Response({"message": "Education is deleted!"})
+
+
+class ExperienceList(APIView):
+    """
+    API endpoint, where user can create a experience field
+    and fetch all the experience field of a particular user
+    """
+
+    class InputSerializer(serializers.Serializer):
+        company = serializers.CharField(max_length=200)
+        image = serializers.ImageField()
+        position = serializers.CharField(max_length=100)
+        description = serializers.CharField(allow_blank=True)
+        date_from = serializers.DateField()
+        date_to = serializers.DateField(required=False)
+        currently_working = serializers.BooleanField()
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Experiences
+            fields = [
+                "id",
+                "company",
+                "image",
+                "position",
+                "date_from",
+                "date_to",
+                "currently_working",
+            ]
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(
+            instance=request.user.user_profile.experiences,
+            many=True,
+        )
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.createExperience(
+            user=request.user, **serializer.validated_data
+        )
+
+        return Response(
+            {"message": "Experience created successfully"},
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class ExperienceDetail(APIView):
+    """
+    API endpoint, where user can edit their experience
+    and delete their experience
+    """
+
+    class InputSerializer(serializers.Serializer):
+        company = serializers.CharField(max_length=200)
+        image = serializers.ImageField(required=False)
+        position = serializers.CharField(max_length=100)
+        description = serializers.CharField(allow_blank=True)
+        date_from = serializers.DateField()
+        date_to = serializers.DateField(required=False)
+        currently_working = serializers.BooleanField()
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Experiences
+            fields = [
+                "id",
+                "company",
+                "image",
+                "position",
+                "description",
+                "date_from",
+                "date_to",
+                "currently_working",
+            ]
+
+    def get(self, request: Request, id: int) -> Response:
+        experience = selectors.getExperience(
+            user=request.user,
+            experienceId=id,
+        )
+        serializer = self.OutputSerializer(instance=experience)
+
+        return Response(serializer.data)
+
+    def patch(self, request: Request, id: int) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.editExperience(
+            user=request.user,
+            experienceId=id,
+            **serializer.validated_data,
+        )
+
+        return Response({"message": "Experience is saved!"})
+
+    def delete(self, request: Request, id: int) -> Response:
+        services.deleteExperience(
+            user=request.user,
+            experienceId=id,
+        )
+
+        return Response({"message": "Experience is deleted!"})
