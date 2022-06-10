@@ -9,6 +9,7 @@ from .models import (
     Experiences,
     PricingPlan,
     Project,
+    ProjectCategory,
     Service,
     Tags,
     UserProfile,
@@ -685,3 +686,19 @@ def getExperience(
     )
 
     return experience
+
+
+def getProjectCategory(
+    *,
+    user: UserAccount,
+    projectCategoryId: int,
+) -> ProjectCategory:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    projectCategory = get_object_or_404(
+        ProjectCategory,
+        user_profile=userProfile,
+        id=projectCategoryId,
+    )
+
+    return projectCategory

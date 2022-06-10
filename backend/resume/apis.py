@@ -4,7 +4,14 @@ from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import status, permissions, serializers
 
-from .models import Education, Experiences, PricingPlan, Service, UserProfile
+from .models import (
+    Education,
+    Experiences,
+    PricingPlan,
+    ProjectCategory,
+    Service,
+    UserProfile,
+)
 from . import selectors, services
 
 
@@ -945,3 +952,82 @@ class ExperienceDetail(APIView):
         )
 
         return Response({"message": "Experience is deleted!"})
+
+
+class ProjectCategoryList(APIView):
+    """
+    API endpoint, where user can create and fetch
+    all the project category field of a particular user
+    """
+
+    class InputSerializer(serializers.Serializer):
+        title = serializers.CharField(max_length=100)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = ProjectCategory
+            fields = ["id", "title"]
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(
+            instance=request.user.user_profile.project_categories,
+            many=True,
+        )
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.createProjectCategory(
+            user=request.user, **serializer.validated_data
+        )
+
+        return Response(
+            {"message": "Project category created successfully"},
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class ProjectCategoryDetail(APIView):
+    """
+    API endpoint, where user can edit & delete
+    their project category
+    """
+
+    class InputSerializer(serializers.Serializer):
+        title = serializers.CharField(max_length=100)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = ProjectCategory
+            fields = ["id", "title"]
+
+    def get(self, request: Request, id: int) -> Response:
+        projectCategory = selectors.getProjectCategory(
+            user=request.user,
+            projectCategoryId=id,
+        )
+        serializer = self.OutputSerializer(instance=projectCategory)
+
+        return Response(serializer.data)
+
+    def patch(self, request: Request, id: int) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.editProjectCategory(
+            user=request.user,
+            projectCategoryId=id,
+            **serializer.validated_data,
+        )
+
+        return Response({"message": "Project Category is saved!"})
+
+    def delete(self, request: Request, id: int) -> Response:
+        services.deleteProjectCategory(
+            user=request.user,
+            projectCategoryId=id,
+        )
+
+        return Response({"message": "Project Category is deleted!"})

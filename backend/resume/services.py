@@ -8,6 +8,7 @@ from .models import (
     Experiences,
     Message,
     PricingPlan,
+    ProjectCategory,
     RequestedAppointment,
     Service,
     UserProfile,
@@ -326,8 +327,6 @@ def editService(
     description: str,
     image: Optional[InMemoryUploadedFile] = None,
 ) -> None:
-    userProfile: UserProfile = user.user_profile  # type: ignore
-
     service = selectors.getService(user=user, serviceId=serviceId)
 
     service.title = title
@@ -394,8 +393,6 @@ def editPricingPlan(
     features: str,
     plan_icon: Optional[InMemoryUploadedFile] = None,
 ) -> None:
-    userProfile: UserProfile = user.user_profile  # type: ignore
-
     pricingPlan = selectors.getPricingPlan(
         user=user, pricingPlanId=pricingPlanId
     )
@@ -464,8 +461,6 @@ def editEducation(
     date_to: str,
     currently_studying: bool,
 ) -> None:
-    userProfile: UserProfile = user.user_profile  # type: ignore
-
     education = selectors.getEducation(user=user, educationId=educationId)
 
     education.school = school
@@ -531,8 +526,6 @@ def editExperience(
     date_to: str,
     currently_working: bool,
 ) -> None:
-    userProfile: UserProfile = user.user_profile  # type: ignore
-
     experience = selectors.getExperience(
         user=user,
         experienceId=experienceId,
@@ -562,3 +555,45 @@ def deleteExperience(
     )
 
     experience.delete()
+
+
+def createProjectCategory(
+    *,
+    user: UserAccount,
+    title: str,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    ProjectCategory.objects.create(
+        user_profile=userProfile,
+        title=title,
+    )
+
+
+def editProjectCategory(
+    *,
+    user: UserAccount,
+    projectCategoryId: int,
+    title: str,
+) -> None:
+    projectCategory = selectors.getProjectCategory(
+        user=user,
+        projectCategoryId=projectCategoryId,
+    )
+
+    projectCategory.title = title
+
+    projectCategory.save()
+
+
+def deleteProjectCategory(
+    *,
+    user: UserAccount,
+    projectCategoryId: int,
+) -> None:
+    projectCategory = selectors.getProjectCategory(
+        user=user,
+        projectCategoryId=projectCategoryId,
+    )
+
+    projectCategory.delete()
