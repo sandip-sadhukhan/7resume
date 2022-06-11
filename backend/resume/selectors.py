@@ -702,3 +702,19 @@ def getProjectCategory(
     )
 
     return projectCategory
+
+
+def getProject(
+    *,
+    user: UserAccount,
+    projectId: int,
+) -> Project:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    project = get_object_or_404(
+        Project,
+        user_profile=userProfile,
+        id=projectId,
+    )
+
+    return project

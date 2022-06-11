@@ -8,6 +8,7 @@ from .models import (
     Experiences,
     Message,
     PricingPlan,
+    Project,
     ProjectCategory,
     RequestedAppointment,
     Service,
@@ -597,3 +598,94 @@ def deleteProjectCategory(
     )
 
     projectCategory.delete()
+
+
+def createProject(
+    *,
+    user: UserAccount,
+    display_project: bool,
+    category_id: int,
+    title: str,
+    link: str,
+    published: str,
+    featured_image: InMemoryUploadedFile,
+    description: str,
+    meta_description=str,
+    facebook: str,
+    twitter: str,
+    pinterest: str,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    projectCategory = selectors.getProjectCategory(
+        user=user, projectCategoryId=category_id
+    )
+
+    Project.objects.create(
+        user_profile=userProfile,
+        display_project=display_project,
+        category=projectCategory,
+        title=title,
+        link=link,
+        published=published,
+        featured_image=featured_image,
+        description=description,
+        meta_description=meta_description,
+        facebook=facebook,
+        twitter=twitter,
+        pinterest=pinterest,
+    )
+
+
+def editProject(
+    *,
+    user: UserAccount,
+    projectId: int,
+    display_project: bool,
+    category_id: int,
+    title: str,
+    link: str,
+    published: str,
+    featured_image: Optional[InMemoryUploadedFile] = None,
+    description: str,
+    meta_description=str,
+    facebook: str,
+    twitter: str,
+    pinterest: str,
+) -> None:
+    project = selectors.getProject(
+        user=user,
+        projectId=projectId,
+    )
+    projectCategory = selectors.getProjectCategory(
+        user=user,
+        projectCategoryId=category_id,
+    )
+
+    project.display_project = display_project
+    project.category = projectCategory
+    project.title = title
+    project.link = link
+    project.published = published
+    if featured_image is not None:
+        project.featured_image = featured_image
+    project.description = description
+    project.meta_description = meta_description
+    project.facebook = facebook
+    project.twitter = twitter
+    project.pinterest = pinterest
+
+    project.save()
+
+
+def deleteProject(
+    *,
+    user: UserAccount,
+    projectId: int,
+) -> None:
+    project = selectors.getProject(
+        user=user,
+        projectId=projectId,
+    )
+
+    project.delete()

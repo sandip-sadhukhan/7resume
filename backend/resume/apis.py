@@ -8,6 +8,7 @@ from .models import (
     Education,
     Experiences,
     PricingPlan,
+    Project,
     ProjectCategory,
     Service,
     UserProfile,
@@ -1031,3 +1032,118 @@ class ProjectCategoryDetail(APIView):
         )
 
         return Response({"message": "Project Category is deleted!"})
+
+
+class ProjectList(APIView):
+    """
+    API endpoint, where user can create a project
+    and fetch all the projects of a particular user
+    """
+
+    class InputSerializer(serializers.Serializer):
+        display_project = serializers.BooleanField()
+        category_id = serializers.IntegerField()
+        title = serializers.CharField(max_length=200)
+        link = serializers.URLField(max_length=500, allow_blank=True)
+        published = serializers.DateField()
+        featured_image = serializers.ImageField()
+        description = serializers.CharField()
+        meta_description = serializers.CharField(allow_blank=True)
+        facebook = serializers.URLField(max_length=500, blank=True)
+        twitter = serializers.URLField(max_length=500, blank=True)
+        pinterest = serializers.URLField(max_length=500, blank=True)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Project
+            fields = [
+                "id",
+                "title",
+                "category",
+                "featured_image",
+            ]
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(
+            instance=request.user.user_profile.user_profile_projects,
+            many=True,
+        )
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.createProject(user=request.user, **serializer.validated_data)
+
+        return Response(
+            {"message": "Project created successfully"},
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class ProjectDetail(APIView):
+    """
+    API endpoint, where user can edit their project
+    and delete their project
+    """
+
+    class InputSerializer(serializers.Serializer):
+        display_project = serializers.BooleanField()
+        category_id = serializers.IntegerField()
+        title = serializers.CharField(max_length=200)
+        link = serializers.URLField(max_length=500, allow_blank=True)
+        published = serializers.DateField()
+        featured_image = serializers.ImageField(allow_blank=True)
+        description = serializers.CharField()
+        meta_description = serializers.CharField(allow_blank=True)
+        facebook = serializers.URLField(max_length=500, blank=True)
+        twitter = serializers.URLField(max_length=500, blank=True)
+        pinterest = serializers.URLField(max_length=500, blank=True)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Project
+            fields = [
+                "id",
+                "display_project",
+                "category",
+                "title",
+                "link",
+                "published",
+                "featured_image",
+                "description",
+                "meta_description",
+                "facebook",
+                "twitter",
+                "pinterest",
+            ]
+
+    def get(self, request: Request, id: int) -> Response:
+        project = selectors.getProject(
+            user=request.user,
+            projectId=id,
+        )
+        serializer = self.OutputSerializer(instance=project)
+
+        return Response(serializer.data)
+
+    def patch(self, request: Request, id: int) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.editProject(
+            user=request.user,
+            projectId=id,
+            **serializer.validated_data,
+        )
+
+        return Response({"message": "Project is saved!"})
+
+    def delete(self, request: Request, id: int) -> Response:
+        services.deleteProject(
+            user=request.user,
+            projectId=id,
+        )
+
+        return Response({"message": "Project is deleted!"})
