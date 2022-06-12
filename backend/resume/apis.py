@@ -4,7 +4,10 @@ from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import status, permissions, serializers
 
+from resume.serializers import TagSerializer
+
 from .models import (
+    Blog,
     BlogCategory,
     Education,
     Experiences,
@@ -12,6 +15,7 @@ from .models import (
     Project,
     ProjectCategory,
     Service,
+    Tags,
     UserProfile,
 )
 from . import selectors, services
@@ -1227,3 +1231,114 @@ class BlogCategoryDetail(APIView):
         )
 
         return Response({"message": "Blog Category is deleted!"})
+
+
+class BlogList(APIView):
+    """
+    API endpoint, where user can create a blog
+    and fetch all the blogs of a particular user
+    """
+
+    class InputSerializer(serializers.Serializer):
+        display_article = serializers.BooleanField()
+        author = serializers.CharField(max_length=200)
+        category_id = serializers.IntegerField()
+        title = serializers.CharField(max_length=200)
+        short_description = serializers.CharField()
+        description = serializers.CharField()
+        featured_image = serializers.ImageField()
+        tags = serializers.CharField(max_length=500)
+        meta_description = serializers.CharField(allow_blank=True)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Blog
+            fields = [
+                "id",
+                "title",
+                "views",
+                "created_at",
+            ]
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(
+            instance=request.user.user_profile.user_profile_blogs,
+            many=True,
+        )
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.createBlog(user=request.user, **serializer.validated_data)
+
+        return Response(
+            {"message": "Blog created successfully"},
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class BlogDetail(APIView):
+    """
+    API endpoint, where user can edit their blog
+    and delete their blog
+    """
+
+    class InputSerializer(serializers.Serializer):
+        display_article = serializers.BooleanField()
+        author = serializers.CharField(max_length=200)
+        category_id = serializers.IntegerField()
+        title = serializers.CharField(max_length=200)
+        short_description = serializers.CharField()
+        description = serializers.CharField()
+        featured_image = serializers.ImageField(required=False)
+        tags = serializers.CharField(max_length=500)
+        meta_description = serializers.CharField(allow_blank=True)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        tags = TagSerializer(read_only=True, many=True)
+
+        class Meta:
+            model = Blog
+            fields = [
+                "id",
+                "display_article",
+                "author",
+                "category",
+                "title",
+                "short_description",
+                "description",
+                "featured_image",
+                "tags",
+                "meta_description",
+            ]
+
+    def get(self, request: Request, id: int) -> Response:
+        blog = selectors.getBlog(
+            user=request.user,
+            blogId=id,
+        )
+        serializer = self.OutputSerializer(instance=blog)
+
+        return Response(serializer.data)
+
+    def patch(self, request: Request, id: int) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.editBlog(
+            user=request.user,
+            blogId=id,
+            **serializer.validated_data,
+        )
+
+        return Response({"message": "Blog is saved!"})
+
+    def delete(self, request: Request, id: int) -> Response:
+        services.deleteBlog(
+            user=request.user,
+            blogId=id,
+        )
+
+        return Response({"message": "Blog is deleted!"})

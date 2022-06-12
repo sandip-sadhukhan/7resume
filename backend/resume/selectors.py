@@ -734,3 +734,19 @@ def getBlogCategory(
     )
 
     return blogCategory
+
+
+def getBlog(
+    *,
+    user: UserAccount,
+    blogId: int,
+) -> Blog:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    blog = get_object_or_404(
+        Blog,
+        user_profile=userProfile,
+        id=blogId,
+    )
+
+    return blog

@@ -148,4 +148,12 @@ urlpatterns = [
         "dashboard/blog-category/<int:id>/",
         apis.BlogCategoryDetail.as_view(),
     ),
+    path(
+        "dashboard/blogs/",
+        apis.BlogList.as_view(),
+    ),
+    path(
+        "dashboard/blog/<int:id>/",
+        apis.BlogDetail.as_view(),
+    ),
 ]

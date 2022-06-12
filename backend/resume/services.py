@@ -13,6 +13,7 @@ from .models import (
     ProjectCategory,
     RequestedAppointment,
     Service,
+    Tags,
     UserProfile,
 )
 from . import selectors
@@ -731,3 +732,109 @@ def deleteBlogCategory(
     )
 
     blogCategory.delete()
+
+
+def createBlog(
+    *,
+    user: UserAccount,
+    display_article: bool,
+    author: str,
+    category_id: int,
+    title: str,
+    short_description: str,
+    description: str,
+    featured_image: InMemoryUploadedFile,
+    tags: str,
+    meta_description=str,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    blogCategory = selectors.getBlogCategory(
+        user=user, blogCategoryId=category_id
+    )
+
+    blog = Blog.objects.create(
+        user_profile=userProfile,
+        display_article=display_article,
+        author=author,
+        category=blogCategory,
+        title=title,
+        short_description=short_description,
+        description=description,
+        featured_image=featured_image,
+        meta_description=meta_description,
+    )
+
+    # Add Tags
+    tagsList = tags.strip().split(",")
+    for tag in tagsList:
+        title = tag.strip().lower()
+        tagObj, created = Tags.objects.get_or_create(
+            user_profile=userProfile,
+            title=title,
+        )
+        blog.tags.add(tagObj)
+    blog.save()
+
+
+def editBlog(
+    *,
+    user: UserAccount,
+    blogId: int,
+    display_article: bool,
+    author: str,
+    category_id: int,
+    title: str,
+    short_description: str,
+    description: str,
+    featured_image: Optional[InMemoryUploadedFile] = None,
+    tags: str,
+    meta_description=str,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    blog = selectors.getBlog(
+        user=user,
+        blogId=blogId,
+    )
+    blogCategory = selectors.getBlogCategory(
+        user=user,
+        blogCategoryId=category_id,
+    )
+
+    blog.display_article = display_article
+    blog.author = author
+    blog.category = blogCategory
+    blog.title = title
+    blog.short_description = short_description
+    blog.description = description
+    if featured_image is not None:
+        blog.featured_image = featured_image
+    blog.meta_description = meta_description
+    blog.tags.clear()
+
+    # Add Tags
+    tagsList = tags.strip().split(",")
+    for tag in tagsList:
+        title = tag.strip().lower()
+        if not title:
+            return
+        tagObj, created = Tags.objects.get_or_create(
+            user_profile=userProfile,
+            title=title,
+        )
+        blog.tags.add(tagObj)
+    blog.save()
+
+
+def deleteBlog(
+    *,
+    user: UserAccount,
+    blogId: int,
+) -> None:
+    blog = selectors.getBlog(
+        user=user,
+        blogId=blogId,
+    )
+
+    blog.delete()
