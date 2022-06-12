@@ -718,3 +718,19 @@ def getProject(
     )
 
     return project
+
+
+def getBlogCategory(
+    *,
+    user: UserAccount,
+    blogCategoryId: int,
+) -> BlogCategory:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    blogCategory = get_object_or_404(
+        BlogCategory,
+        user_profile=userProfile,
+        id=blogCategoryId,
+    )
+
+    return blogCategory

@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework import status, permissions, serializers
 
 from .models import (
+    BlogCategory,
     Education,
     Experiences,
     PricingPlan,
@@ -1049,9 +1050,9 @@ class ProjectList(APIView):
         featured_image = serializers.ImageField()
         description = serializers.CharField()
         meta_description = serializers.CharField(allow_blank=True)
-        facebook = serializers.URLField(max_length=500, blank=True)
-        twitter = serializers.URLField(max_length=500, blank=True)
-        pinterest = serializers.URLField(max_length=500, blank=True)
+        facebook = serializers.URLField(max_length=500, allow_blank=True)
+        twitter = serializers.URLField(max_length=500, allow_blank=True)
+        pinterest = serializers.URLField(max_length=500, allow_blank=True)
 
     class OutputSerializer(serializers.ModelSerializer):
         class Meta:
@@ -1094,12 +1095,12 @@ class ProjectDetail(APIView):
         title = serializers.CharField(max_length=200)
         link = serializers.URLField(max_length=500, allow_blank=True)
         published = serializers.DateField()
-        featured_image = serializers.ImageField(allow_blank=True)
+        featured_image = serializers.ImageField(required=False)
         description = serializers.CharField()
         meta_description = serializers.CharField(allow_blank=True)
-        facebook = serializers.URLField(max_length=500, blank=True)
-        twitter = serializers.URLField(max_length=500, blank=True)
-        pinterest = serializers.URLField(max_length=500, blank=True)
+        facebook = serializers.URLField(max_length=500, allow_blank=True)
+        twitter = serializers.URLField(max_length=500, allow_blank=True)
+        pinterest = serializers.URLField(max_length=500, allow_blank=True)
 
     class OutputSerializer(serializers.ModelSerializer):
         class Meta:
@@ -1147,3 +1148,82 @@ class ProjectDetail(APIView):
         )
 
         return Response({"message": "Project is deleted!"})
+
+
+class BlogCategoryList(APIView):
+    """
+    API endpoint, where user can create and fetch
+    all the blog category field of a particular user
+    """
+
+    class InputSerializer(serializers.Serializer):
+        title = serializers.CharField(max_length=100)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = BlogCategory
+            fields = ["id", "title"]
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(
+            instance=request.user.user_profile.blog_categories,
+            many=True,
+        )
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.createBlogCategory(
+            user=request.user, **serializer.validated_data
+        )
+
+        return Response(
+            {"message": "Blog category created successfully"},
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class BlogCategoryDetail(APIView):
+    """
+    API endpoint, where user can edit & delete
+    their blog category
+    """
+
+    class InputSerializer(serializers.Serializer):
+        title = serializers.CharField(max_length=100)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = BlogCategory
+            fields = ["id", "title"]
+
+    def get(self, request: Request, id: int) -> Response:
+        blogCategory = selectors.getBlogCategory(
+            user=request.user,
+            blogCategoryId=id,
+        )
+        serializer = self.OutputSerializer(instance=blogCategory)
+
+        return Response(serializer.data)
+
+    def patch(self, request: Request, id: int) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.editBlogCategory(
+            user=request.user,
+            blogCategoryId=id,
+            **serializer.validated_data,
+        )
+
+        return Response({"message": "Blog Category is saved!"})
+
+    def delete(self, request: Request, id: int) -> Response:
+        services.deleteBlogCategory(
+            user=request.user,
+            blogCategoryId=id,
+        )
+
+        return Response({"message": "Blog Category is deleted!"})

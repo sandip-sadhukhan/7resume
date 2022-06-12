@@ -4,6 +4,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from accounts.models import UserAccount
 from .models import (
     Blog,
+    BlogCategory,
     Education,
     Experiences,
     Message,
@@ -689,3 +690,44 @@ def deleteProject(
     )
 
     project.delete()
+
+
+def createBlogCategory(
+    *,
+    user: UserAccount,
+    title: str,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    BlogCategory.objects.create(
+        user_profile=userProfile,
+        title=title,
+    )
+
+
+def editBlogCategory(
+    *,
+    user: UserAccount,
+    blogCategoryId: int,
+    title: str,
+) -> None:
+    blogCategory = selectors.getBlogCategory(
+        user=user,
+        blogCategoryId=blogCategoryId,
+    )
+
+    blogCategory.title = title
+    blogCategory.save()
+
+
+def deleteBlogCategory(
+    *,
+    user: UserAccount,
+    blogCategoryId: int,
+) -> None:
+    blogCategory = selectors.getBlogCategory(
+        user=user,
+        blogCategoryId=blogCategoryId,
+    )
+
+    blogCategory.delete()

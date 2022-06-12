@@ -132,4 +132,20 @@ urlpatterns = [
         "dashboard/project-category/<int:id>/",
         apis.ProjectCategoryDetail.as_view(),
     ),
+    path(
+        "dashboard/projects/",
+        apis.ProjectList.as_view(),
+    ),
+    path(
+        "dashboard/project/<int:id>/",
+        apis.ProjectDetail.as_view(),
+    ),
+    path(
+        "dashboard/blog-categories/",
+        apis.BlogCategoryList.as_view(),
+    ),
+    path(
+        "dashboard/blog-category/<int:id>/",
+        apis.BlogCategoryDetail.as_view(),
+    ),
 ]
