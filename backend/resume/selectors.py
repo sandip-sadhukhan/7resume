@@ -11,6 +11,8 @@ from .models import (
     Project,
     ProjectCategory,
     Service,
+    Skill,
+    SkillCategory,
     Tags,
     UserProfile,
 )
@@ -750,3 +752,35 @@ def getBlog(
     )
 
     return blog
+
+
+def getSkillCategory(
+    *,
+    user: UserAccount,
+    skillCategoryId: int,
+) -> SkillCategory:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    skillCategory = get_object_or_404(
+        SkillCategory,
+        user_profile=userProfile,
+        id=skillCategoryId,
+    )
+
+    return skillCategory
+
+
+def getSkill(
+    *,
+    user: UserAccount,
+    skillId: int,
+) -> Skill:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    skill = get_object_or_404(
+        Skill,
+        user_profile=userProfile,
+        id=skillId,
+    )
+
+    return skill

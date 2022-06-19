@@ -13,6 +13,8 @@ from .models import (
     ProjectCategory,
     RequestedAppointment,
     Service,
+    Skill,
+    SkillCategory,
     Tags,
     UserProfile,
 )
@@ -838,3 +840,102 @@ def deleteBlog(
     )
 
     blog.delete()
+
+
+def createSkillCategory(
+    *,
+    user: UserAccount,
+    title: str,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    SkillCategory.objects.create(
+        user_profile=userProfile,
+        title=title,
+    )
+
+
+def editSkillCategory(
+    *,
+    user: UserAccount,
+    skillCategoryId: int,
+    title: str,
+) -> None:
+    skillCategory = selectors.getSkillCategory(
+        user=user,
+        skillCategoryId=skillCategoryId,
+    )
+
+    skillCategory.title = title
+    skillCategory.save()
+
+
+def deleteSkillCategory(
+    *,
+    user: UserAccount,
+    skillCategoryId: int,
+) -> None:
+    skillCategory = selectors.getSkillCategory(
+        user=user,
+        skillCategoryId=skillCategoryId,
+    )
+
+    skillCategory.delete()
+
+
+def createSkill(
+    *,
+    user: UserAccount,
+    category_id: int,
+    title: str,
+    level: int,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    skillCategory = selectors.getSkillCategory(
+        user=user, skillCategoryId=category_id
+    )
+
+    Skill.objects.create(
+        user_profile=userProfile,
+        category=skillCategory,
+        title=title,
+        level=level,
+    )
+
+
+def editSkill(
+    *,
+    user: UserAccount,
+    skillId: int,
+    category_id: int,
+    title: str,
+    level: int,
+) -> None:
+    skill = selectors.getSkill(
+        user=user,
+        skillId=skillId,
+    )
+    skillCategory = selectors.getSkillCategory(
+        user=user,
+        skillCategoryId=category_id,
+    )
+
+    skill.category = skillCategory
+    skill.title = title
+    skill.level = level
+
+    skill.save()
+
+
+def deleteSkill(
+    *,
+    user: UserAccount,
+    skillId: int,
+) -> None:
+    skill = selectors.getSkill(
+        user=user,
+        skillId=skillId,
+    )
+
+    skill.delete()

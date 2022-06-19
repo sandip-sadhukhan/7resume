@@ -156,4 +156,20 @@ urlpatterns = [
         "dashboard/blog/<int:id>/",
         apis.BlogDetail.as_view(),
     ),
+    path(
+        "dashboard/skill-categories/",
+        apis.SkillCategoryList.as_view(),
+    ),
+    path(
+        "dashboard/skill-category/<int:id>/",
+        apis.SkillCategoryDetail.as_view(),
+    ),
+    path(
+        "dashboard/skills/",
+        apis.SkillList.as_view(),
+    ),
+    path(
+        "dashboard/skill/<int:id>/",
+        apis.SkillDetail.as_view(),
+    ),
 ]

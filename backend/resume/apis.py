@@ -15,6 +15,8 @@ from .models import (
     Project,
     ProjectCategory,
     Service,
+    Skill,
+    SkillCategory,
     Tags,
     UserProfile,
 )
@@ -1342,3 +1344,172 @@ class BlogDetail(APIView):
         )
 
         return Response({"message": "Blog is deleted!"})
+
+
+class SkillCategoryList(APIView):
+    """
+    API endpoint, where user can create and fetch
+    all the skill category field of a particular user
+    """
+
+    class InputSerializer(serializers.Serializer):
+        title = serializers.CharField(max_length=100)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = SkillCategory
+            fields = ["id", "title"]
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(
+            instance=request.user.user_profile.skill_categories,
+            many=True,
+        )
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.createSkillCategory(
+            user=request.user, **serializer.validated_data
+        )
+
+        return Response(
+            {"message": "Skill category created successfully"},
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class SkillCategoryDetail(APIView):
+    """
+    API endpoint, where user can edit & delete
+    their skill category
+    """
+
+    class InputSerializer(serializers.Serializer):
+        title = serializers.CharField(max_length=100)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = SkillCategory
+            fields = ["id", "title"]
+
+    def get(self, request: Request, id: int) -> Response:
+        skillCategory = selectors.getSkillCategory(
+            user=request.user,
+            skillCategoryId=id,
+        )
+        serializer = self.OutputSerializer(instance=skillCategory)
+
+        return Response(serializer.data)
+
+    def patch(self, request: Request, id: int) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.editSkillCategory(
+            user=request.user,
+            skillCategoryId=id,
+            **serializer.validated_data,
+        )
+
+        return Response({"message": "Skill Category is saved!"})
+
+    def delete(self, request: Request, id: int) -> Response:
+        services.deleteSkillCategory(
+            user=request.user,
+            skillCategoryId=id,
+        )
+
+        return Response({"message": "Skill Category is deleted!"})
+
+
+class SkillList(APIView):
+    """
+    API endpoint, where user can create a skill
+    and fetch all the skills of a particular user
+    """
+
+    class InputSerializer(serializers.Serializer):
+        category_id = serializers.IntegerField()
+        title = serializers.CharField(max_length=200)
+        level = serializers.IntegerField(min_value=0, max_value=100)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Skill
+            fields = [
+                "id",
+                "title",
+                "category",
+            ]
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(
+            instance=request.user.user_profile.skills,
+            many=True,
+        )
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.createSkill(user=request.user, **serializer.validated_data)
+
+        return Response(
+            {"message": "Skill created successfully"},
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class SkillDetail(APIView):
+    """
+    API endpoint, where user can edit their skill
+    and delete their skill
+    """
+
+    class InputSerializer(serializers.Serializer):
+        category_id = serializers.IntegerField()
+        title = serializers.CharField(max_length=200)
+        level = serializers.IntegerField(max_value=100, min_value=0)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Skill
+            fields = [
+                "id",
+                "category",
+                "title",
+                "level",
+            ]
+
+    def get(self, request: Request, id: int) -> Response:
+        skill = selectors.getSkill(
+            user=request.user,
+            skillId=id,
+        )
+        serializer = self.OutputSerializer(instance=skill)
+
+        return Response(serializer.data)
+
+    def patch(self, request: Request, id: int) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.editSkill(
+            user=request.user,
+            skillId=id,
+            **serializer.validated_data,
+        )
+
+        return Response({"message": "Skill is saved!"})
+
+    def delete(self, request: Request, id: int) -> Response:
+        services.deleteSkill(
+            user=request.user,
+            skillId=id,
+        )
+
+        return Response({"message": "Skill is deleted!"})
