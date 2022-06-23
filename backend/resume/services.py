@@ -1047,3 +1047,16 @@ def deleteClient(
     )
 
     client.delete()
+
+
+def deleteMessage(
+    *,
+    user: UserAccount,
+    messageId: int,
+) -> None:
+    message = selectors.getMessage(
+        user=user,
+        messageId=messageId,
+    )
+
+    message.delete()

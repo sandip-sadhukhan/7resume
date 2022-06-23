@@ -188,4 +188,12 @@ urlpatterns = [
         "dashboard/client/<int:id>/",
         apis.ClientDetail.as_view(),
     ),
+    path(
+        "dashboard/messages/",
+        apis.MessageList.as_view(),
+    ),
+    path(
+        "dashboard/message/<int:id>/",
+        apis.MessageDetail.as_view(),
+    ),
 ]

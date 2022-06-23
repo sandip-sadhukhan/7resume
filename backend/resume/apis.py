@@ -12,6 +12,7 @@ from .models import (
     Client,
     Education,
     Experiences,
+    Message,
     PricingPlan,
     Project,
     ProjectCategory,
@@ -1700,3 +1701,61 @@ class ClientDetail(APIView):
         )
 
         return Response({"message": "Client is deleted!"})
+
+
+class MessageList(APIView):
+    """
+    API endpoint, where user can fetch
+    all the messages of a particular user
+    """
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Message
+            fields = [
+                "id",
+                "name",
+                "email",
+                "created_at",
+            ]
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(
+            instance=request.user.user_profile.messages,
+            many=True,
+        )
+        return Response(serializer.data)
+
+
+class MessageDetail(APIView):
+    """
+    API endpoint, where user can view their message
+    and delete their message
+    """
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Message
+            fields = [
+                "id",
+                "name",
+                "email",
+                "message",
+            ]
+
+    def get(self, request: Request, id: int) -> Response:
+        message = selectors.getMessage(
+            user=request.user,
+            messageId=id,
+        )
+        serializer = self.OutputSerializer(instance=message)
+
+        return Response(serializer.data)
+
+    def delete(self, request: Request, id: int) -> Response:
+        services.deleteMessage(
+            user=request.user,
+            messageId=id,
+        )
+
+        return Response({"message": "Message is deleted!"})

@@ -8,6 +8,7 @@ from .models import (
     Client,
     Education,
     Experiences,
+    Message,
     PricingPlan,
     Project,
     ProjectCategory,
@@ -818,3 +819,19 @@ def getClient(
     )
 
     return client
+
+
+def getMessage(
+    *,
+    user: UserAccount,
+    messageId: int,
+) -> Message:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    message = get_object_or_404(
+        Message,
+        user_profile=userProfile,
+        id=messageId,
+    )
+
+    return message
