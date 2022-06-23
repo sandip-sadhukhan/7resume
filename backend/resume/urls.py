@@ -200,4 +200,12 @@ urlpatterns = [
         "dashboard/appointment/",
         apis.AppointmentList.as_view(),
     ),
+    path(
+        "dashboard/requested-appointments/",
+        apis.RequestedAppointmentList.as_view(),
+    ),
+    path(
+        "dashboard/requested-appointment/<int:id>/",
+        apis.RequestedAppointmentDetail.as_view(),
+    ),
 ]

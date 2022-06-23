@@ -12,6 +12,7 @@ from .models import (
     PricingPlan,
     Project,
     ProjectCategory,
+    RequestedAppointment,
     Service,
     Skill,
     SkillCategory,
@@ -835,3 +836,17 @@ def getMessage(
     )
 
     return message
+
+
+def getRequestedAppointment(
+    *, user: UserAccount, requestedAppointmentId: int
+) -> RequestedAppointment:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    requestedAppointment = get_object_or_404(
+        RequestedAppointment,
+        user_profile=userProfile,
+        id=requestedAppointmentId,
+    )
+
+    return requestedAppointment

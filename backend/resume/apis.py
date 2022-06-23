@@ -17,6 +17,7 @@ from .models import (
     PricingPlan,
     Project,
     ProjectCategory,
+    RequestedAppointment,
     Service,
     Skill,
     SkillCategory,
@@ -1834,3 +1835,66 @@ class AppointmentList(APIView):
         )
 
         return Response({"message": "Appointment is Saved!"})
+
+
+class RequestedAppointmentList(APIView):
+    """
+    API endpoint, where user can fetch all the
+    requested appointments of a particular user
+    """
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = RequestedAppointment
+            fields = [
+                "id",
+                "subject",
+                "name",
+                "appointment_time",
+                "created_at",
+            ]
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(
+            instance=request.user.user_profile.requested_appointments,
+            many=True,
+        )
+        return Response(serializer.data)
+
+
+class RequestedAppointmentDetail(APIView):
+    """
+    API endpoint, where user can view their requested
+    appointments and delete their message
+    """
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = RequestedAppointment
+            fields = [
+                "id",
+                "subject",
+                "name",
+                "email",
+                "phone",
+                "appointment_time",
+                "message",
+                "created_at",
+            ]
+
+    def get(self, request: Request, id: int) -> Response:
+        requestedAppointment = selectors.getRequestedAppointment(
+            user=request.user,
+            requestedAppointmentId=id,
+        )
+        serializer = self.OutputSerializer(instance=requestedAppointment)
+
+        return Response(serializer.data)
+
+    def delete(self, request: Request, id: int) -> Response:
+        services.deleteRequestedAppointment(
+            user=request.user,
+            requestedAppointmentId=id,
+        )
+
+        return Response({"message": "Requested Appointment is deleted!"})

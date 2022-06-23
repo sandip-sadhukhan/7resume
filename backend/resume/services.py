@@ -1113,3 +1113,15 @@ def editAppointment(
     appointment.saturday_end_time = saturday_end_time
 
     appointment.save()
+
+
+def deleteRequestedAppointment(
+    *,
+    user: UserAccount,
+    requestedAppointmentId: int,
+) -> None:
+    requestedAppointment = selectors.getRequestedAppointment(
+        user=user, requestedAppointmentId=requestedAppointmentId
+    )
+
+    requestedAppointment.delete()
