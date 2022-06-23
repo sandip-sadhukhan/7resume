@@ -14,6 +14,7 @@ from .models import (
     Skill,
     SkillCategory,
     Tags,
+    Testimonial,
     UserProfile,
 )
 from . import serializers, services
@@ -784,3 +785,19 @@ def getSkill(
     )
 
     return skill
+
+
+def getTestimonial(
+    *,
+    user: UserAccount,
+    testimonialId: int,
+) -> Testimonial:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    testimonial = get_object_or_404(
+        Testimonial,
+        user_profile=userProfile,
+        id=testimonialId,
+    )
+
+    return testimonial

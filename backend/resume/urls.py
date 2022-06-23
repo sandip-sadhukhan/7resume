@@ -172,4 +172,12 @@ urlpatterns = [
         "dashboard/skill/<int:id>/",
         apis.SkillDetail.as_view(),
     ),
+    path(
+        "dashboard/testimonials/",
+        apis.TestimonialList.as_view(),
+    ),
+    path(
+        "dashboard/testimonial/<int:id>/",
+        apis.TestimonialDetail.as_view(),
+    ),
 ]

@@ -18,6 +18,7 @@ from .models import (
     Skill,
     SkillCategory,
     Tags,
+    Testimonial,
     UserProfile,
 )
 from . import selectors, services
@@ -1513,3 +1514,101 @@ class SkillDetail(APIView):
         )
 
         return Response({"message": "Skill is deleted!"})
+
+
+class TestimonialList(APIView):
+    """
+    API endpoint, where user can create a testimonial
+    and fetch all the testimonials of a particular user
+    """
+
+    class InputSerializer(serializers.Serializer):
+        name = serializers.CharField(max_length=100)
+        image = serializers.ImageField()
+        position = serializers.CharField(max_length=100)
+        rating = serializers.IntegerField()
+        message = serializers.CharField()
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Testimonial
+            fields = [
+                "id",
+                "name",
+                "position",
+            ]
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(
+            instance=request.user.user_profile.testimonials,
+            many=True,
+        )
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.createTestimonial(
+            user=request.user, **serializer.validated_data
+        )
+
+        return Response(
+            {"message": "Testimonial created successfully"},
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class TestimonialDetail(APIView):
+    """
+    API endpoint, where user can edit their testimonial
+    and delete their testimonial
+    """
+
+    class InputSerializer(serializers.Serializer):
+        name = serializers.CharField(max_length=100)
+        image = serializers.ImageField(required=False)
+        position = serializers.CharField(max_length=100)
+        rating = serializers.IntegerField()
+        message = serializers.CharField()
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Testimonial
+            fields = [
+                "id",
+                "name",
+                "image",
+                "position",
+                "rating",
+                "message",
+            ]
+
+    def get(self, request: Request, id: int) -> Response:
+        testimonial = selectors.getTestimonial(
+            user=request.user,
+            testimonialId=id,
+        )
+        serializer = self.OutputSerializer(instance=testimonial)
+
+        return Response(serializer.data)
+
+    def patch(self, request: Request, id: int) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.editTestimonial(
+            user=request.user,
+            testimonialId=id,
+            **serializer.validated_data,
+        )
+
+        return Response({"message": "Testimonial is saved!"})
+
+    def delete(self, request: Request, id: int) -> Response:
+        services.deleteTestimonial(
+            user=request.user,
+            testimonialId=id,
+        )
+
+        return Response({"message": "Testimonial is deleted!"})

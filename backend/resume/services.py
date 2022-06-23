@@ -16,6 +16,7 @@ from .models import (
     Skill,
     SkillCategory,
     Tags,
+    Testimonial,
     UserProfile,
 )
 from . import selectors
@@ -939,3 +940,62 @@ def deleteSkill(
     )
 
     skill.delete()
+
+
+def createTestimonial(
+    *,
+    user: UserAccount,
+    name: str,
+    image: InMemoryUploadedFile,
+    position: str,
+    rating: int,
+    message: str,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    Testimonial.objects.create(
+        user_profile=userProfile,
+        name=name,
+        image=image,
+        position=position,
+        rating=rating,
+        message=message,
+    )
+
+
+def editTestimonial(
+    *,
+    user: UserAccount,
+    testimonialId: int,
+    name: str,
+    image: Optional[InMemoryUploadedFile] = None,
+    position: str,
+    rating: int,
+    message: str,
+) -> None:
+    testimonial = selectors.getTestimonial(
+        user=user,
+        testimonialId=testimonialId,
+    )
+
+    testimonial.name = name
+    if image is not None:
+        testimonial.image = image
+    testimonial.position = position
+    testimonial.rating = rating
+    testimonial.message = message
+
+    testimonial.save()
+
+
+def deleteTestimonial(
+    *,
+    user: UserAccount,
+    testimonialId: int,
+) -> None:
+    testimonial = selectors.getTestimonial(
+        user=user,
+        testimonialId=testimonialId,
+    )
+
+    testimonial.delete()
