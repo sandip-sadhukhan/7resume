@@ -9,6 +9,7 @@ from resume.serializers import TagSerializer
 from .models import (
     Blog,
     BlogCategory,
+    Client,
     Education,
     Experiences,
     PricingPlan,
@@ -1612,3 +1613,90 @@ class TestimonialDetail(APIView):
         )
 
         return Response({"message": "Testimonial is deleted!"})
+
+
+class ClientList(APIView):
+    """
+    API endpoint, where user can create a client
+    and fetch all the clients of a particular user
+    """
+
+    class InputSerializer(serializers.Serializer):
+        name = serializers.CharField(max_length=100)
+        image = serializers.ImageField()
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Client
+            fields = [
+                "id",
+                "name",
+                "image",
+            ]
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(
+            instance=request.user.user_profile.clients,
+            many=True,
+        )
+        return Response(serializer.data)
+
+    def post(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.createClient(user=request.user, **serializer.validated_data)
+
+        return Response(
+            {"message": "Client created successfully"},
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class ClientDetail(APIView):
+    """
+    API endpoint, where user can edit their client
+    and delete their client
+    """
+
+    class InputSerializer(serializers.Serializer):
+        name = serializers.CharField(max_length=100)
+        image = serializers.ImageField(required=False)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Client
+            fields = [
+                "id",
+                "name",
+                "image",
+            ]
+
+    def get(self, request: Request, id: int) -> Response:
+        client = selectors.getClient(
+            user=request.user,
+            clientId=id,
+        )
+        serializer = self.OutputSerializer(instance=client)
+
+        return Response(serializer.data)
+
+    def patch(self, request: Request, id: int) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.editClient(
+            user=request.user,
+            clientId=id,
+            **serializer.validated_data,
+        )
+
+        return Response({"message": "Client is saved!"})
+
+    def delete(self, request: Request, id: int) -> Response:
+        services.deleteClient(
+            user=request.user,
+            clientId=id,
+        )
+
+        return Response({"message": "Client is deleted!"})

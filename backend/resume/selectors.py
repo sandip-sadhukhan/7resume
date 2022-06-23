@@ -5,6 +5,7 @@ from accounts.models import UserAccount
 from .models import (
     Blog,
     BlogCategory,
+    Client,
     Education,
     Experiences,
     PricingPlan,
@@ -801,3 +802,19 @@ def getTestimonial(
     )
 
     return testimonial
+
+
+def getClient(
+    *,
+    user: UserAccount,
+    clientId: int,
+) -> Client:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    client = get_object_or_404(
+        Client,
+        user_profile=userProfile,
+        id=clientId,
+    )
+
+    return client

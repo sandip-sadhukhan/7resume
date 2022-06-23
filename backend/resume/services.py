@@ -5,6 +5,7 @@ from accounts.models import UserAccount
 from .models import (
     Blog,
     BlogCategory,
+    Client,
     Education,
     Experiences,
     Message,
@@ -999,3 +1000,50 @@ def deleteTestimonial(
     )
 
     testimonial.delete()
+
+
+def createClient(
+    *,
+    user: UserAccount,
+    name: str,
+    image: InMemoryUploadedFile,
+) -> None:
+    userProfile: UserProfile = user.user_profile  # type: ignore
+
+    Client.objects.create(
+        user_profile=userProfile,
+        name=name,
+        image=image,
+    )
+
+
+def editClient(
+    *,
+    user: UserAccount,
+    clientId: int,
+    name: str,
+    image: Optional[InMemoryUploadedFile] = None,
+) -> None:
+    client = selectors.getClient(
+        user=user,
+        clientId=clientId,
+    )
+
+    client.name = name
+    if image is not None:
+        client.image = image
+
+    client.save()
+
+
+def deleteClient(
+    *,
+    user: UserAccount,
+    clientId: int,
+) -> None:
+    client = selectors.getClient(
+        user=user,
+        clientId=clientId,
+    )
+
+    client.delete()
