@@ -7,6 +7,7 @@ from rest_framework import status, permissions, serializers
 from resume.serializers import TagSerializer
 
 from .models import (
+    Appointment,
     Blog,
     BlogCategory,
     Client,
@@ -1759,3 +1760,77 @@ class MessageDetail(APIView):
         )
 
         return Response({"message": "Message is deleted!"})
+
+
+class AppointmentList(APIView):
+    """
+    API endpoint, where user can fetch
+    all the appointment and edit them
+    """
+
+    class InputSerializer(serializers.Serializer):
+        sunday = serializers.BooleanField()
+        sunday_start_time = serializers.TimeField(allow_null=True)
+        sunday_end_time = serializers.TimeField(allow_null=True)
+        monday = serializers.BooleanField()
+        monday_start_time = serializers.TimeField(allow_null=True)
+        monday_end_time = serializers.TimeField(allow_null=True)
+        tuesday = serializers.BooleanField()
+        tuesday_start_time = serializers.TimeField(allow_null=True)
+        tuesday_end_time = serializers.TimeField(allow_null=True)
+        wednesday = serializers.BooleanField()
+        wednesday_start_time = serializers.TimeField(allow_null=True)
+        wednesday_end_time = serializers.TimeField(allow_null=True)
+        thursday = serializers.BooleanField()
+        thursday_start_time = serializers.TimeField(allow_null=True)
+        thursday_end_time = serializers.TimeField(allow_null=True)
+        friday = serializers.BooleanField()
+        friday_start_time = serializers.TimeField(allow_null=True)
+        friday_end_time = serializers.TimeField(allow_null=True)
+        saturday = serializers.BooleanField()
+        saturday_start_time = serializers.TimeField(allow_null=True)
+        saturday_end_time = serializers.TimeField(allow_null=True)
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Appointment
+            fields = [
+                "sunday",
+                "sunday_start_time",
+                "sunday_end_time",
+                "monday",
+                "monday_start_time",
+                "monday_end_time",
+                "tuesday",
+                "tuesday_start_time",
+                "tuesday_end_time",
+                "wednesday",
+                "wednesday_start_time",
+                "wednesday_end_time",
+                "thursday",
+                "thursday_start_time",
+                "thursday_end_time",
+                "friday",
+                "friday_start_time",
+                "friday_end_time",
+                "saturday",
+                "saturday_start_time",
+                "saturday_end_time",
+            ]
+
+    def get(self, request: Request) -> Response:
+        serializer = self.OutputSerializer(
+            instance=request.user.user_profile.appointment,
+        )
+        return Response(serializer.data)
+
+    def patch(self, request: Request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        services.editAppointment(
+            user=request.user,
+            **serializer.validated_data,
+        )
+
+        return Response({"message": "Appointment is Saved!"})

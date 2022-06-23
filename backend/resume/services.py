@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from accounts.models import UserAccount
 from .models import (
+    Appointment,
     Blog,
     BlogCategory,
     Client,
@@ -1060,3 +1061,55 @@ def deleteMessage(
     )
 
     message.delete()
+
+
+def editAppointment(
+    *,
+    user: UserAccount,
+    sunday: bool,
+    sunday_start_time: Optional[str],
+    sunday_end_time: Optional[str],
+    monday: bool,
+    monday_start_time: Optional[str],
+    monday_end_time: Optional[str],
+    tuesday: bool,
+    tuesday_start_time: Optional[str],
+    tuesday_end_time: Optional[str],
+    wednesday: bool,
+    wednesday_start_time: Optional[str],
+    wednesday_end_time: Optional[str],
+    thursday: bool,
+    thursday_start_time: Optional[str],
+    thursday_end_time: Optional[str],
+    friday: bool,
+    friday_start_time: Optional[str],
+    friday_end_time: Optional[str],
+    saturday: bool,
+    saturday_start_time: Optional[str],
+    saturday_end_time: Optional[str],
+) -> None:
+    appointment: Appointment = user.user_profile.appointment  # type: ignore
+
+    appointment.sunday = sunday
+    appointment.sunday_start_time = sunday_start_time
+    appointment.sunday_end_time = sunday_end_time
+    appointment.monday = monday
+    appointment.monday_start_time = monday_start_time
+    appointment.monday_end_time = monday_end_time
+    appointment.tuesday = tuesday
+    appointment.tuesday_start_time = tuesday_start_time
+    appointment.tuesday_end_time = tuesday_end_time
+    appointment.wednesday = wednesday
+    appointment.wednesday_start_time = wednesday_start_time
+    appointment.wednesday_end_time = wednesday_end_time
+    appointment.thursday = thursday
+    appointment.thursday_start_time = thursday_start_time
+    appointment.thursday_end_time = thursday_end_time
+    appointment.friday = friday
+    appointment.friday_start_time = friday_start_time
+    appointment.friday_end_time = friday_end_time
+    appointment.saturday = saturday
+    appointment.saturday_start_time = saturday_start_time
+    appointment.saturday_end_time = saturday_end_time
+
+    appointment.save()

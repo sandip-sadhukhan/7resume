@@ -196,4 +196,8 @@ urlpatterns = [
         "dashboard/message/<int:id>/",
         apis.MessageDetail.as_view(),
     ),
+    path(
+        "dashboard/appointment/",
+        apis.AppointmentList.as_view(),
+    ),
 ]
