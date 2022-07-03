@@ -34,7 +34,8 @@ interface AboutMeContentProps {
 }
 
 // TODO: When "name" and "profile picture" is changed show the updated image
-// and value to the sidebar
+// and value to the sidebar (may be reloading the page will handle but find
+// usefull alternate solutions)
 const AboutMeContent: React.FC<AboutMeContentProps> = (
   props: AboutMeContentProps
 ) => {
