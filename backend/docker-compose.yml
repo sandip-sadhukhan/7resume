@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  web:
+    build: ./
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - ./:/usr/src/app/
+      - static_volume:/usr/src/app/static_files
+      - media_volume:/usr/src/app/upload
+    expose:
+      - 8000
+  nginx:
+    build: ./nginx
+    restart: always
+    volumes:
+      - static_volume:/home/app/web/static_files
+      - media_volume:/home/app/web/upload
+    ports:
+      # - 433:433
+      - 80:80
+    depends_on:
+      - web
+volumes:
+  static_volume:
+  media_volume:
+#
+# copy the upload_default to upload foler
+#
+# Commands
+# first time migration
+# docker-compose exec web python manage.py migrate --noinput
+
+# create super user
+# docker-compose exec web python manage.py createsuperuser
+
+# collect static
+# docker-compose exec web python manage.py collectstatic --noinput
