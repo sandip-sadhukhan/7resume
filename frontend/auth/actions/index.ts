@@ -38,11 +38,20 @@ export const login = async (
   dispatch: Dispatch<IAction>
 ): Promise<[boolean, string]> => {
   try {
-    const response = await axios.post("/api/accounts/login/", {
-      email,
-      password,
-    })
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+
+    const response = await axios.post(
+      "/api/accounts/login/",
+      { email, password },
+      config
+    )
+
     const data: ILoginResult = response.data
+
     dispatch({
       type: LOGIN_SUCCESS,
       payload: {
@@ -87,12 +96,22 @@ export const signup = async (
   dispatch: Dispatch<IAction>
 ): Promise<[boolean, string]> => {
   try {
-    await axios.post("/api/accounts/signup/", {
-      username,
-      name,
-      email,
-      password,
-    })
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+
+    await axios.post(
+      "/api/accounts/signup/",
+      {
+        username,
+        name,
+        email,
+        password,
+      },
+      config
+    )
 
     return await login(email, password, dispatch)
   } catch (error) {

@@ -45,11 +45,21 @@ const Hero = (props: Props) => {
     setLoading(true)
 
     try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+
       const url = `/api/profile/${username}/contact-me/send/`
 
-      await axios.post(url, {
-        ...formData,
-      })
+      await axios.post(
+        url,
+        {
+          ...formData,
+        },
+        config
+      )
 
       toast({
         title: "Done",
