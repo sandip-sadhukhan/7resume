@@ -1,17 +1,91 @@
 import {
   Button,
   Divider,
-  Flex,
   HStack,
-  Input,
   Text,
   Textarea,
+  useToast,
+  VStack,
 } from "@chakra-ui/react"
-import React from "react"
+import React, { useEffect } from "react"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { withAuth } from "../../../../auth/context"
+import { IState } from "../../../../types/auth"
+import axiosInstance from "../../../../utils/axiosInstance"
 
-const ContactInformationContent = () => {
+interface IFormData {
+  address: string
+  gmap_iframe: string
+  phone: string
+  email: string
+}
+
+interface ContactInformationContentProps {
+  state: IState
+}
+
+const ContactInformationContent: React.FC<ContactInformationContentProps> = (
+  props: ContactInformationContentProps
+) => {
+  const token = props.state.user?.access as string
+  const toast = useToast()
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { isSubmitting },
+  } = useForm<IFormData>()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axiosInstance.get(
+        "/api/dashboard/contact-information-settings/",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      const data: IFormData = response.data
+
+      setValue("address", data.address)
+      setValue("gmap_iframe", data.gmap_iframe)
+      setValue("phone", data.phone)
+      setValue("email", data.email)
+    }
+
+    fetchData()
+  }, [token, setValue])
+
+  const onSubmit: SubmitHandler<IFormData> = async (data: IFormData) => {
+    const response = await axiosInstance.post(
+      "/api/dashboard/contact-information-settings/",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    const responseData: { message: string } = response.data
+
+    toast({
+      title: responseData.message,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    })
+  }
+
   return (
-    <>
+    <VStack
+      as="form"
+      onSubmit={handleSubmit(onSubmit)}
+      w="full"
+      spacing={4}
+      align="start"
+    >
       <HStack
         align="start"
         w="full"
@@ -31,6 +105,7 @@ const ContactInformationContent = () => {
           size="sm"
           placeholder="Address"
           flex={[1, 1, 8, 8, 10]}
+          {...register("address")}
         ></Textarea>
       </HStack>
 
@@ -51,14 +126,15 @@ const ContactInformationContent = () => {
           pt={[0, 0, 2, 2, 2]}
           pe={[0, 0, 3, 3, 3]}
         >
-          Location
+          Google Map Embedded Link
         </Text>
-        <Flex w="full" flex={[1, 1, 4, 4, 5]}>
-          <Input size="sm" placeholder="Longitude" />
-        </Flex>
-        <Flex w="full" flex={[1, 1, 4, 4, 5]}>
-          <Input size="sm" placeholder="Latitude" />
-        </Flex>
+        <Textarea
+          size="sm"
+          placeholder="Embedded Link"
+          flex={[1, 1, 8, 8, 10]}
+          rows={5}
+          {...register("gmap_iframe")}
+        />
       </HStack>
 
       <Divider />
@@ -82,6 +158,7 @@ const ContactInformationContent = () => {
           size="sm"
           placeholder="Phone"
           flex={[1, 1, 8, 8, 10]}
+          {...register("phone")}
         ></Textarea>
       </HStack>
 
@@ -106,6 +183,7 @@ const ContactInformationContent = () => {
           size="sm"
           placeholder="Email"
           flex={[1, 1, 8, 8, 10]}
+          {...register("email")}
         ></Textarea>
       </HStack>
 
@@ -114,15 +192,22 @@ const ContactInformationContent = () => {
         ps={["full", "full", 110, 150, 175]}
         justifyContent={["start", "start", "end", "end", "end"]}
       >
-        <Button size="sm" rounded={0} colorScheme="green">
+        <Button
+          type="submit"
+          isLoading={isSubmitting}
+          loadingText="Saving"
+          size="sm"
+          rounded={0}
+          colorScheme="green"
+        >
           Save
         </Button>
         <Button size="sm" rounded={0} colorScheme="red">
           Cancel
         </Button>
       </HStack>
-    </>
+    </VStack>
   )
 }
 
-export default ContactInformationContent
+export default withAuth(ContactInformationContent)
