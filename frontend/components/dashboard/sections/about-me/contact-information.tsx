@@ -7,11 +7,12 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { withAuth } from "../../../../auth/context"
 import { IState } from "../../../../types/auth"
 import axiosInstance from "../../../../utils/axiosInstance"
+import SaveButton from "../../../shared/save-button"
 
 interface IFormData {
   address: string
@@ -37,6 +38,8 @@ const ContactInformationContent: React.FC<ContactInformationContentProps> = (
     formState: { isSubmitting },
   } = useForm<IFormData>()
 
+  const [isLoading, setLoading] = useState<boolean>(true)
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await axiosInstance.get(
@@ -53,6 +56,7 @@ const ContactInformationContent: React.FC<ContactInformationContentProps> = (
       setValue("gmap_iframe", data.gmap_iframe)
       setValue("phone", data.phone)
       setValue("email", data.email)
+      setLoading(false)
     }
 
     fetchData()
@@ -192,16 +196,7 @@ const ContactInformationContent: React.FC<ContactInformationContentProps> = (
         ps={["full", "full", 110, 150, 175]}
         justifyContent={["start", "start", "end", "end", "end"]}
       >
-        <Button
-          type="submit"
-          isLoading={isSubmitting}
-          loadingText="Saving"
-          size="sm"
-          rounded={0}
-          colorScheme="green"
-        >
-          Save
-        </Button>
+        <SaveButton isSubmitting={isSubmitting} isLoading={isLoading} />
         <Button size="sm" rounded={0} colorScheme="red">
           Cancel
         </Button>

@@ -1,10 +1,11 @@
 import { Button, Divider, VStack, HStack, useToast } from "@chakra-ui/react"
 import { AxiosError } from "axios"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { withAuth } from "../../../../auth/context"
 import { IState } from "../../../../types/auth"
 import axiosInstance from "../../../../utils/axiosInstance"
+import SaveButton from "../../../shared/save-button"
 import SocialLink from "./social-link"
 
 interface IFormData {
@@ -99,6 +100,8 @@ const SocialLinksContent: React.FC<SocialLinksContentProps> = (
     formState: { isSubmitting, errors },
   } = useForm<IFormData>()
 
+  const [isLoading, setLoading] = useState<boolean>(true)
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await axiosInstance.get(
@@ -110,6 +113,7 @@ const SocialLinksContent: React.FC<SocialLinksContentProps> = (
         }
       )
       const data: IFormData = response.data
+      await new Promise((resolve) => setTimeout(resolve, 4000))
 
       setValue("facebook", data.facebook)
       setValue("twitter", data.twitter)
@@ -133,6 +137,7 @@ const SocialLinksContent: React.FC<SocialLinksContentProps> = (
       setValue("soundcloud", data.soundcloud)
       setValue("tumblr", data.tumblr)
       setValue("yelp", data.yelp)
+      setLoading(false)
     }
 
     fetchData()
@@ -199,16 +204,7 @@ const SocialLinksContent: React.FC<SocialLinksContentProps> = (
         ps={["full", "full", 110, 150, 175]}
         justifyContent={["start", "start", "end", "end", "end"]}
       >
-        <Button
-          type="submit"
-          isLoading={isSubmitting}
-          loadingText="Saving"
-          size="sm"
-          rounded={0}
-          colorScheme="green"
-        >
-          Save
-        </Button>
+        <SaveButton isSubmitting={isSubmitting} isLoading={isLoading} />
         <Button size="sm" rounded={0} colorScheme="red">
           Cancel
         </Button>

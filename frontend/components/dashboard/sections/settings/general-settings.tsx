@@ -7,11 +7,12 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { withAuth } from "../../../../auth/context"
 import { IState } from "../../../../types/auth"
 import axiosInstance from "../../../../utils/axiosInstance"
+import SaveButton from "../../../shared/save-button"
 import SwitchBox from "./switch-box"
 
 interface GeneralSettingsProps {
@@ -75,6 +76,8 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = (
     formState: { isSubmitting },
   } = useForm<IFormData>()
 
+  const [isLoading, setLoading] = useState<boolean>(true)
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await axiosInstance.get(
@@ -91,6 +94,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = (
         const attribute = key as CheckboxName
         setValue(attribute, data[attribute])
       }
+      setLoading(false)
     }
 
     fetchData()
@@ -279,16 +283,7 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = (
         w={300}
         justifyContent={["start", "start", "start", "end", "end"]}
       >
-        <Button
-          type="submit"
-          size="sm"
-          colorScheme="green"
-          rounded={0}
-          loadingText="Saving"
-          isLoading={isSubmitting}
-        >
-          Save
-        </Button>
+        <SaveButton isSubmitting={isSubmitting} isLoading={isLoading} />
         <Button size="sm" colorScheme="red" rounded={0}>
           Cancel
         </Button>

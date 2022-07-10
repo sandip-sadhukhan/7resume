@@ -8,11 +8,12 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { withAuth } from "../../../../auth/context"
 import { IState } from "../../../../types/auth"
 import axiosInstance from "../../../../utils/axiosInstance"
+import SaveButton from "../../../shared/save-button"
 
 interface IFormData {
   projects: number
@@ -39,6 +40,8 @@ const StatisticsContent: React.FC<StatisticsContentProps> = (
     formState: { isSubmitting },
   } = useForm<IFormData>()
 
+  const [isLoading, setLoading] = useState<boolean>(true)
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await axiosInstance.get(
@@ -56,6 +59,7 @@ const StatisticsContent: React.FC<StatisticsContentProps> = (
       setValue("happy_clients", data.happy_clients)
       setValue("awards_won", data.awards_won)
       setValue("experience", data.experience)
+      setLoading(false)
     }
 
     fetchData()
@@ -243,16 +247,7 @@ const StatisticsContent: React.FC<StatisticsContentProps> = (
         ps={["full", "full", 110, 150, 175]}
         justifyContent={["start", "start", "end", "end", "end"]}
       >
-        <Button
-          type="submit"
-          isLoading={isSubmitting}
-          loadingText="Saving"
-          size="sm"
-          rounded={0}
-          colorScheme="green"
-        >
-          Save
-        </Button>
+        <SaveButton isSubmitting={isSubmitting} isLoading={isLoading} />
         <Button size="sm" rounded={0} colorScheme="red">
           Cancel
         </Button>

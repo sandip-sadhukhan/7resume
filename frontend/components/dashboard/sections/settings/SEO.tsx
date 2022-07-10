@@ -8,11 +8,12 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { withAuth } from "../../../../auth/context"
 import { IState } from "../../../../types/auth"
 import axiosInstance from "../../../../utils/axiosInstance"
+import SaveButton from "../../../shared/save-button"
 
 interface SeoProps {
   state: IState
@@ -34,6 +35,8 @@ const Seo: React.FC<SeoProps> = (props: SeoProps) => {
     formState: { isSubmitting },
   } = useForm<IFormData>()
 
+  const [isLoading, setLoading] = useState<boolean>(true)
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await axiosInstance.get("/api/dashboard/seo-settings/", {
@@ -43,6 +46,7 @@ const Seo: React.FC<SeoProps> = (props: SeoProps) => {
       })
       const data: IFormData = response.data
       setValue("meta_description", data.meta_description)
+      setLoading(false)
     }
 
     fetchData()
@@ -103,16 +107,7 @@ const Seo: React.FC<SeoProps> = (props: SeoProps) => {
         w={["full", "full", 240, 245, 295]}
         justifyContent={["start", "start", "end", "end", "end"]}
       >
-        <Button
-          size="sm"
-          type="submit"
-          rounded={0}
-          colorScheme="green"
-          loadingText="Saving"
-          isLoading={isSubmitting}
-        >
-          Save
-        </Button>
+        <SaveButton isSubmitting={isSubmitting} isLoading={isLoading} />
         <Button size="sm" rounded={0} colorScheme="red">
           Cancel
         </Button>

@@ -15,6 +15,7 @@ import { useRouter } from "next/router"
 import axiosInstance from "../../../../utils/axiosInstance"
 import { withAuth } from "../../../../auth/context"
 import { IState } from "../../../../types/auth"
+import SaveButton from "../../../shared/save-button"
 
 interface WebsiteSettingsProps {
   state: IState
@@ -45,12 +46,15 @@ const WebsiteSettings: React.FC<WebsiteSettingsProps> = (
     about_me_image: string | null
     contact_form_image: string | null
   }
+
   const [pictures, setPictures] = useState<IPictures>({
     favicon: "",
     start_page_background: "",
     about_me_image: "",
     contact_form_image: "",
   })
+
+  const [isLoading, setLoading] = useState<boolean>(true)
 
   const {
     register,
@@ -84,6 +88,7 @@ const WebsiteSettings: React.FC<WebsiteSettingsProps> = (
     )
     const data: IFormData = response.data
     updateData(data)
+    setLoading(false)
   }, [token, updateData])
 
   useEffect(() => {
@@ -368,16 +373,7 @@ const WebsiteSettings: React.FC<WebsiteSettingsProps> = (
         w={["full", "full", 200, 245, 295]}
         justifyContent={["start", "start", "end", "end", "end"]}
       >
-        <Button
-          type="submit"
-          size="sm"
-          rounded={0}
-          colorScheme="green"
-          isLoading={isSubmitting}
-          loadingText="Saving"
-        >
-          Save
-        </Button>
+        <SaveButton isSubmitting={isSubmitting} isLoading={isLoading} />
         <Button
           onClick={() => router.back()}
           size="sm"

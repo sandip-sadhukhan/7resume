@@ -21,7 +21,6 @@ from .models import (
     Service,
     Skill,
     SkillCategory,
-    Tags,
     Testimonial,
     UserProfile,
 )
@@ -251,9 +250,9 @@ class WebsiteSettings(APIView):
     """Set or get website settings"""
 
     class InputSerializer(serializers.Serializer):
-        site_title = serializers.CharField(max_length=200, required=False)
+        site_title = serializers.CharField(max_length=200, allow_blank=True)
         webmaster_email = serializers.EmailField(
-            max_length=100, required=False
+            max_length=100, allow_blank=True
         )
         favicon = serializers.ImageField(required=False)
         start_page_background = serializers.ImageField(required=False)

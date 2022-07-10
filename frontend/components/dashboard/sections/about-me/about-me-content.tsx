@@ -18,6 +18,7 @@ import Image from "../../../image"
 import { withAuth } from "../../../../auth/context"
 import { IState } from "../../../../types/auth"
 import axiosInstance from "../../../../utils/axiosInstance"
+import SaveButton from "../../../shared/save-button"
 
 interface IFormData {
   name: string
@@ -52,6 +53,7 @@ const AboutMeContent: React.FC<AboutMeContentProps> = (
 
   const [profilePicture, setProfilePicture] = useState<string | null>(null)
   const [resume, setResume] = useState<string | null>(null)
+  const [isLoading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,6 +73,7 @@ const AboutMeContent: React.FC<AboutMeContentProps> = (
       setValue("my_positions", data.my_positions)
       setValue("video_description", data.video_description)
       setResume(data.resume)
+      setLoading(false)
     }
 
     fetchData()
@@ -331,16 +334,7 @@ const AboutMeContent: React.FC<AboutMeContentProps> = (
         w={["full", "full", 245, 245, 245]}
         justifyContent={["start", "start", "end", "end", "end"]}
       >
-        <Button
-          type="submit"
-          size="sm"
-          rounded={0}
-          colorScheme="green"
-          isLoading={isSubmitting}
-          loadingText="Saving"
-        >
-          Save
-        </Button>
+        <SaveButton isSubmitting={isSubmitting} isLoading={isLoading} />
         <Button size="sm" rounded={0} colorScheme="red">
           Cancel
         </Button>

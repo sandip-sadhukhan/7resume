@@ -1,5 +1,4 @@
 import {
-  Button,
   Divider,
   Flex,
   FormErrorMessage,
@@ -13,12 +12,13 @@ import {
   useToast,
 } from "@chakra-ui/react"
 import Head from "next/head"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { withAuth } from "../../../../auth/context"
 import { IState } from "../../../../types/auth"
 import axiosInstance from "../../../../utils/axiosInstance"
 import { AxiosError } from "axios"
+import SaveButton from "../../../shared/save-button"
 
 interface EditProfileSectionProps {
   state: IState
@@ -46,6 +46,8 @@ const EditProfileSection: React.FC<EditProfileSectionProps> = (
     formState: { errors, isSubmitting },
   } = useForm<IFormData>()
 
+  const [isLoading, setLoading] = useState<boolean>(true)
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await axiosInstance.get("/api/dashboard/edit-profile/", {
@@ -58,6 +60,7 @@ const EditProfileSection: React.FC<EditProfileSectionProps> = (
       setValue("name", data.name)
       setValue("username", data.username)
       setValue("email", data.email)
+      setLoading(false)
     }
 
     fetchData()
@@ -298,16 +301,7 @@ const EditProfileSection: React.FC<EditProfileSectionProps> = (
           w={["full", "full", 152, 182, 262]}
           justifyContent={["start", "start", "end", "end", "end"]}
         >
-          <Button
-            type="submit"
-            colorScheme="green"
-            rounded={0}
-            size="sm"
-            isLoading={isSubmitting}
-            loadingText="Saving"
-          >
-            Save
-          </Button>
+          <SaveButton isSubmitting={isSubmitting} isLoading={isLoading} />
         </HStack>
       </VStack>
     </VStack>
