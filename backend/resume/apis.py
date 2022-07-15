@@ -667,8 +667,10 @@ class PricingPlansList(APIView):
             fields = [
                 "id",
                 "plan_name",
-                "plan_price",
                 "plan_icon",
+                "plan_price",
+                "price_duration",
+                "plan_currency",
             ]
 
     def get(self, request: Request) -> Response:

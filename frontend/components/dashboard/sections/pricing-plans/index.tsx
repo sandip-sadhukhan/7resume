@@ -12,17 +12,88 @@ import {
   Tr,
   useBreakpointValue,
   useColorModeValue,
+  useToast,
   VStack,
 } from "@chakra-ui/react"
 import Head from "next/head"
 import Link from "next/link"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { FaPencilAlt, FaPlusSquare, FaTrash } from "react-icons/fa"
+import { withAuth } from "../../../../auth/context"
+import { IState } from "../../../../types/auth"
+import axiosInstance from "../../../../utils/axiosInstance"
 import Image from "../../../image"
+import PricingPlanSkeleton from "./pricing-plan-skeleton"
 
-const PricingPlanSection = () => {
+interface PricingPlanSectionProps {
+  state: IState
+}
+
+const PricingPlanSection: React.FC<PricingPlanSectionProps> = (
+  props: PricingPlanSectionProps
+) => {
   const bgColor = useColorModeValue("white", "gray.700")
   const buttonSize = useBreakpointValue({ base: "xs", sm: "sm" })
+  const token = props.state.user?.access as string
+  const toast = useToast()
+  const BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL
+
+  interface PricingPlan {
+    id: number
+    plan_name: string
+    plan_icon: string
+    plan_price: string
+    price_duration: string
+    plan_currency: string
+  }
+
+  const [data, setData] = useState<PricingPlan[] | null>(null)
+  const [isLoading, setLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axiosInstance.get(
+        "/api/dashboard/pricing-plans/",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      const data: PricingPlan[] = response.data
+      setData(data)
+      setLoading(false)
+    }
+
+    fetchData()
+  }, [token])
+
+  const deletePricingPlan = async (id: number) => {
+    if (data === null) return
+
+    let newPricingPlan = [...data]
+    newPricingPlan = newPricingPlan.filter(
+      (pricingPlan) => pricingPlan.id !== id
+    )
+    setData(newPricingPlan)
+
+    const response = await axiosInstance.delete(
+      `/api/dashboard/pricing-plan/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    const resData: { message: string } = response.data
+
+    toast({
+      title: resData.message,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    })
+  }
 
   return (
     <VStack
@@ -64,60 +135,76 @@ const PricingPlanSection = () => {
             </Tr>
           </Thead>
           <Tbody>
-            <Tr>
-              <Td>
-                <HStack
-                  w="full"
-                  align="start"
-                  alignItems="center"
-                  flexDir={["column", "row", "row", "row", "row"]}
-                  gap={2}
-                  spacing={[0, 2, 2, 2, 2]}
-                >
-                  <Image
-                    width={40}
-                    height={40}
-                    src="/1.png"
-                    alt="service image"
-                  />
-                  <Text fontSize={[10, 13, 13, 13, 13]}>SEO Specialist</Text>
-                </HStack>
-              </Td>
+            {isLoading && [1].map((ele) => <PricingPlanSkeleton key={ele} />)}
+            {data &&
+              data.map((pricingPlan) => (
+                <Tr key={pricingPlan.id}>
+                  <Td>
+                    <HStack
+                      w="full"
+                      align="start"
+                      alignItems="center"
+                      flexDir={["column", "row", "row", "row", "row"]}
+                      gap={2}
+                      spacing={[0, 2, 2, 2, 2]}
+                    >
+                      <Image
+                        width={40}
+                        height={40}
+                        src={`${BASE_API_URL}${pricingPlan.plan_icon}`}
+                        alt={`${pricingPlan.plan_name} pricing plan`}
+                      />
+                      <Text fontSize={[10, 13, 13, 13, 13]}>
+                        {pricingPlan.plan_name}
+                      </Text>
+                    </HStack>
+                  </Td>
 
-              <Td>
-                <Text fontSize={[10, 13, 13, 13, 13]}>$ 30 / per month</Text>
-              </Td>
-              <Td>
-                <HStack
-                  w="full"
-                  align="start"
-                  flexDir={["column", "row", "row", "row", "row"]}
-                  gap={2}
-                  spacing={[0, 2, 2, 2, 2]}
-                >
-                  <Link href="/dashboard/pricing-plans/edit/1">
-                    <a>
+                  <Td>
+                    <Text fontSize={[10, 13, 13, 13, 13]}>
+                      {pricingPlan.plan_currency}
+                      {pricingPlan.plan_price} {pricingPlan.price_duration}
+                    </Text>
+                  </Td>
+                  <Td>
+                    <HStack
+                      w="full"
+                      align="start"
+                      flexDir={["column", "row", "row", "row", "row"]}
+                      gap={2}
+                      spacing={[0, 2, 2, 2, 2]}
+                    >
+                      <Link
+                        href={`/dashboard/pricing-plans/edit/${pricingPlan.id}`}
+                      >
+                        <a>
+                          <Button
+                            size={buttonSize}
+                            rounded={0}
+                            colorScheme="orange"
+                          >
+                            <FaPencilAlt fontSize={13} />
+                            <Text fontSize={[10, 13, 13, 13, 13]} ps={2}>
+                              Edit
+                            </Text>
+                          </Button>
+                        </a>
+                      </Link>
                       <Button
                         size={buttonSize}
                         rounded={0}
-                        colorScheme="orange"
+                        colorScheme="red"
+                        onClick={() => deletePricingPlan(pricingPlan.id)}
                       >
-                        <FaPencilAlt fontSize={13} />
+                        <FaTrash fontSize={13} />
                         <Text fontSize={[10, 13, 13, 13, 13]} ps={2}>
-                          Edit
+                          Delete
                         </Text>
                       </Button>
-                    </a>
-                  </Link>
-                  <Button size={buttonSize} rounded={0} colorScheme="red">
-                    <FaTrash fontSize={13} />
-                    <Text fontSize={[10, 13, 13, 13, 13]} ps={2}>
-                      Delete
-                    </Text>
-                  </Button>
-                </HStack>
-              </Td>
-            </Tr>
+                    </HStack>
+                  </Td>
+                </Tr>
+              ))}
           </Tbody>
         </Table>
       </VStack>
@@ -125,4 +212,4 @@ const PricingPlanSection = () => {
   )
 }
 
-export default PricingPlanSection
+export default withAuth(PricingPlanSection)
