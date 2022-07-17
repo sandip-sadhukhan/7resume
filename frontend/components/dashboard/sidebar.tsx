@@ -205,7 +205,7 @@ const Sidebar: React.FC<SidebarProps> = (props: SidebarProps) => {
         <NavItem
           Icon={FaGraduationCap}
           text="Education"
-          link="/dashboard/education"
+          link="/dashboard/educations"
         />
         <Divider borderColor="whiteAlpha.200" />
 

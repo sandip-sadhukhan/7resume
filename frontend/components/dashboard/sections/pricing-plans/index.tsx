@@ -135,7 +135,8 @@ const PricingPlanSection: React.FC<PricingPlanSectionProps> = (
             </Tr>
           </Thead>
           <Tbody>
-            {isLoading && [1].map((ele) => <PricingPlanSkeleton key={ele} />)}
+            {isLoading &&
+              [1, 2, 3].map((ele) => <PricingPlanSkeleton key={ele} />)}
             {data &&
               data.map((pricingPlan) => (
                 <Tr key={pricingPlan.id}>
