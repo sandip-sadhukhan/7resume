@@ -3,22 +3,154 @@ import {
   Checkbox,
   Divider,
   Flex,
+  FormControl,
+  FormHelperText,
   Heading,
   HStack,
   Input,
   Text,
   Textarea,
   useColorModeValue,
+  useToast,
   VStack,
 } from "@chakra-ui/react"
+import { AxiosError } from "axios"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import React from "react"
+import React, { useEffect, useState } from "react"
+import { Controller, SubmitHandler, useForm } from "react-hook-form"
+import { withAuth } from "../../../../auth/context"
+import { IState } from "../../../../types/auth"
+import axiosInstance from "../../../../utils/axiosInstance"
 import Image from "../../../image"
+import SaveButton from "../../../shared/save-button"
 
-const EditExperienceSection = () => {
+interface EditExperienceSectionProps {
+  state: IState
+}
+
+const EditExperienceSection: React.FC<EditExperienceSectionProps> = (
+  props: EditExperienceSectionProps
+) => {
   const bgColor = useColorModeValue("white", "gray.700")
   const router = useRouter()
+  const token = props.state.user?.access as string
+  const BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL
+  const toast = useToast()
+  const experienceId = router.query.id as string
+
+  interface IFormData {
+    company: string
+    position: string
+    image: string
+    description: string
+    date_from: string
+    date_to: string | null
+    currently_working: boolean
+  }
+
+  const {
+    watch,
+    control,
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    setError,
+    formState: { isSubmitting, errors },
+  } = useForm<IFormData>()
+
+  const watchCurrentlyWorking = watch("currently_working", false)
+
+  const [isLoading, setLoading] = useState<boolean>(true)
+  const [image, setImage] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axiosInstance.get(
+        `/api/dashboard/experience/${experienceId}/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      const data: IFormData = response.data
+      setValue("company", data.company)
+      setValue("position", data.position)
+      setValue("description", data.description)
+      setValue("date_from", data.date_from)
+      setValue("date_to", data.date_to)
+      setValue("currently_working", data.currently_working)
+      setImage(data.image)
+      setLoading(false)
+    }
+
+    fetchData()
+  }, [token, setValue, experienceId])
+
+  const onSubmit: SubmitHandler<IFormData> = async (data: IFormData) => {
+    const formData = new FormData()
+
+    formData.append("company", data.company)
+    formData.append("position", data.position)
+    formData.append("description", data.description)
+    formData.append("date_from", data.date_from)
+    formData.append("currently_working", data.currently_working.toString())
+
+    if (data.date_to !== null) {
+      formData.append("date_to", data.date_to)
+    }
+
+    if (data.image !== null && data.image.length === 1) {
+      formData.append("image", data.image[0])
+    }
+
+    try {
+      const res = await axiosInstance.patch(
+        `/api/dashboard/experience/${experienceId}/`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      const data: { message: string } = res.data
+
+      toast({
+        title: data.message,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      })
+      router.push("/dashboard/experiences")
+    } catch (error) {
+      const err = error as AxiosError
+      if (err.response?.status === 400) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const data = err.response.data as any
+        Object.keys(data).forEach((ele) => {
+          type elementType =
+            | "company"
+            | "position"
+            | "image"
+            | "description"
+            | "date_from"
+            | "date_to"
+            | "currently_working"
+
+          const element = ele as elementType
+          setError(element, { message: data[ele].join(",") })
+        })
+      } else {
+        toast({
+          status: "error",
+          title: err.response?.statusText,
+        })
+      }
+    }
+  }
 
   return (
     <VStack
@@ -38,7 +170,15 @@ const EditExperienceSection = () => {
       </Heading>
       <Divider bgColor="blackAlpha.500" borderWidth="1px" />
 
-      <VStack w="full" align="start" spacing={4} pt={2} alignItems="baseline">
+      <VStack
+        as="form"
+        onSubmit={handleSubmit(onSubmit)}
+        w="full"
+        align="start"
+        spacing={4}
+        pt={2}
+        alignItems="baseline"
+      >
         <HStack
           align="start"
           w="full"
@@ -57,7 +197,18 @@ const EditExperienceSection = () => {
             </Text>
           </Flex>
           <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
-            <Input size="sm" placeholder="School" />
+            <FormControl isInvalid={errors.company !== undefined}>
+              <Input
+                size="sm"
+                placeholder="Company"
+                {...register("company", {
+                  required: "Company name should not be empty.",
+                })}
+              />
+              {errors.company && (
+                <FormHelperText>{errors.company?.message}</FormHelperText>
+              )}
+            </FormControl>
           </Flex>
         </HStack>
         <Divider />
@@ -81,16 +232,23 @@ const EditExperienceSection = () => {
             <Text color="red">*</Text>
           </Flex>
           <Flex ps={4} flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
-            <Input type="file" size="sm" />
+            <FormControl isInvalid={errors.image !== undefined}>
+              <Input type="file" size="sm" {...register("image")} />
+              {errors.image && (
+                <FormHelperText>{errors.image?.message}</FormHelperText>
+              )}
+            </FormControl>
           </Flex>
-          <Flex>
-            <Image
-              width={40}
-              height={40}
-              src="/avatar-1.jpg"
-              alt="School image"
-            />
-          </Flex>
+          {image && (
+            <Flex>
+              <Image
+                width={40}
+                height={40}
+                src={`${BASE_API_URL}${image}`}
+                alt={`${getValues("company")} company`}
+              />
+            </Flex>
+          )}
         </HStack>
         <Divider />
 
@@ -112,7 +270,18 @@ const EditExperienceSection = () => {
             </Text>
           </Flex>
           <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
-            <Input size="sm" placeholder="Field" />
+            <FormControl isInvalid={errors.position !== undefined}>
+              <Input
+                size="sm"
+                placeholder="Position"
+                {...register("position", {
+                  required: "Position should not be empty.",
+                })}
+              />
+              {errors.position && (
+                <FormHelperText>{errors.position?.message}</FormHelperText>
+              )}
+            </FormControl>
           </Flex>
         </HStack>
         <Divider />
@@ -135,7 +304,16 @@ const EditExperienceSection = () => {
             </Text>
           </Flex>
           <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
-            <Textarea size="sm" placeholder="Description" />
+            <FormControl isInvalid={errors.description !== undefined}>
+              <Textarea
+                size="sm"
+                placeholder="Description"
+                {...register("description")}
+              />
+              {errors.description && (
+                <FormHelperText>{errors.description?.message}</FormHelperText>
+              )}
+            </FormControl>
           </Flex>
         </HStack>
         <Divider />
@@ -165,13 +343,35 @@ const EditExperienceSection = () => {
             flexDir={["column", "column", "row", "row", "row"]}
           >
             <Flex flex={2}>
-              <Input type="date" size="sm" placeholder="School" />
+              <FormControl isInvalid={errors.date_from !== undefined}>
+                <Input
+                  type="date"
+                  size="sm"
+                  {...register("date_from", {
+                    required: "Date From Field should not be empty.",
+                  })}
+                />
+                {errors.date_from && (
+                  <FormHelperText>{errors.date_from?.message}</FormHelperText>
+                )}
+              </FormControl>
             </Flex>
             <Flex flex={3} gap={3} alignItems="center">
               <Text fontSize={14} minW={50}>
                 Date To
               </Text>
-              <Input type="date" size="sm" placeholder="School" />
+              <FormControl isInvalid={errors.date_to !== undefined}>
+                <Input
+                  type="date"
+                  size="sm"
+                  placeholder="Plan Name"
+                  {...register("date_to")}
+                  disabled={watchCurrentlyWorking}
+                />
+                {errors.date_to && (
+                  <FormHelperText>{errors.date_to?.message}</FormHelperText>
+                )}
+              </FormControl>
             </Flex>
           </Flex>
         </HStack>
@@ -180,9 +380,22 @@ const EditExperienceSection = () => {
           justifyContent={["start", "start", "end", "end", "end"]}
           pe={[0, 0, "30%", "30%", "30%"]}
         >
-          <Checkbox p={0} size="sm">
-            I currently work
-          </Checkbox>
+          <Controller
+            control={control}
+            name="currently_working"
+            defaultValue={false}
+            render={({ field: { onChange, value, ref } }) => (
+              <Checkbox
+                p={0}
+                size="sm"
+                onChange={onChange}
+                isChecked={value}
+                ref={ref}
+              >
+                I currently study
+              </Checkbox>
+            )}
+          />
         </HStack>
         <Divider />
 
@@ -190,9 +403,8 @@ const EditExperienceSection = () => {
           w={["full", "full", 260, 320, 330]}
           justifyContent={["start", "start", "end", "end", "end"]}
         >
-          <Button size="sm" rounded={0} colorScheme="green">
-            Save
-          </Button>
+          <SaveButton isSubmitting={isSubmitting} isLoading={isLoading} />
+
           <Button
             onClick={() => router.back()}
             size="sm"
@@ -207,4 +419,4 @@ const EditExperienceSection = () => {
   )
 }
 
-export default EditExperienceSection
+export default withAuth(EditExperienceSection)

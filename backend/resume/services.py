@@ -461,13 +461,13 @@ def editEducation(
     *,
     user: UserAccount,
     educationId: int,
-    image: Optional[InMemoryUploadedFile] = None,
     school: str,
     field: str,
     description: str,
     date_from: str,
-    date_to: str,
     currently_studying: bool,
+    image: Optional[InMemoryUploadedFile] = None,
+    date_to: Optional[str] = None,
 ) -> None:
     education = selectors.getEducation(user=user, educationId=educationId)
 
@@ -527,12 +527,12 @@ def editExperience(
     user: UserAccount,
     experienceId: int,
     company: str,
-    image: Optional[InMemoryUploadedFile] = None,
     position: str,
     description: str,
     date_from: str,
-    date_to: str,
     currently_working: bool,
+    image: Optional[InMemoryUploadedFile] = None,
+    date_to: Optional[str] = None,
 ) -> None:
     experience = selectors.getExperience(
         user=user,

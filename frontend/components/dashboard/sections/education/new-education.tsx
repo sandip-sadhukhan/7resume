@@ -42,7 +42,7 @@ const NewEducationSection: React.FC<NewEducationSectionProps> = (
     image: string
     description: string
     date_from: string
-    date_to: string
+    date_to: string | null
     currently_studying: boolean
   }
 
@@ -63,8 +63,11 @@ const NewEducationSection: React.FC<NewEducationSectionProps> = (
     formData.append("field", data.field)
     formData.append("description", data.description)
     formData.append("date_from", data.date_from)
-    formData.append("date_to", data.date_to)
     formData.append("currently_studying", data.currently_studying.toString())
+
+    if (data.date_to !== null) {
+      formData.append("date_to", data.date_to)
+    }
 
     if (data.image !== null && data.image.length === 1) {
       formData.append("image", data.image[0])
