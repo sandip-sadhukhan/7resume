@@ -2,7 +2,6 @@ import {
   Button,
   Divider,
   Flex,
-  FormControl,
   Heading,
   HStack,
   Input,
@@ -77,11 +76,9 @@ const NewProjectSection: React.FC<NewProjectSectionProps> = (
   }
 
   const {
-    watch,
-    register,
-    handleSubmit,
     setError,
-    formState: { isSubmitting, errors },
+    handleSubmit,
+    formState: { isSubmitting },
   } = useForm<IFormData>()
 
   const onSubmit: SubmitHandler<IFormData> = async (data: IFormData) => {
@@ -170,7 +167,15 @@ const NewProjectSection: React.FC<NewProjectSectionProps> = (
       </Heading>
       <Divider bgColor="blackAlpha.500" borderWidth="1px" />
 
-      <VStack w="full" align="start" spacing={4} pt={2} alignItems="baseline">
+      <VStack
+        as="form"
+        onSubmit={handleSubmit(onSubmit)}
+        w="full"
+        align="start"
+        spacing={4}
+        pt={2}
+        alignItems="baseline"
+      >
         <HStack
           align="start"
           w="full"
@@ -261,7 +266,7 @@ const NewProjectSection: React.FC<NewProjectSectionProps> = (
             </Text>
           </Flex>
           <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
-            <FormControl isInvalid={errors.company !== undefined}>
+            {/* <FormControl isInvalid={errors.company !== undefined}>
               <Input
                 size="sm"
                 placeholder="Company"
@@ -272,7 +277,7 @@ const NewProjectSection: React.FC<NewProjectSectionProps> = (
               {errors.company && (
                 <FormHelperText>{errors.company?.message}</FormHelperText>
               )}
-            </FormControl>
+            </FormControl> */}
           </Flex>
         </HStack>
         <Divider />
