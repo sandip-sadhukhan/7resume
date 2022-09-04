@@ -3,8 +3,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import status, permissions, serializers
-
-from resume.serializers import TagSerializer
+from resume.serializers import TagSerializer, ProjectCategorySerializer
 
 from .models import (
     Appointment,
@@ -1067,6 +1066,8 @@ class ProjectList(APIView):
         pinterest = serializers.URLField(max_length=500, allow_blank=True)
 
     class OutputSerializer(serializers.ModelSerializer):
+        category = serializers.CharField(source="category.title")
+
         class Meta:
             model = Project
             fields = [
@@ -1139,7 +1140,17 @@ class ProjectDetail(APIView):
         )
         serializer = self.OutputSerializer(instance=project)
 
-        return Response(serializer.data)
+        all_categories = ProjectCategory.objects.filter(
+            user_profile=request.user.user_profile)
+        categoriesSerializer = ProjectCategorySerializer(
+            instance=all_categories, many=True)
+
+        data = {
+            "project": serializer.data,
+            "categories": categoriesSerializer.data
+        }
+
+        return Response(data)
 
     def patch(self, request: Request, id: int) -> Response:
         serializer = self.InputSerializer(data=request.data)

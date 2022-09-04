@@ -6,6 +6,7 @@ from .models import (
     Experiences,
     PricingPlan,
     Project,
+    ProjectCategory,
     Service,
     Skill,
     Tags,
@@ -132,6 +133,15 @@ class ProjectSerializer(serializers.ModelSerializer):
             "facebook",
             "twitter",
             "pinterest",
+        )
+
+
+class ProjectCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectCategory
+        fields = (
+            "id",
+            "title",
         )
 
 

@@ -2,6 +2,7 @@ import {
   Button,
   Divider,
   Flex,
+  FormControl,
   Heading,
   HStack,
   Input,
@@ -10,15 +11,146 @@ import {
   Text,
   Textarea,
   useColorModeValue,
+  useToast,
   VStack,
 } from "@chakra-ui/react"
+import { AxiosError } from "axios"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import React from "react"
+import React, { useEffect, useState } from "react"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { withAuth } from "../../../../auth/context"
+import { IState } from "../../../../types/auth"
+import axiosInstance from "../../../../utils/axiosInstance"
+import SaveButton from "../../../shared/save-button"
 
-const NewProjectSection = () => {
+interface NewProjectSectionProps {
+  state: IState
+}
+
+const NewProjectSection: React.FC<NewProjectSectionProps> = (
+  props: NewProjectSectionProps
+) => {
   const bgColor = useColorModeValue("white", "gray.700")
   const router = useRouter()
+  const token = props.state.user?.access as string
+  const toast = useToast()
+
+  interface ProjectCategory {
+    id: number
+    title: string
+  }
+
+  const [data, setData] = useState<ProjectCategory[] | null>(null)
+  const [isLoading, setLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axiosInstance.get(
+        "/api/dashboard/project-categories/",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      const data: ProjectCategory[] = response.data
+      setData(data)
+      setLoading(false)
+    }
+
+    fetchData()
+  }, [token])
+
+  interface IFormData {
+    display_project: boolean
+    category_id: string
+    title: string
+    link: string
+    published: string
+    featured_image: string
+    description: string
+    meta_description: string
+    facebook: string
+    twitter: string
+    pinterest: string
+  }
+
+  const {
+    watch,
+    register,
+    handleSubmit,
+    setError,
+    formState: { isSubmitting, errors },
+  } = useForm<IFormData>()
+
+  const onSubmit: SubmitHandler<IFormData> = async (data: IFormData) => {
+    const formData = new FormData()
+
+    formData.append("display_project", data.display_project.toString())
+    formData.append("category_id", data.category_id)
+    formData.append("title", data.title)
+    formData.append("link", data.link)
+    formData.append("published", data.published)
+    formData.append("description", data.description)
+    formData.append("meta_description", data.meta_description)
+    formData.append("facebook", data.facebook)
+    formData.append("twitter", data.twitter)
+    formData.append("pinterest", data.pinterest)
+
+    if (data.featured_image !== null && data.featured_image.length === 1) {
+      formData.append("featured_image", data.featured_image[0])
+    }
+
+    try {
+      const res = await axiosInstance.post(
+        "/api/dashboard/projects/",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      const data: { message: string } = res.data
+
+      toast({
+        title: data.message,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      })
+      router.push("/dashboard/projects")
+    } catch (error) {
+      const err = error as AxiosError
+      if (err.response?.status === 400) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const data = err.response.data as any
+        Object.keys(data).forEach((ele) => {
+          type elementType =
+            | "display_project"
+            | "category_id"
+            | "title"
+            | "link"
+            | "published"
+            | "featured_image"
+            | "description"
+            | "meta_description"
+            | "facebook"
+            | "twitter"
+            | "pinterest"
+
+          const element = ele as elementType
+          setError(element, { message: data[ele].join(",") })
+        })
+      } else {
+        toast({
+          status: "error",
+          title: err.response?.statusText,
+        })
+      }
+    }
+  }
 
   return (
     <VStack
@@ -92,9 +224,12 @@ const NewProjectSection = () => {
           </Flex>
           <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
             <Select placeholder="Select..." size="sm">
-              <option value="option1">Website</option>
-              <option value="option2">Decoration</option>
-              <option value="option3">Business Logo</option>
+              {data &&
+                data.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.title}
+                  </option>
+                ))}
             </Select>
           </Flex>
         </HStack>
@@ -126,7 +261,18 @@ const NewProjectSection = () => {
             </Text>
           </Flex>
           <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
-            <Input w="full" size="sm" placeholder="Title" />
+            <FormControl isInvalid={errors.company !== undefined}>
+              <Input
+                size="sm"
+                placeholder="Company"
+                {...register("company", {
+                  required: "Company name should not be empty.",
+                })}
+              />
+              {errors.company && (
+                <FormHelperText>{errors.company?.message}</FormHelperText>
+              )}
+            </FormControl>
           </Flex>
         </HStack>
         <Divider />
@@ -283,9 +429,7 @@ const NewProjectSection = () => {
           w={["full", "full", 260, 320, 330]}
           justifyContent={["start", "start", "end", "end", "end"]}
         >
-          <Button size="sm" rounded={0} colorScheme="green">
-            Save
-          </Button>
+          <SaveButton isSubmitting={isSubmitting} isLoading={isLoading} />
           <Button
             onClick={() => router.back()}
             size="sm"
@@ -300,4 +444,4 @@ const NewProjectSection = () => {
   )
 }
 
-export default NewProjectSection
+export default withAuth(NewProjectSection)
