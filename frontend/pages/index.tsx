@@ -8,7 +8,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Resume Bus</title>
+        <title>7Resume</title>
         <meta name="description" content="Best Resume maker application" />
         <link rel="icon" href="/favicon.png" />
       </Head>
@@ -34,7 +34,7 @@ const Home: NextPage = () => {
           textAlign="center"
         >
           <Heading as="h1" size="2xl">
-            Welcome to Resume Bus
+            Welcome to 7Resume
           </Heading>
           <Heading as="h2" size="lg" color="red.300">
             Best Resume CMS on the Market

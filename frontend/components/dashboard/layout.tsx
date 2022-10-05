@@ -106,7 +106,7 @@ const Layout: React.FC<layoutProps> = (props: layoutProps) => {
                     px={5}
                   >
                     <Text fontSize={13} fontWeight={700} color={footerColor}>
-                      &copy; Resume bus {new Date().getFullYear()}
+                      &copy; 7Resume.com {new Date().getFullYear()}
                     </Text>
                     <BsArrowUpCircle
                       fontSize={18}

@@ -2,6 +2,8 @@ import {
   Button,
   Divider,
   Flex,
+  FormControl,
+  FormHelperText,
   Heading,
   HStack,
   Input,
@@ -17,7 +19,7 @@ import { AxiosError } from "axios"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
-import { SubmitHandler, useForm } from "react-hook-form"
+import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import { withAuth } from "../../../../auth/context"
 import { IState } from "../../../../types/auth"
 import axiosInstance from "../../../../utils/axiosInstance"
@@ -76,9 +78,11 @@ const NewProjectSection: React.FC<NewProjectSectionProps> = (
   }
 
   const {
+    register,
     setError,
     handleSubmit,
-    formState: { isSubmitting },
+    control,
+    formState: { isSubmitting, errors },
   } = useForm<IFormData>()
 
   const onSubmit: SubmitHandler<IFormData> = async (data: IFormData) => {
@@ -197,7 +201,21 @@ const NewProjectSection: React.FC<NewProjectSectionProps> = (
             </Text>
           </Flex>
           <Flex flex={[1, 1, 8, 8, 10]} pt={3} w="full" alignItems="end">
-            <Switch checked={true} />
+            <Controller
+              control={control}
+              name="display_project"
+              defaultValue={false}
+              render={({ field: { onChange, value, ref } }) => (
+                <Switch
+                  size="sm"
+                  ring={0}
+                  _hover={{ ring: 0 }}
+                  onChange={onChange}
+                  isChecked={value}
+                  ref={ref}
+                />
+              )}
+            />
           </Flex>
         </HStack>
         <Divider />
@@ -228,7 +246,13 @@ const NewProjectSection: React.FC<NewProjectSectionProps> = (
             </Text>
           </Flex>
           <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
-            <Select placeholder="Select..." size="sm">
+            <Select
+              placeholder="Select..."
+              size="sm"
+              {...register("category_id", {
+                required: "Category should not be empty",
+              })}
+            >
               {data &&
                 data.map((category) => (
                   <option key={category.id} value={category.id}>
@@ -266,18 +290,18 @@ const NewProjectSection: React.FC<NewProjectSectionProps> = (
             </Text>
           </Flex>
           <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
-            {/* <FormControl isInvalid={errors.company !== undefined}>
+            <FormControl isInvalid={errors.title !== undefined}>
               <Input
                 size="sm"
-                placeholder="Company"
-                {...register("company", {
-                  required: "Company name should not be empty.",
+                placeholder="Title"
+                {...register("title", {
+                  required: "Title should not be empty.",
                 })}
               />
-              {errors.company && (
-                <FormHelperText>{errors.company?.message}</FormHelperText>
+              {errors.title && (
+                <FormHelperText>{errors.title?.message}</FormHelperText>
               )}
-            </FormControl> */}
+            </FormControl>
           </Flex>
         </HStack>
         <Divider />
@@ -308,7 +332,12 @@ const NewProjectSection: React.FC<NewProjectSectionProps> = (
             </Text>
           </Flex>
           <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
-            <Input w="full" size="sm" placeholder="Link" type="url" />
+            <FormControl isInvalid={errors.link !== undefined}>
+              <Input size="sm" placeholder="Link" {...register("link")} />
+              {errors.link && (
+                <FormHelperText>{errors.link?.message}</FormHelperText>
+              )}
+            </FormControl>
           </Flex>
         </HStack>
         <Divider />
@@ -336,7 +365,18 @@ const NewProjectSection: React.FC<NewProjectSectionProps> = (
             </Text>
           </Flex>
           <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
-            <Input w="full" size="sm" placeholder="Published" type="date" />
+            <FormControl isInvalid={errors.published !== undefined}>
+              <Input
+                size="sm"
+                type="date"
+                {...register("published", {
+                  required: "Publish Date should not be empty.",
+                })}
+              />
+              {errors.published && (
+                <FormHelperText>{errors.published?.message}</FormHelperText>
+              )}
+            </FormControl>
           </Flex>
         </HStack>
         <Divider />
@@ -364,7 +404,20 @@ const NewProjectSection: React.FC<NewProjectSectionProps> = (
             </Text>
           </Flex>
           <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
-            <Input w="full" size="sm" placeholder="image" type="file" />
+            <FormControl isInvalid={errors.featured_image !== undefined}>
+              <Input
+                size="sm"
+                type="file"
+                {...register("featured_image", {
+                  required: "Feature Image should not be empty.",
+                })}
+              />
+              {errors.featured_image && (
+                <FormHelperText>
+                  {errors.featured_image?.message}
+                </FormHelperText>
+              )}
+            </FormControl>
           </Flex>
         </HStack>
         <Divider />
@@ -387,11 +440,19 @@ const NewProjectSection: React.FC<NewProjectSectionProps> = (
             </Text>
           </Flex>
           <Flex flex={[1, 1, 8, 8, 10]} w="full" flexDir="column" gap={2}>
-            <Textarea
-              minH={400}
-              placeholder="Write Markdown* here..."
-              size="sm"
-            />
+            <FormControl isInvalid={errors.description !== undefined}>
+              <Textarea
+                minH={400}
+                placeholder="Write Markdown* here..."
+                size="sm"
+                {...register("description", {
+                  required: "Description should not be empty.",
+                })}
+              />
+              {errors.description && (
+                <FormHelperText>{errors.description?.message}</FormHelperText>
+              )}
+            </FormControl>
             <Text color="gray" fontSize={13}>
               *Learn about markdown from here -{" "}
               <a
@@ -400,7 +461,7 @@ const NewProjectSection: React.FC<NewProjectSectionProps> = (
                 rel="noreferrer"
                 style={{ color: "blueviolet" }}
               >
-                Markdown CheetSheet
+                Markdown CheatSheet
               </a>
             </Text>
           </Flex>
@@ -425,7 +486,125 @@ const NewProjectSection: React.FC<NewProjectSectionProps> = (
             </Text>
           </Flex>
           <Flex flex={[1, 1, 8, 8, 10]} w="full">
-            <Textarea placeholder="Meta Description" size="sm" />
+            <FormControl isInvalid={errors.meta_description !== undefined}>
+              <Textarea
+                placeholder="Meta Description"
+                size="sm"
+                {...register("meta_description")}
+              />
+              {errors.meta_description && (
+                <FormHelperText>
+                  {errors.meta_description?.message}
+                </FormHelperText>
+              )}
+            </FormControl>
+          </Flex>
+        </HStack>
+        <Divider />
+
+        <HStack
+          align="start"
+          w="full"
+          spacing={[0, 0, 5, 5, 5]}
+          flexDir={["column", "column", "row", "row", "row"]}
+          gap={4}
+        >
+          <Flex
+            flex={[1, 1, 1, 2, 2]}
+            w="full"
+            alignItems="center"
+            flexDir={["column", "column", "row", "row", "row"]}
+          >
+            <Text
+              w="full"
+              fontSize={13}
+              textAlign={["start", "start", "end", "end", "end"]}
+              pt={2}
+            >
+              Facebook
+            </Text>
+          </Flex>
+          <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
+            <FormControl isInvalid={errors.facebook !== undefined}>
+              <Input
+                size="sm"
+                placeholder="Facebook"
+                {...register("facebook")}
+              />
+              {errors.facebook && (
+                <FormHelperText>{errors.facebook?.message}</FormHelperText>
+              )}
+            </FormControl>
+          </Flex>
+        </HStack>
+        <Divider />
+
+        <HStack
+          align="start"
+          w="full"
+          spacing={[0, 0, 5, 5, 5]}
+          flexDir={["column", "column", "row", "row", "row"]}
+          gap={4}
+        >
+          <Flex
+            flex={[1, 1, 1, 2, 2]}
+            w="full"
+            alignItems="center"
+            flexDir={["column", "column", "row", "row", "row"]}
+          >
+            <Text
+              w="full"
+              fontSize={13}
+              textAlign={["start", "start", "end", "end", "end"]}
+              pt={2}
+            >
+              Title
+            </Text>
+          </Flex>
+          <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
+            <FormControl isInvalid={errors.twitter !== undefined}>
+              <Input size="sm" placeholder="Twitter" {...register("twitter")} />
+              {errors.twitter && (
+                <FormHelperText>{errors.twitter?.message}</FormHelperText>
+              )}
+            </FormControl>
+          </Flex>
+        </HStack>
+        <Divider />
+
+        <HStack
+          align="start"
+          w="full"
+          spacing={[0, 0, 5, 5, 5]}
+          flexDir={["column", "column", "row", "row", "row"]}
+          gap={4}
+        >
+          <Flex
+            flex={[1, 1, 1, 2, 2]}
+            w="full"
+            alignItems="center"
+            flexDir={["column", "column", "row", "row", "row"]}
+          >
+            <Text
+              w="full"
+              fontSize={13}
+              textAlign={["start", "start", "end", "end", "end"]}
+              pt={2}
+            >
+              Pinterest
+            </Text>
+          </Flex>
+          <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
+            <FormControl isInvalid={errors.pinterest !== undefined}>
+              <Input
+                size="sm"
+                placeholder="Pinterest"
+                {...register("pinterest")}
+              />
+              {errors.pinterest && (
+                <FormHelperText>{errors.pinterest?.message}</FormHelperText>
+              )}
+            </FormControl>
           </Flex>
         </HStack>
         <Divider />

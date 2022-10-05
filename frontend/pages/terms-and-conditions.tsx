@@ -7,7 +7,7 @@ const TermsAndCondition: NextPage = () => {
   return (
     <Container maxW="container.lg" py={10}>
       <Head>
-        <title>Terms and Condition Page | Resume Bus</title>
+        <title>Terms and Condition Page | 7Resume</title>
         <meta
           name="description"
           content="Read our terms and condition to use our site"
@@ -15,21 +15,21 @@ const TermsAndCondition: NextPage = () => {
         <link rel="icon" href="/favicon.png" />
       </Head>
       <Heading pb={8} textAlign="center">
-        Terms and Conditions for Resume Bus
+        Terms and Conditions for 7Resume
       </Heading>
       <VStack w="full" align="start" spacing={3} px={2}>
-        <Text>Welcome to resume bus!</Text>
+        <Text>Welcome to 7Resume!</Text>
 
         <Text>
           These terms and conditions outline the rules and regulations for the
-          use of Resume Bus&apos;s Website, located at
+          use of 7Resume&apos;s Website, located at
           https://resumebus.sigmaprogrammer.com.
         </Text>
 
         <Text>
           By accessing this website we assume you accept these terms and
-          conditions. Do not continue to use resume bus if you do not agree to
-          take all of the terms and conditions stated on this page.
+          conditions. Do not continue to use 7Resume if you do not agree to take
+          all of the terms and conditions stated on this page.
         </Text>
 
         <Text>
@@ -56,8 +56,8 @@ const TermsAndCondition: NextPage = () => {
         </Heading>
 
         <Text>
-          We employ the use of cookies. By accessing resume bus, you agreed to
-          use cookies in agreement with the Resume Bus&apos;s Privacy Policy.{" "}
+          We employ the use of cookies. By accessing 7Resume, you agreed to use
+          cookies in agreement with the 7Resume&apos;s Privacy Policy.{" "}
         </Text>
 
         <Text>
@@ -73,19 +73,19 @@ const TermsAndCondition: NextPage = () => {
         </Heading>
 
         <Text>
-          Unless otherwise stated, Resume Bus and/or its licensors own the
-          intellectual property rights for all material on resume bus. All
+          Unless otherwise stated, 7Resume and/or its licensors own the
+          intellectual property rights for all material on 7Resume. All
           intellectual property rights are reserved. You may access this from
-          resume bus for your own personal use subjected to restrictions set in
+          7Resume for your own personal use subjected to restrictions set in
           these terms and conditions.
         </Text>
 
         <Text>You must not:</Text>
         <ul>
-          <li>Republish material from resume bus</li>
-          <li>Sell, rent or sub-license material from resume bus</li>
-          <li>Reproduce, duplicate or copy material from resume bus</li>
-          <li>Redistribute content from resume bus</li>
+          <li>Republish material from 7Resume</li>
+          <li>Sell, rent or sub-license material from 7Resume</li>
+          <li>Reproduce, duplicate or copy material from 7Resume</li>
+          <li>Redistribute content from 7Resume</li>
         </ul>
 
         <Text>
@@ -100,20 +100,20 @@ const TermsAndCondition: NextPage = () => {
         <Text>
           Parts of this website offer an opportunity for users to post and
           exchange opinions and information in certain areas of the website.
-          Resume Bus does not filter, edit, publish or review Comments prior to
+          7Resume does not filter, edit, publish or review Comments prior to
           their presence on the website. Comments do not reflect the views and
-          opinions of Resume Bus,its agents and/or affiliates. Comments reflect
-          the views and opinions of the person who post their views and
-          opinions. To the extent permitted by applicable laws, Resume Bus shall
-          not be liable for the Comments or for any liability, damages or
-          expenses caused and/or suffered as a result of any use of and/or
-          posting of and/or appearance of the Comments on this website.
+          opinions of 7Resume,its agents and/or affiliates. Comments reflect the
+          views and opinions of the person who post their views and opinions. To
+          the extent permitted by applicable laws, 7Resume shall not be liable
+          for the Comments or for any liability, damages or expenses caused
+          and/or suffered as a result of any use of and/or posting of and/or
+          appearance of the Comments on this website.
         </Text>
 
         <Text>
-          Resume Bus reserves the right to monitor all Comments and to remove
-          any Comments which can be considered inappropriate, offensive or
-          causes breach of these Terms and Conditions.
+          7Resume reserves the right to monitor all Comments and to remove any
+          Comments which can be considered inappropriate, offensive or causes
+          breach of these Terms and Conditions.
         </Text>
 
         <Text>You warrant and represent that:</Text>
@@ -140,7 +140,7 @@ const TermsAndCondition: NextPage = () => {
         </ul>
 
         <Text>
-          You hereby grant Resume Bus a non-exclusive license to use, reproduce,
+          You hereby grant 7Resume a non-exclusive license to use, reproduce,
           edit and authorize others to use, reproduce and edit any of your
           Comments in any and all forms, formats or media.
         </Text>
@@ -198,8 +198,8 @@ const TermsAndCondition: NextPage = () => {
           that: (a) the link would not make us look unfavorably to ourselves or
           to our accredited businesses; (b) the organization does not have any
           negative records with us; (c) the benefit to us from the visibility of
-          the hyperlink compensates the absence of Resume Bus; and (d) the link
-          is in the context of general resource information.
+          the hyperlink compensates the absence of 7Resume; and (d) the link is
+          in the context of general resource information.
         </Text>
 
         <Text>
@@ -213,7 +213,7 @@ const TermsAndCondition: NextPage = () => {
         <Text>
           If you are one of the organizations listed in paragraph 2 above and
           are interested in linking to our website, you must inform us by
-          sending an e-mail to Resume Bus. Please include your name, your
+          sending an e-mail to 7Resume. Please include your name, your
           organization name, contact information as well as the URL of your
           site, a list of any URLs from which you intend to link to our Website,
           and a list of the URLs on our site to which you would like to link.
@@ -235,7 +235,7 @@ const TermsAndCondition: NextPage = () => {
         </ul>
 
         <Text>
-          No use of Resume Bus&apos;s logo or other artwork will be allowed for
+          No use of 7Resume&apos;s logo or other artwork will be allowed for
           linking absent a trademark license agreement.
         </Text>
 

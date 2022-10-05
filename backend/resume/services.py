@@ -649,7 +649,7 @@ def editProject(
     user: UserAccount,
     projectId: int,
     display_project: bool,
-    category_id: int,
+    category_id: Optional[int] = None,
     title: str,
     link: str,
     published: str,
@@ -664,13 +664,17 @@ def editProject(
         user=user,
         projectId=projectId,
     )
-    projectCategory = selectors.getProjectCategory(
-        user=user,
-        projectCategoryId=category_id,
-    )
+
+    if category_id is not None:
+        projectCategory = selectors.getProjectCategory(
+            user=user,
+            projectCategoryId=category_id,
+        )
+        project.category = projectCategory
+    else:
+        project.category = None
 
     project.display_project = display_project
-    project.category = projectCategory
     project.title = title
     project.link = link
     project.published = published

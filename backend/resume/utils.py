@@ -1,6 +1,7 @@
 import string
 import random
 from django.utils.text import slugify
+from rest_framework.views import exception_handler
 
 
 def random_string_generator(
@@ -27,3 +28,8 @@ def unique_slug_generator(instance, new_slug=None):
 
         return unique_slug_generator(instance, new_slug=new_slug)
     return slug
+
+
+# def custom_exception_handler(exc, context):
+#     response = exception_handler(exc, context)
+#     print(response)

@@ -106,7 +106,7 @@ const SignUp: NextPage<SignUpProps> = (props: SignUpProps) => {
     <NotAuth>
       <HStack w="full" minH="100vh" py={5} px={3} bgColor={outerBg}>
         <Head>
-          <title>SignUp Page | Resume Bus</title>
+          <title>SignUp Page | 7Resume</title>
           <meta name="description" content="Signup and create your portfolio" />
           <link rel="icon" href="/favicon.png" />
         </Head>

@@ -7,19 +7,19 @@ const PrivacyPolicy: NextPage = () => {
   return (
     <Container maxW="container.lg" py={10}>
       <Head>
-        <title>Privacy Policy Page | Resume Bus</title>
+        <title>Privacy Policy Page | 7Resume</title>
         <meta name="description" content="Read our privacy policy page" />
         <link rel="icon" href="/favicon.png" />
       </Head>
       <Heading pb={8} textAlign="center">
-        Privacy Policy for Resume Bus
+        Privacy Policy for 7Resume
       </Heading>
       <VStack w="full" align="start" spacing={3} px={2}>
         <Text>
-          At resume bus, accessible from resumebus.sigmaprogrammer.com, one of
-          our main priorities is the privacy of our visitors. This Privacy
-          Policy document contains types of information that is collected and
-          recorded by resume bus and how we use it.
+          At 7Resume, accessible from resumebus.sigmaprogrammer.com, one of our
+          main priorities is the privacy of our visitors. This Privacy Policy
+          document contains types of information that is collected and recorded
+          by 7Resume and how we use it.
         </Text>
         <Text>
           If you have additional questions or require more information about our
@@ -29,9 +29,9 @@ const PrivacyPolicy: NextPage = () => {
         <Text>
           This Privacy Policy applies only to our online activities and is valid
           for visitors to our website with regards to the information that they
-          shared and/or collect in resume bus. This policy is not applicable to
-          any information collected offline or via channels other than this
-          website. .
+          shared and/or collect in 7Resume. This policy is not applicable to any
+          information collected offline or via channels other than this website.
+          .
         </Text>
 
         <Heading as="h2" py={4}>
@@ -92,9 +92,9 @@ const PrivacyPolicy: NextPage = () => {
         </Heading>
 
         <Text>
-          resume bus follows a standard procedure of using log files. These
-          files log visitors when they visit websites. All hosting companies do
-          this and a part of hosting services&apos; analytics. The information
+          7Resume follows a standard procedure of using log files. These files
+          log visitors when they visit websites. All hosting companies do this
+          and a part of hosting services&apos; analytics. The information
           collected by log files include internet protocol (IP) addresses,
           browser type, Internet Service Provider (ISP), date and time stamp,
           referring/exit pages, and possibly the number of clicks. These are not
@@ -109,7 +109,7 @@ const PrivacyPolicy: NextPage = () => {
         </Heading>
 
         <Text>
-          Like any other website, resume bus uses &apos;cookies&apos;. These
+          Like any other website, 7Resume uses &apos;cookies&apos;. These
           cookies are used to store information including visitors&apos;
           preferences, and the pages on the website that the visitor accessed or
           visited. The information is used to optimize the users&apos;
@@ -169,13 +169,13 @@ const PrivacyPolicy: NextPage = () => {
 
         <Text>
           You may consult this list to find the Privacy Policy for each of the
-          advertising partners of resume bus.
+          advertising partners of 7Resume.
         </Text>
 
         <Text>
           Third-party ad servers or ad networks uses technologies like cookies,
           JavaScript, or Web Beacons that are used in their respective
-          advertisements and links that appear on resume bus, which are sent
+          advertisements and links that appear on 7Resume, which are sent
           directly to users&apos; browser. They automatically receive your IP
           address when this occurs. These technologies are used to measure the
           effectiveness of their advertising campaigns and/or to personalize the
@@ -183,8 +183,8 @@ const PrivacyPolicy: NextPage = () => {
         </Text>
 
         <Text>
-          Note that resume bus has no access to or control over these cookies
-          that are used by third-party advertisers.
+          Note that 7Resume has no access to or control over these cookies that
+          are used by third-party advertisers.
         </Text>
 
         <Heading as="h2" py={4}>
@@ -192,9 +192,9 @@ const PrivacyPolicy: NextPage = () => {
         </Heading>
 
         <Text>
-          resume bus&apos;s Privacy Policy does not apply to other advertisers
-          or websites. Thus, we are advising you to consult the respective
-          Privacy Policies of these third-party ad servers for more detailed
+          7Resume&apos;s Privacy Policy does not apply to other advertisers or
+          websites. Thus, we are advising you to consult the respective Privacy
+          Policies of these third-party ad servers for more detailed
           information. It may include their practices and instructions about how
           to opt-out of certain options.{" "}
         </Text>
@@ -284,7 +284,7 @@ const PrivacyPolicy: NextPage = () => {
         </Text>
 
         <Text>
-          resume bus does not knowingly collect any Personal Identifiable
+          7Resume does not knowingly collect any Personal Identifiable
           Information from children under the age of 13. If you think that your
           child provided this kind of information on our website, we strongly
           encourage you to contact us immediately and we will do our best

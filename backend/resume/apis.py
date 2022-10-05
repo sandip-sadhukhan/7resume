@@ -982,11 +982,14 @@ class ProjectCategoryList(APIView):
             fields = ["id", "title"]
 
     def get(self, request: Request) -> Response:
-        serializer = self.OutputSerializer(
-            instance=request.user.user_profile.project_categories,
-            many=True,
-        )
-        return Response(serializer.data)
+        try:
+            serializer = self.OutputSerializer(
+                instance=request.user.user_profile.project_categories,
+                many=True,
+            )
+            return Response(serializer.data)
+        except Exception as e:
+            print(e)
 
     def post(self, request: Request) -> Response:
         serializer = self.InputSerializer(data=request.data)
@@ -1017,13 +1020,16 @@ class ProjectCategoryDetail(APIView):
             fields = ["id", "title"]
 
     def get(self, request: Request, id: int) -> Response:
-        projectCategory = selectors.getProjectCategory(
-            user=request.user,
-            projectCategoryId=id,
-        )
-        serializer = self.OutputSerializer(instance=projectCategory)
+        try:
+            projectCategory = selectors.getProjectCategory(
+                user=request.user,
+                projectCategoryId=id,
+            )
+            serializer = self.OutputSerializer(instance=projectCategory)
 
-        return Response(serializer.data)
+            return Response(serializer.data)
+        except Exception as e:
+            print(e)
 
     def patch(self, request: Request, id: int) -> Response:
         serializer = self.InputSerializer(data=request.data)
@@ -1054,7 +1060,7 @@ class ProjectList(APIView):
 
     class InputSerializer(serializers.Serializer):
         display_project = serializers.BooleanField()
-        category_id = serializers.IntegerField()
+        category_id = serializers.IntegerField(allow_null=True)
         title = serializers.CharField(max_length=200)
         link = serializers.URLField(max_length=500, allow_blank=True)
         published = serializers.DateField()
@@ -1066,7 +1072,9 @@ class ProjectList(APIView):
         pinterest = serializers.URLField(max_length=500, allow_blank=True)
 
     class OutputSerializer(serializers.ModelSerializer):
-        category = serializers.CharField(source="category.title")
+        category = serializers.CharField(
+            source="category.title", allow_null=True
+        )
 
         class Meta:
             model = Project
@@ -1104,7 +1112,7 @@ class ProjectDetail(APIView):
 
     class InputSerializer(serializers.Serializer):
         display_project = serializers.BooleanField()
-        category_id = serializers.IntegerField()
+        category_id = serializers.IntegerField(required=False)
         title = serializers.CharField(max_length=200)
         link = serializers.URLField(max_length=500, allow_blank=True)
         published = serializers.DateField()
@@ -1116,12 +1124,16 @@ class ProjectDetail(APIView):
         pinterest = serializers.URLField(max_length=500, allow_blank=True)
 
     class OutputSerializer(serializers.ModelSerializer):
+        category_id = serializers.IntegerField(
+            source="category.id", allow_null=True
+        )
+
         class Meta:
             model = Project
             fields = [
                 "id",
                 "display_project",
-                "category",
+                "category_id",
                 "title",
                 "link",
                 "published",
@@ -1141,13 +1153,15 @@ class ProjectDetail(APIView):
         serializer = self.OutputSerializer(instance=project)
 
         all_categories = ProjectCategory.objects.filter(
-            user_profile=request.user.user_profile)
+            user_profile=request.user.user_profile
+        )
         categoriesSerializer = ProjectCategorySerializer(
-            instance=all_categories, many=True)
+            instance=all_categories, many=True
+        )
 
         data = {
             "project": serializer.data,
-            "categories": categoriesSerializer.data
+            "categories": categoriesSerializer.data,
         }
 
         return Response(data)

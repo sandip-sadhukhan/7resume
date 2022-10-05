@@ -87,7 +87,7 @@ const Login: NextPage<LoginProps> = (props: LoginProps) => {
     <NotAuth>
       <HStack w="full" minH="100vh" py={10} px={3} bgColor={outerBg}>
         <Head>
-          <title>Login Page | Resume Bus</title>
+          <title>Login Page | 7Resume</title>
           <meta name="description" content="Login your account." />
           <link rel="icon" href="/favicon.png" />
         </Head>
