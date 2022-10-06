@@ -113,7 +113,6 @@ const SocialLinksContent: React.FC<SocialLinksContentProps> = (
         }
       )
       const data: IFormData = response.data
-      await new Promise((resolve) => setTimeout(resolve, 4000))
 
       setValue("facebook", data.facebook)
       setValue("twitter", data.twitter)
