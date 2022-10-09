@@ -7,6 +7,7 @@ from resume.serializers import (
     TagSerializer,
     ProjectCategorySerializer,
     BlogCategorySerializer,
+    SkillCategorySerializer,
 )
 
 from .models import (
@@ -1479,11 +1480,13 @@ class SkillList(APIView):
     """
 
     class InputSerializer(serializers.Serializer):
-        category_id = serializers.IntegerField()
+        category_id = serializers.IntegerField(allow_null=True)
         title = serializers.CharField(max_length=200)
         level = serializers.IntegerField(min_value=0, max_value=100)
 
     class OutputSerializer(serializers.ModelSerializer):
+        category = serializers.CharField(source="category.title")
+
         class Meta:
             model = Skill
             fields = [
@@ -1523,12 +1526,16 @@ class SkillDetail(APIView):
         level = serializers.IntegerField(max_value=100, min_value=0)
 
     class OutputSerializer(serializers.ModelSerializer):
+        category_id = serializers.IntegerField(
+            source="category.id", allow_null=True
+        )
+
         class Meta:
             model = Skill
             fields = [
                 "id",
-                "category",
                 "title",
+                "category_id",
                 "level",
             ]
 
@@ -1537,9 +1544,22 @@ class SkillDetail(APIView):
             user=request.user,
             skillId=id,
         )
+
         serializer = self.OutputSerializer(instance=skill)
 
-        return Response(serializer.data)
+        all_categories = SkillCategory.objects.filter(
+            user_profile=request.user.user_profile
+        )
+        categoriesSerializer = SkillCategorySerializer(
+            instance=all_categories, many=True
+        )
+
+        data = {
+            "skill": serializer.data,
+            "categories": categoriesSerializer.data,
+        }
+
+        return Response(data)
 
     def patch(self, request: Request, id: int) -> Response:
         serializer = self.InputSerializer(data=request.data)

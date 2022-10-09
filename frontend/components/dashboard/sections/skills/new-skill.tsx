@@ -2,21 +2,117 @@ import {
   Button,
   Divider,
   Flex,
+  FormControl,
+  FormHelperText,
   Heading,
   HStack,
   Input,
   Select,
   Text,
   useColorModeValue,
+  useToast,
   VStack,
 } from "@chakra-ui/react"
+import { AxiosError } from "axios"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import React from "react"
+import React, { useEffect, useState } from "react"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { withAuth } from "../../../../auth/context"
+import { IState } from "../../../../types/auth"
+import axiosInstance from "../../../../utils/axiosInstance"
+import SaveButton from "../../../shared/save-button"
 
-const NewSkillSection = () => {
+interface NewSkillSectionProps {
+  state: IState
+}
+
+const NewSkillSection: React.FC<NewSkillSectionProps> = (
+  props: NewSkillSectionProps
+) => {
   const bgColor = useColorModeValue("white", "gray.700")
   const router = useRouter()
+  const token = props.state.user?.access as string
+  const toast = useToast()
+
+  interface SkillCategory {
+    id: number
+    title: string
+  }
+
+  const [data, setData] = useState<SkillCategory[] | null>(null)
+  const [isLoading, setLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axiosInstance.get(
+        "/api/dashboard/skill-categories/",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      const data: SkillCategory[] = response.data
+      setData(data)
+      setLoading(false)
+    }
+
+    fetchData()
+  }, [token])
+
+  interface IFormData {
+    category_id: string | null
+    title: string
+    level: string
+  }
+
+  const {
+    register,
+    setError,
+    handleSubmit,
+    formState: { isSubmitting, errors },
+  } = useForm<IFormData>()
+
+  const onSubmit: SubmitHandler<IFormData> = async (formData: IFormData) => {
+    if (!formData.category_id) {
+      formData.category_id = null
+    }
+
+    try {
+      const res = await axiosInstance.post("/api/dashboard/skills/", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      const data: { message: string } = res.data
+
+      toast({
+        title: data.message,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      })
+      router.push("/dashboard/skills")
+    } catch (error) {
+      const err = error as AxiosError
+      if (err.response?.status === 400) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const data = err.response.data as any
+        Object.keys(data).forEach((ele) => {
+          type elementType = "category_id" | "title" | "level"
+
+          const element = ele as elementType
+          setError(element, { message: data[ele].join(",") })
+        })
+      } else {
+        toast({
+          status: "error",
+          title: err.response?.statusText,
+        })
+      }
+    }
+  }
 
   return (
     <VStack
@@ -36,7 +132,15 @@ const NewSkillSection = () => {
       </Heading>
       <Divider bgColor="blackAlpha.500" borderWidth="1px" />
 
-      <VStack w="full" align="start" spacing={4} pt={2} alignItems="baseline">
+      <VStack
+        as="form"
+        onSubmit={handleSubmit(onSubmit)}
+        w="full"
+        align="start"
+        spacing={4}
+        pt={2}
+        alignItems="baseline"
+      >
         <HStack
           align="start"
           w="full"
@@ -60,10 +164,17 @@ const NewSkillSection = () => {
             </Text>
           </Flex>
           <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
-            <Select placeholder="Select..." size="sm">
-              <option value="option1">Website</option>
-              <option value="option2">Decoration</option>
-              <option value="option3">Business Logo</option>
+            <Select
+              placeholder="Select..."
+              size="sm"
+              {...register("category_id")}
+            >
+              {data &&
+                data.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.title}
+                  </option>
+                ))}
             </Select>
           </Flex>
         </HStack>
@@ -92,7 +203,18 @@ const NewSkillSection = () => {
             </Text>
           </Flex>
           <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
-            <Input w="full" size="sm" placeholder="Title" type="text" />
+            <FormControl isInvalid={errors.title !== undefined}>
+              <Input
+                size="sm"
+                placeholder="Title"
+                {...register("title", {
+                  required: "Title should not be empty.",
+                })}
+              />
+              {errors.title && (
+                <FormHelperText>{errors.title?.message}</FormHelperText>
+              )}
+            </FormControl>
           </Flex>
         </HStack>
         <Divider />
@@ -120,14 +242,30 @@ const NewSkillSection = () => {
             </Text>
           </Flex>
           <Flex flex={[1, 1, 8, 8, 10]} w="full" alignItems="end">
-            <Input
-              w="full"
-              size="sm"
-              placeholder="Published"
-              type="number"
-              min={0}
-              max={100}
-            />
+            <FormControl isInvalid={errors.level !== undefined}>
+              <Input
+                type="number"
+                // min="0"
+                // max="100"
+                step="0.1"
+                size="sm"
+                placeholder="Level"
+                {...register("level", {
+                  required: "Level should not be empty.",
+                  min: {
+                    value: 0,
+                    message: "Minimum value should not be less than 0",
+                  },
+                  max: {
+                    value: 100,
+                    message: "Maximum value should not be more than 100",
+                  },
+                })}
+              />
+              {errors.level && (
+                <FormHelperText>{errors.level?.message}</FormHelperText>
+              )}
+            </FormControl>
           </Flex>
         </HStack>
         <Divider />
@@ -136,9 +274,7 @@ const NewSkillSection = () => {
           w={["full", "full", 260, 320, 330]}
           justifyContent={["start", "start", "end", "end", "end"]}
         >
-          <Button size="sm" rounded={0} colorScheme="green">
-            Save
-          </Button>
+          <SaveButton isLoading={isLoading} isSubmitting={isSubmitting} />
           <Button
             onClick={() => router.back()}
             size="sm"
@@ -153,4 +289,4 @@ const NewSkillSection = () => {
   )
 }
 
-export default NewSkillSection
+export default withAuth(NewSkillSection)

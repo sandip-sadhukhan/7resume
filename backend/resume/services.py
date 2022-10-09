@@ -900,22 +900,24 @@ def deleteSkillCategory(
 def createSkill(
     *,
     user: UserAccount,
-    category_id: int,
     title: str,
     level: int,
+    category_id: Optional[int],
 ) -> None:
     userProfile: UserProfile = user.user_profile  # type: ignore
 
-    skillCategory = selectors.getSkillCategory(
-        user=user, skillCategoryId=category_id
-    )
-
-    Skill.objects.create(
+    skill = Skill.objects.create(
         user_profile=userProfile,
-        category=skillCategory,
         title=title,
         level=level,
     )
+
+    if category_id:
+        skillCategory = selectors.getSkillCategory(
+            user=user, skillCategoryId=category_id
+        )
+        skill.category = skillCategory
+        skill.save()
 
 
 def editSkill(

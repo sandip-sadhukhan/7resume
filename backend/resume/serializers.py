@@ -10,6 +10,7 @@ from .models import (
     ProjectCategory,
     Service,
     Skill,
+    SkillCategory,
     Tags,
     Testimonial,
     Client,
@@ -205,6 +206,15 @@ class BlogSerializer(serializers.ModelSerializer):
 class BlogCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogCategory
+        fields = (
+            "id",
+            "title",
+        )
+
+
+class SkillCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SkillCategory
         fields = (
             "id",
             "title",
