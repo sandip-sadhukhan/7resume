@@ -303,9 +303,11 @@ class Tags(BaseModel):
     )
     title = models.CharField(max_length=200)
 
+    class Meta:
+        ordering = ("id",)
 
-def __str__(self):
-    return str(self.title)
+    def __str__(self):
+        return str(self.title)
 
 
 class BlogCategory(BaseModel):

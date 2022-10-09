@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import (
     Appointment,
     Blog,
+    BlogCategory,
     Education,
     Experiences,
     PricingPlan,
@@ -198,6 +199,15 @@ class BlogSerializer(serializers.ModelSerializer):
             "description",
             "meta_description",
             "tags",
+        )
+
+
+class BlogCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogCategory
+        fields = (
+            "id",
+            "title",
         )
 
 

@@ -748,7 +748,7 @@ def createBlog(
     user: UserAccount,
     display_article: bool,
     author: str,
-    category_id: int,
+    category_id: Optional[int],
     title: str,
     short_description: str,
     description: str,
@@ -758,21 +758,23 @@ def createBlog(
 ) -> None:
     userProfile: UserProfile = user.user_profile  # type: ignore
 
-    blogCategory = selectors.getBlogCategory(
-        user=user, blogCategoryId=category_id
-    )
-
     blog = Blog.objects.create(
         user_profile=userProfile,
         display_article=display_article,
         author=author,
-        category=blogCategory,
         title=title,
         short_description=short_description,
         description=description,
         featured_image=featured_image,
         meta_description=meta_description,
     )
+
+    # add category
+    if category_id is not None:
+        blogCategory = selectors.getBlogCategory(
+            user=user, blogCategoryId=category_id
+        )
+        blog.category = blogCategory
 
     # Add Tags
     tagsList = tags.strip().split(",")
@@ -792,13 +794,13 @@ def editBlog(
     blogId: int,
     display_article: bool,
     author: str,
-    category_id: int,
     title: str,
     short_description: str,
     description: str,
-    featured_image: Optional[InMemoryUploadedFile] = None,
     tags: str,
     meta_description=str,
+    featured_image: Optional[InMemoryUploadedFile] = None,
+    category_id: Optional[int] = None,
 ) -> None:
     userProfile: UserProfile = user.user_profile  # type: ignore
 
@@ -806,14 +808,9 @@ def editBlog(
         user=user,
         blogId=blogId,
     )
-    blogCategory = selectors.getBlogCategory(
-        user=user,
-        blogCategoryId=category_id,
-    )
 
     blog.display_article = display_article
     blog.author = author
-    blog.category = blogCategory
     blog.title = title
     blog.short_description = short_description
     blog.description = description
@@ -821,6 +818,16 @@ def editBlog(
         blog.featured_image = featured_image
     blog.meta_description = meta_description
     blog.tags.clear()
+
+    if category_id is not None:
+        blogCategory = selectors.getBlogCategory(
+            user=user,
+            blogCategoryId=category_id,
+        )
+
+        blog.category = blogCategory
+    else:
+        blog.category = None
 
     # Add Tags
     tagsList = tags.strip().split(",")

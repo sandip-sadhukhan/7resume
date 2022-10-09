@@ -3,7 +3,11 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import status, permissions, serializers
-from resume.serializers import TagSerializer, ProjectCategorySerializer
+from resume.serializers import (
+    TagSerializer,
+    ProjectCategorySerializer,
+    BlogCategorySerializer,
+)
 
 from .models import (
     Appointment,
@@ -1275,7 +1279,7 @@ class BlogList(APIView):
     class InputSerializer(serializers.Serializer):
         display_article = serializers.BooleanField()
         author = serializers.CharField(max_length=200)
-        category_id = serializers.IntegerField()
+        category_id = serializers.IntegerField(allow_null=True)
         title = serializers.CharField(max_length=200)
         short_description = serializers.CharField()
         description = serializers.CharField()
@@ -1321,7 +1325,7 @@ class BlogDetail(APIView):
     class InputSerializer(serializers.Serializer):
         display_article = serializers.BooleanField()
         author = serializers.CharField(max_length=200)
-        category_id = serializers.IntegerField()
+        category_id = serializers.IntegerField(required=False)
         title = serializers.CharField(max_length=200)
         short_description = serializers.CharField()
         description = serializers.CharField()
@@ -1354,7 +1358,19 @@ class BlogDetail(APIView):
         )
         serializer = self.OutputSerializer(instance=blog)
 
-        return Response(serializer.data)
+        all_categories = BlogCategory.objects.filter(
+            user_profile=request.user.user_profile
+        )
+        categoriesSerializer = BlogCategorySerializer(
+            instance=all_categories, many=True
+        )
+
+        data = {
+            "blog": serializer.data,
+            "categories": categoriesSerializer.data,
+        }
+
+        return Response(data)
 
     def patch(self, request: Request, id: int) -> Response:
         serializer = self.InputSerializer(data=request.data)
