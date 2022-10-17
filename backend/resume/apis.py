@@ -1806,6 +1806,7 @@ class MessageDetail(APIView):
                 "name",
                 "email",
                 "message",
+                "created_at",
             ]
 
     def get(self, request: Request, id: int) -> Response:

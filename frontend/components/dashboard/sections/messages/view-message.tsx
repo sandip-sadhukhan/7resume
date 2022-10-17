@@ -2,19 +2,63 @@ import {
   Button,
   Divider,
   HStack,
+  Spinner,
   Text,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
+import dayjs from "dayjs"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { FaChevronLeft } from "react-icons/fa"
+import { withAuth } from "../../../../auth/context"
+import { IState } from "../../../../types/auth"
+import axiosInstance from "../../../../utils/axiosInstance"
 
-const ViewMessageSection = () => {
+interface ViewMessageSectionProps {
+  state: IState
+}
+
+const ViewMessageSection: React.FC<ViewMessageSectionProps> = (
+  props: ViewMessageSectionProps
+) => {
   const bgColor = useColorModeValue("white", "gray.700")
   const router = useRouter()
   const mailTextColor = useColorModeValue("gray", "gray.400")
+  const token = props.state.user?.access as string
+  const messageId = router.query.id as string
+
+  interface Message {
+    id: number
+    name: string
+    email: string
+    message: string
+    created_at: string
+  }
+
+  const [data, setData] = useState<Message | null>(null)
+  const [isLoading, setLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    if (!messageId) return
+
+    const fetchData = async () => {
+      const response = await axiosInstance.get(
+        `/api/dashboard/message/${messageId}/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      const data: Message = response.data
+      setData(data)
+      setLoading(false)
+    }
+
+    fetchData()
+  }, [token, messageId])
 
   return (
     <VStack
@@ -46,40 +90,35 @@ const ViewMessageSection = () => {
         </VStack>
         <VStack w="full" align="start" spacing={0} fontSize={14} pb={3}>
           <HStack fontSize={14}>
-            <Text fontWeight="semibold">Sandip Sadhukhan</Text>
+            <Text fontWeight="semibold">{data?.name}</Text>
             <Text color={mailTextColor} fontSize={13}>
-              (sandip.sendme@gmail.com) to
+              ({data?.email}) to
             </Text>
             <Text fontWeight="semibold">me</Text>
           </HStack>
           <Text color="gray.400" fontWeight="light">
-            2018-03-23 21:35:00
+            {data && dayjs(data.created_at).format("DD MMM, YYYY, HH:mm")}
           </Text>
         </VStack>
         <Divider />
-        <Text
-          textAlign="justify"
-          py={3}
-          fontSize={14}
-          lineHeight="tall"
-          letterSpacing="wide"
-        >
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolor
-          laboriosam consectetur est explicabo dolores, iure, ipsum sequi esse,
-          minus quasi eos maxime suscipit rerum eius excepturi corrupti. Dolor
-          architecto nulla beatae recusandae qui maxime! Voluptatem quo fugiat
-          asperiores amet veniam expedita labore corrupti vero voluptas dicta
-          officiis, eos nobis exercitationem ipsum saepe atque perferendis nisi?
-          Iste excepturi iure minima. Voluptatem neque mollitia hic, eius vero
-          dolorem itaque vel labore omnis saepe quis ullam porro consectetur
-          aspernatur ratione dicta accusantium? Quo aliquid error consequuntur,
-          delectus labore magni ipsa provident tempore debitis quibusdam itaque
-          maiores nobis. Libero tempora dignissimos asperiores voluptas eius?
-        </Text>
+        {!isLoading ? (
+          <Text
+            textAlign="justify"
+            py={3}
+            fontSize={14}
+            lineHeight="tall"
+            letterSpacing="wide"
+            whiteSpace="pre"
+          >
+            {data?.message}
+          </Text>
+        ) : (
+          <Spinner />
+        )}
         <Divider />
       </VStack>
     </VStack>
   )
 }
 
-export default ViewMessageSection
+export default withAuth(ViewMessageSection)
