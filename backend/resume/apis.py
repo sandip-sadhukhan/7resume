@@ -1600,6 +1600,7 @@ class TestimonialList(APIView):
             model = Testimonial
             fields = [
                 "id",
+                "image",
                 "name",
                 "position",
             ]
