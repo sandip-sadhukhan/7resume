@@ -3,13 +3,15 @@ import {
   Divider,
   Heading,
   HStack,
+  Spinner,
   Text,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
+import dayjs from "dayjs"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import {
   FaCalendar,
   FaChevronLeft,
@@ -18,11 +20,53 @@ import {
   FaPhone,
   FaUser,
 } from "react-icons/fa"
+import { withAuth } from "../../../../auth/context"
+import { IState } from "../../../../types/auth"
+import axiosInstance from "../../../../utils/axiosInstance"
 
-const ViewRequestedAppointment = () => {
+interface ViewRequestedAppointmentProps {
+  state: IState
+}
+
+const ViewRequestedAppointment: React.FC<ViewRequestedAppointmentProps> = (
+  props: ViewRequestedAppointmentProps
+) => {
   const bgColor = useColorModeValue("white", "gray.700")
   const textColor = useColorModeValue("gray.600", "gray.400")
   const router = useRouter()
+  const token = props.state.user?.access as string
+  const requestedAppointmentId = router.query.id as string
+
+  interface RequestedAppointment {
+    id: number
+    subject: string
+    name: string
+    phone: string
+    appointment_time: string
+    message: string
+    created_at: string
+  }
+
+  const [data, setData] = useState<RequestedAppointment | null>(null)
+  const [isLoading, setLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axiosInstance.get(
+        `/api/dashboard/requested-appointment/${requestedAppointmentId}/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      const data: RequestedAppointment = response.data
+      setData(data)
+      setLoading(false)
+    }
+
+    fetchData()
+  }, [token, requestedAppointmentId])
 
   return (
     <VStack
@@ -55,12 +99,13 @@ const ViewRequestedAppointment = () => {
 
         <VStack w="full" align="start" spacing={2} fontSize={14} pb={3}>
           <Heading size="lg" fontWeight="normal">
-            Redesign of my website
+            {data?.subject}
           </Heading>
           <HStack fontSize={13}>
             <FaHistory color="gray" fontSize={13} />
             <Text color="gray.400" fontWeight="light">
-              Created: 2020-06-12 00:29:06
+              Created:{" "}
+              {data && dayjs(data.created_at).format("DD/MM/YYYY - hh:mm a")}
             </Text>
           </HStack>
         </VStack>
@@ -90,35 +135,31 @@ const ViewRequestedAppointment = () => {
           </HStack>
           <HStack>
             <FaCalendar />
-            <Text>06/22/2020 - 3:28 pm</Text>
+            <Text>
+              {data &&
+                dayjs(data.appointment_time).format("DD/MM/YYYY - hh:mm a")}
+            </Text>
           </HStack>
         </HStack>
 
         <Divider />
-        <Text
-          py={5}
-          fontSize={14}
-          lineHeight="tall"
-          letterSpacing="wide"
-          whiteSpace="pre-wrap"
-        >
-          Dear Sir, Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-          Dolor laboriosam consectetur est explicabo dolores, iure, ipsum sequi
-          esse, minus quasi eos maxime suscipit rerum eius excepturi corrupti.
-          Dolor architecto nulla beatae recusandae qui maxime! Voluptatem quo
-          fugiat asperiores amet veniam expedita labore corrupti vero voluptas
-          dicta officiis, eos nobis exercitationem ipsum saepe atque perferendis
-          nisi? Iste excepturi iure minima. Voluptatem neque mollitia hic, eius
-          vero dolorem itaque vel labore omnis saepe quis ullam porro
-          consectetur aspernatur ratione dicta accusantium? Quo aliquid error
-          consequuntur, delectus labore magni ipsa provident tempore debitis
-          quibusdam itaque maiores nobis. Libero tempora dignissimos asperiores
-          voluptas eius?
-        </Text>
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <Text
+            py={5}
+            fontSize={14}
+            lineHeight="tall"
+            letterSpacing="wide"
+            whiteSpace="pre-wrap"
+          >
+            {data?.message}
+          </Text>
+        )}
         <Divider />
       </VStack>
     </VStack>
   )
 }
 
-export default ViewRequestedAppointment
+export default withAuth(ViewRequestedAppointment)

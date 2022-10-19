@@ -85,8 +85,6 @@ const AppointmentsSection: React.FC<AppointmentsSectionProps> = (
       })
       const data: Appointment = response.data
 
-      await new Promise((res) => setTimeout(res, 3000))
-
       setValue("sunday", data.sunday)
       setValue("sunday_start_time", data.sunday_start_time)
       setValue("sunday_end_time", data.sunday_end_time)
