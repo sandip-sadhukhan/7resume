@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from accounts.models import UserAccount
@@ -391,7 +391,7 @@ def getRelatedBlogs(*, blog: Blog) -> dict[str, Any]:
 
 
 def getLatestBlogs(
-    *, userProfile: UserProfile, blog: Blog | None = None
+    *, userProfile: UserProfile, blog: Optional[Blog] = None
 ) -> dict[str, Any]:
     """Get the 4 latest posts of a blog"""
     latest_posts = Blog.objects.filter(

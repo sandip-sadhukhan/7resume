@@ -1,3 +1,4 @@
+from typing import Optional
 from accounts.models import UserAccount
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import AbstractBaseUser
@@ -13,7 +14,7 @@ def createUser(*, name: str, email: str, username: str, password: str) -> None:
     )
 
 
-def loginUser(*, email: str, password: str) -> AbstractBaseUser | None:
+def loginUser(*, email: str, password: str) -> Optional[AbstractBaseUser]:
     user = authenticate(
         email=email,
         password=password,
