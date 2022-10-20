@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Dict, List, Optional
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from accounts.models import UserAccount
@@ -29,7 +29,7 @@ def findUserFromUsername(username: str) -> UserAccount:
 
 
 # Get all the data required for layout in profile
-def getLayoutData(*, user: UserAccount) -> dict[str, Any]:
+def getLayoutData(*, user: UserAccount) -> Dict[str, Any]:
     """Get All the repetitive data for layout in user profile"""
     data = {
         # SEO
@@ -49,7 +49,7 @@ def getLayoutData(*, user: UserAccount) -> dict[str, Any]:
     return data
 
 
-def getHomeSectionData(*, username: str) -> dict[str, Any]:
+def getHomeSectionData(*, username: str) -> Dict[str, Any]:
     "Get all the data related to home section of user profile"
     user = findUserFromUsername(username=username)
 
@@ -65,7 +65,7 @@ def getHomeSectionData(*, username: str) -> dict[str, Any]:
     return data
 
 
-def getAboutMeSectionData(*, username: str) -> dict[str, Any]:
+def getAboutMeSectionData(*, username: str) -> Dict[str, Any]:
     """Get all the data related to about me section of user profile"""
     user = findUserFromUsername(username=username)
 
@@ -136,7 +136,7 @@ def getAboutMeSectionData(*, username: str) -> dict[str, Any]:
     return data
 
 
-def getContactMeSectionData(*, username: str) -> dict[str, Any]:
+def getContactMeSectionData(*, username: str) -> Dict[str, Any]:
     "Get all the data related to contact me section of user profile"
     user = findUserFromUsername(username=username)
 
@@ -182,7 +182,7 @@ def getContactMeSectionData(*, username: str) -> dict[str, Any]:
     return data
 
 
-def getResumeSectionData(*, username: str) -> dict[str, Any]:
+def getResumeSectionData(*, username: str) -> Dict[str, Any]:
     """Get all the data related to resume section"""
     user = findUserFromUsername(username=username)
 
@@ -251,7 +251,7 @@ def getResumeSectionData(*, username: str) -> dict[str, Any]:
     return data
 
 
-def getPortfolioSectionData(*, username: str) -> dict[str, Any]:
+def getPortfolioSectionData(*, username: str) -> Dict[str, Any]:
     """Get all the data related to portfolio section"""
     user = findUserFromUsername(username=username)
 
@@ -288,7 +288,7 @@ def getPortfolioSectionData(*, username: str) -> dict[str, Any]:
     return data
 
 
-def getRelatedPortfolios(*, portfolio: Project) -> dict[str, Any]:
+def getRelatedPortfolios(*, portfolio: Project) -> Dict[str, Any]:
     """Get the 2 related posts of a portfolio"""
     category = portfolio.category
     related_projects = Project.objects.filter(
@@ -342,7 +342,7 @@ def getPortfolioDetailSectionData(*, username: str, slug: str):
     return data
 
 
-def getBlogSectionData(*, username: str) -> dict[str, Any]:
+def getBlogSectionData(*, username: str) -> Dict[str, Any]:
     """Get all the data related to blog page"""
     user = findUserFromUsername(username=username)
     userProfile: UserProfile = user.user_profile  # type: ignore
@@ -372,7 +372,7 @@ def getBlogSectionData(*, username: str) -> dict[str, Any]:
     return data
 
 
-def getRelatedBlogs(*, blog: Blog) -> dict[str, Any]:
+def getRelatedBlogs(*, blog: Blog) -> Dict[str, Any]:
     """Get the 4 related posts of a blog"""
     category = blog.category
     related_posts = Blog.objects.filter(
@@ -392,7 +392,7 @@ def getRelatedBlogs(*, blog: Blog) -> dict[str, Any]:
 
 def getLatestBlogs(
     *, userProfile: UserProfile, blog: Optional[Blog] = None
-) -> dict[str, Any]:
+) -> Dict[str, Any]:
     """Get the 4 latest posts of a blog"""
     latest_posts = Blog.objects.filter(
         user_profile=userProfile,
@@ -411,7 +411,7 @@ def getLatestBlogs(
     return latest_posts_data
 
 
-def getTagClouds(*, userProfile: UserProfile) -> dict[str, Any]:
+def getTagClouds(*, userProfile: UserProfile) -> Dict[str, Any]:
     """get tag cloud - last 10 tag"""
     tag_cloud = Tags.objects.filter(user_profile=userProfile)
     tag_cloud_serializer = serializers.TagSerializer(
@@ -421,7 +421,7 @@ def getTagClouds(*, userProfile: UserProfile) -> dict[str, Any]:
     return tag_cloud_serializer.data
 
 
-def getAllCategories(*, userProfile: UserProfile) -> list[dict[str, Any]]:
+def getAllCategories(*, userProfile: UserProfile) -> List[Dict[str, Any]]:
     """Get all category for a user"""
     all_categories = [
         {
@@ -436,7 +436,7 @@ def getAllCategories(*, userProfile: UserProfile) -> list[dict[str, Any]]:
     return all_categories
 
 
-def getBlogDetailSectionData(*, username: str, slug: str) -> dict[str, Any]:
+def getBlogDetailSectionData(*, username: str, slug: str) -> Dict[str, Any]:
     """Get data for single blog page"""
     user = findUserFromUsername(username=username)
     userProfile: UserProfile = user.user_profile  # type: ignore
@@ -483,7 +483,7 @@ def getBlogDetailSectionData(*, username: str, slug: str) -> dict[str, Any]:
     return data
 
 
-def getBlogSearchData(*, username: str, query: str) -> dict[str, Any]:
+def getBlogSearchData(*, username: str, query: str) -> Dict[str, Any]:
     user = findUserFromUsername(username=username)
     userProfile: UserProfile = user.user_profile  # type: ignore
 
@@ -524,7 +524,7 @@ def getBlogSearchData(*, username: str, query: str) -> dict[str, Any]:
     return data
 
 
-def getBlogCategoryData(*, username: str, categoryName: str) -> dict[str, Any]:
+def getBlogCategoryData(*, username: str, categoryName: str) -> Dict[str, Any]:
     user = findUserFromUsername(username=username)
     userProfile: UserProfile = user.user_profile  # type: ignore
 
@@ -564,7 +564,7 @@ def getBlogCategoryData(*, username: str, categoryName: str) -> dict[str, Any]:
     return data
 
 
-def getAppointmentSectionData(*, username: str) -> dict[str, Any]:
+def getAppointmentSectionData(*, username: str) -> Dict[str, Any]:
     user = findUserFromUsername(username=username)
     userProfile: UserProfile = user.user_profile  # type: ignore
 
@@ -591,7 +591,7 @@ def getAppointmentSectionData(*, username: str) -> dict[str, Any]:
 
 
 ### DASHBOARD ####
-def getStatisticsData(*, user: UserAccount) -> dict[str, Any]:
+def getStatisticsData(*, user: UserAccount) -> Dict[str, Any]:
     """Get the data for statistics page"""
     userProfile: UserProfile = user.user_profile  # type: ignore
 
@@ -620,7 +620,7 @@ def getStatisticsData(*, user: UserAccount) -> dict[str, Any]:
     return data
 
 
-def getEditProfileData(*, user: UserAccount) -> dict[str, Any]:
+def getEditProfileData(*, user: UserAccount) -> Dict[str, Any]:
     data = {
         "name": user.name,
         "username": user.username,
