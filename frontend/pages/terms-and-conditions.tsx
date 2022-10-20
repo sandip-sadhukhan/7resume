@@ -22,8 +22,7 @@ const TermsAndCondition: NextPage = () => {
 
         <Text>
           These terms and conditions outline the rules and regulations for the
-          use of 7Resume&apos;s Website, located at
-          https://resumebus.sigmaprogrammer.com.
+          use of 7Resume&apos;s Website, located at https://7resume.com.
         </Text>
 
         <Text>

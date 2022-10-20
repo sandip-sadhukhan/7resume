@@ -16,10 +16,10 @@ const PrivacyPolicy: NextPage = () => {
       </Heading>
       <VStack w="full" align="start" spacing={3} px={2}>
         <Text>
-          At 7Resume, accessible from resumebus.sigmaprogrammer.com, one of our
-          main priorities is the privacy of our visitors. This Privacy Policy
-          document contains types of information that is collected and recorded
-          by 7Resume and how we use it.
+          At 7Resume, accessible from 7resume.com, one of our main priorities is
+          the privacy of our visitors. This Privacy Policy document contains
+          types of information that is collected and recorded by 7Resume and how
+          we use it.
         </Text>
         <Text>
           If you have additional questions or require more information about our
