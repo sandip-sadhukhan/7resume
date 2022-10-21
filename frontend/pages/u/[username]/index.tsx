@@ -12,6 +12,7 @@ interface UserHomeProps {
   section: {
     name: string
     my_positions: string
+    start_page_background: string
   }
 }
 
@@ -28,6 +29,7 @@ const UserHome: NextPage<UserHomeProps> = (props: UserHomeProps) => {
         <HomeSection
           name={section.name}
           professionList={section.my_positions.split("\r\n")}
+          startPageBackground={section.start_page_background}
         />
       </Layout>
     </>

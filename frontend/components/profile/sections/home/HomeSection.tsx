@@ -17,14 +17,17 @@ import Link from "next/link"
 interface HomeSectionProps {
   name: string
   professionList: string[]
+  startPageBackground: string
 }
 
 const HomeSection: React.FC<HomeSectionProps> = ({
   name,
   professionList,
+  startPageBackground,
 }: HomeSectionProps) => {
   const username = useRouter().query.username as string
   const secondaryColor = useColorModeValue("#f7b733", "#00c6ff")
+  const BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL
 
   return (
     <Center
@@ -34,6 +37,10 @@ const HomeSection: React.FC<HomeSectionProps> = ({
       overflowY="auto"
       px={[3, 5, 10]}
       id="main-page-full-image"
+      style={{
+        background: `linear-gradient(to right, #000000ad, #434343ab), url(${BASE_API_URL}${startPageBackground})`,
+        backgroundSize: "cover !important",
+      }}
     >
       <Flex flexDir="column" w="full" align="center">
         <Heading
