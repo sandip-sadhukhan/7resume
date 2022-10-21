@@ -148,7 +148,9 @@ class ProjectCategorySerializer(serializers.ModelSerializer):
 
 
 class BlogShortSerializer(serializers.ModelSerializer):
-    category_name = serializers.CharField(source="category.title")
+    category_name = serializers.CharField(
+        source="category.title", allow_null=True
+    )
 
     class Meta:
         model = Blog
@@ -183,7 +185,9 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class BlogSerializer(serializers.ModelSerializer):
-    category_name = serializers.CharField(source="category.title")
+    category_name = serializers.CharField(
+        source="category.title", allow_null=True
+    )
     tags = TagSerializer(read_only=True, many=True)
 
     class Meta:

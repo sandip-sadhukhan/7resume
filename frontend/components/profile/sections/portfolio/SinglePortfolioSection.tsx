@@ -11,6 +11,8 @@ import Head from "next/head"
 import dayjs from "dayjs"
 import { useRouter } from "next/router"
 import React from "react"
+import ReactMarkdown from "react-markdown"
+
 import { FaFacebookF, FaPinterestP, FaTwitter } from "react-icons/fa"
 import {
   BreadcrumbType,
@@ -38,6 +40,12 @@ const SinglePortfolioSection: React.FC<SinglePortfolioSectionProps> = (
     pinterest,
     published,
   } = props.portfolio
+
+  const descriptionFormatted = description.replace("\r", "").replace(
+    "\n",
+    `
+  `
+  )
 
   const secondaryColor = useColorModeValue("#f7b733", "#00c6ff")
   const transparentSecondaryColor = useColorModeValue(
@@ -147,8 +155,8 @@ const SinglePortfolioSection: React.FC<SinglePortfolioSectionProps> = (
       </VStack>
 
       {/* Blog Content */}
-      <VStack w="full" align="start" py={12}>
-        <Text whiteSpace="pre-wrap">{description}</Text>
+      <VStack w="full" align="start" py={12} className="markdown-content">
+        <ReactMarkdown>{descriptionFormatted}</ReactMarkdown>
       </VStack>
 
       {/* Related Projects */}

@@ -8,6 +8,7 @@ import { AiOutlineEye } from "react-icons/ai"
 import { FaFacebookF, FaPinterestP, FaTwitter } from "react-icons/fa"
 import { FiBook, FiUser } from "react-icons/fi"
 import { GiBackwardTime } from "react-icons/gi"
+import ReactMarkdown from "react-markdown"
 import {
   FacebookShareButton,
   PinterestShareButton,
@@ -28,6 +29,11 @@ const BlogCard: React.FC<BlogCardProps> = (props: BlogCardProps) => {
   const { grayText, secondaryColor, grayBackground, blog, absoluteURL } = props
 
   const username = useRouter().query.username as string
+  const blogFormatted = blog.description.replace("\r", "").replace(
+    "\n",
+    `
+  `
+  )
 
   return (
     <VStack
@@ -85,10 +91,8 @@ const BlogCard: React.FC<BlogCardProps> = (props: BlogCardProps) => {
           </HStack>
         </VStack>
         {/* Content */}
-        <VStack pt={4}>
-          <Text textAlign="justify" whiteSpace="pre-wrap">
-            {blog.description}
-          </Text>
+        <VStack pt={4} className="markdown-content" align="start">
+          <ReactMarkdown>{blogFormatted}</ReactMarkdown>
         </VStack>
         {/* tags */}
         <VStack pt={3} w="full" align="start">
