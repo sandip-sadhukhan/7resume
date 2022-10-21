@@ -264,7 +264,7 @@ const EditSkillSection: React.FC<EditSkillSectionProps> = (
                 type="number"
                 step="0.1"
                 size="sm"
-                placeholder="Level"
+                placeholder="Skill level will be between 0 and 100"
                 {...register("level", {
                   required: "Level should not be empty.",
                   min: {

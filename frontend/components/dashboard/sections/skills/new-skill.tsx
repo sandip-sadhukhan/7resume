@@ -249,7 +249,7 @@ const NewSkillSection: React.FC<NewSkillSectionProps> = (
                 // max="100"
                 step="0.1"
                 size="sm"
-                placeholder="Level"
+                placeholder="Skill level will be between 0 and 100"
                 {...register("level", {
                   required: "Level should not be empty.",
                   min: {
