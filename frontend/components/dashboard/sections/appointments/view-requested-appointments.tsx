@@ -41,6 +41,7 @@ const ViewRequestedAppointment: React.FC<ViewRequestedAppointmentProps> = (
     id: number
     subject: string
     name: string
+    email: string
     phone: string
     appointment_time: string
     message: string
@@ -123,15 +124,15 @@ const ViewRequestedAppointment: React.FC<ViewRequestedAppointmentProps> = (
         >
           <HStack>
             <FaUser />
-            <Text>Sandip Sadhukhan</Text>
+            <Text>{data?.name}</Text>
           </HStack>
           <HStack>
             <FaPhone />
-            <Text>+91 9282683927</Text>
+            <Text>{data?.phone}</Text>
           </HStack>
           <HStack>
             <FaEnvelopeOpen />
-            <Text>sandip.sendme@gmail.com</Text>
+            <Text>{data?.email}</Text>
           </HStack>
           <HStack>
             <FaCalendar />
