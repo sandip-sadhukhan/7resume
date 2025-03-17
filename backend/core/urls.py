@@ -11,12 +11,13 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path("api/", include("resume.urls")),
 ]
 
-urlpatterns.extend(
-    [
-        re_path(
-            r"^%s(?P<path>.*)$" % re.escape(settings.MEDIA_URL.lstrip("/")),
-            serve,
-            kwargs={"document_root": settings.MEDIA_ROOT},
-        )
-    ]
-)
+if settings.DEBUG:
+    urlpatterns.extend(
+        [
+            re_path(
+                r"^%s(?P<path>.*)$" % re.escape(settings.MEDIA_URL.lstrip("/")),
+                serve,
+                kwargs={"document_root": settings.MEDIA_ROOT},
+            )
+        ]
+    )
